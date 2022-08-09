@@ -4,17 +4,16 @@ import Hero from "../components/hero";
 const HomePage = () => {
   const title = (
     <h2 className="text-3xl sm:text-6xl leading-tight font-semibold text-center">
-      <span className="sketch-highlight">Building</span> digital
-      <br /> products, brands, and
-      <br /> experience.
+      <span className="sketch-highlight">Building</span> digital &apos;
+      products, brands, and &apos; experience.
     </h2>
   );
 
   const message = (
     <p className="text-center pt-6">
       a <span className="font-semibold">Front-end Developer</span> in Turkey.
-      <br /> I'm in the know UI/UX Design, Web Development,
-      <br /> and crafting interfaces.
+      &apos; I'm in the know UI/UX Design, Web Development, &apos; and crafting
+      interfaces.
     </p>
   );
 
@@ -25,6 +24,7 @@ const HomePage = () => {
         <a
           className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black rounded-full"
           href="https://instagram.com/onurhandtr"
+          rel="noreferrer"
           target="_blank"
         >
           <svg
@@ -44,6 +44,7 @@ const HomePage = () => {
         <a
           className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black transition-all rounded-full"
           href="https://twitter.com/Onurhan1337"
+          rel="noreferrer"
           target="_blank"
         >
           <svg

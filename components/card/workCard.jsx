@@ -9,7 +9,7 @@ const WorkCard = ({ data, cardTitle }) => {
           <div className="py-4" key={work.company}>
             <div className="flex flex-col mb-5 items-center">
               <span className="text-gray-400 text-sm">{work.date}</span>
-              <div className="">
+              <div>
                 <div className="flex flex-row">
                   <a
                     href={work.websiteLink}
@@ -21,18 +21,9 @@ const WorkCard = ({ data, cardTitle }) => {
                   <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
                       d="M17.25 15.25V6.75H8.75"
                     ></path>
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M17 7L6.75 17.25"
-                    ></path>
+                    <path stroke="currentColor" d="M17 7L6.75 17.25"></path>
                   </svg>
                 </div>
                 <h3 className="text-sm font-normal text-gray-500">

@@ -1,4 +1,5 @@
 import ProjectCard from "../components/card/projectCard";
+import Error from "./_error";
 
 const WorksPage = ({ data, errorCode }) => {
   if (errorCode) {
