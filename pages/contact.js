@@ -4,8 +4,7 @@ import Hero from "../components/hero";
 const ContactPage = () => {
   const title = (
     <h2 className="text-3xl sm:text-6xl leading-tight font-semibold text-center">
-      <span className="sketch-highlight">Hello!</span> I've &apos; waiting for
-      you.
+      <span className="sketch-highlight">Hello!</span> I've waiting for you.
     </h2>
   );
 
