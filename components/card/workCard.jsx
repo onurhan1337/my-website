@@ -14,6 +14,7 @@ const WorkCard = ({ data, cardTitle }) => {
                   <a
                     href={work.websiteLink}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm font-semibold hover:text-black text-gray-700"
                   >
                     {work.title} at {work.company}

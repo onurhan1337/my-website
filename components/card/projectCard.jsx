@@ -18,7 +18,7 @@ const ProjectCard = ({ data }) => {
             <a
               href={project.html_url}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="text-blue-600 inline-flex items-center"
             >
               Project details
@@ -56,8 +56,6 @@ const ProjectCard = ({ data }) => {
                   stroke="currentColor"
                   stroke-width="2"
                   fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
                   viewBox="0 0 24 24"
                 >
                   <path

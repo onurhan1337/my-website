@@ -13,6 +13,7 @@ const CourseCard = ({ data, cardTitle }) => {
                 <div className="flex flex-row">
                   <a
                     href={work.websiteLink}
+                    rel="noopener noreferrer"
                     target="_blank"
                     className="text-sm font-semibold hover:text-black text-gray-700"
                   >
@@ -21,18 +22,9 @@ const CourseCard = ({ data, cardTitle }) => {
                   <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24">
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
                       d="M17.25 15.25V6.75H8.75"
                     ></path>
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M17 7L6.75 17.25"
-                    ></path>
+                    <path stroke="currentColor" d="M17 7L6.75 17.25"></path>
                   </svg>
                 </div>
               </div>

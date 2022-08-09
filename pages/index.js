@@ -24,7 +24,7 @@ const HomePage = () => {
         <a
           className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black rounded-full"
           href="https://instagram.com/onurhandtr"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           target="_blank"
         >
           <svg
@@ -44,7 +44,7 @@ const HomePage = () => {
         <a
           className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black transition-all rounded-full"
           href="https://twitter.com/Onurhan1337"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           target="_blank"
         >
           <svg
@@ -64,6 +64,7 @@ const HomePage = () => {
         <a
           className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black rounded-full"
           href="https://github.com/Onurhan1337"
+          rel="noopener noreferrer"
           target="_blank"
         >
           <svg
