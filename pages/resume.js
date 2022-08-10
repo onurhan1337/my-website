@@ -50,7 +50,7 @@ const ResumePage = () => {
         <CourseCard data={courseExperience} cardTitle={courseCardTitle} />
       </div>
       <div className="flex flex-col items-center justify-center space-x-3 space-y-3">
-        <p>
+        <p  className="text-normal text-center text-wrap px-3">
           You can visit my linkedin account for my tech stack and other skills.
         </p>
         <a
