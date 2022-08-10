@@ -1,19 +1,20 @@
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import Hero from "../components/hero";
 
 const HomePage = () => {
   const title = (
     <h2 className="text-3xl sm:text-6xl leading-tight font-semibold text-center">
-      <span className="sketch-highlight">Building</span> digital &apos;
-      products, brands, and &apos; experience.
+      <span className="sketch-highlight">Building</span> digital <br />
+      products, brands, and <br /> experience.
     </h2>
   );
 
   const message = (
-    <p className="text-center pt-6">
+    <p className="text-center pt-4">
       a <span className="font-semibold">Front-end Developer</span> in Turkey.
-      &apos; I'm in the know UI/UX Design, Web Development, &apos; and crafting
-      interfaces.
+      <br /> I'm in the know UI/UX Design, Web Development,
+      <br /> and crafting interfaces.
     </p>
   );
 
@@ -22,7 +23,7 @@ const HomePage = () => {
       <Hero avatarLabel="Hi, I'm Onurhan 🤘" title={title} message={message} />
       <div className="flex flex-row space-x-3 pb-4">
         <a
-          className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black rounded-full"
+          className="icon"
           href="https://instagram.com/onurhandtr"
           rel="noopener noreferrer"
           target="_blank"
@@ -42,7 +43,7 @@ const HomePage = () => {
           </svg>
         </a>
         <a
-          className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black transition-all rounded-full"
+          className="icon"
           href="https://twitter.com/Onurhan1337"
           rel="noopener noreferrer"
           target="_blank"
@@ -62,7 +63,7 @@ const HomePage = () => {
           </svg>
         </a>
         <a
-          className="p-3 border-2 bg-gray-200 hover:bg-[#FEE3B4] hover:border-black rounded-full"
+          className="icon"
           href="https://github.com/Onurhan1337"
           rel="noopener noreferrer"
           target="_blank"
@@ -90,5 +91,9 @@ const HomePage = () => {
     </div>
   );
 };
-
-export default HomePage;
+{/*Hydration failed because the initial UI does not match what was rendered on the server
+  error solved with next/dynamic
+*/}
+export default dynamic(() => Promise.resolve(HomePage), {
+  ssr: false
+});
