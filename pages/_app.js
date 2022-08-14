@@ -1,5 +1,6 @@
 import Header from "../components/header";
 import "../styles/globals.css";
+import "@upstash/claps/style.css";
 import { ThemeProvider } from "next-themes";
 import dynamic from "next/dynamic";
 

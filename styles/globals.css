@@ -1,17 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 @layer base {
     html {
-        font-family: jakarta sans, sans-serif;
+        font-family: "Jakarta Sans", sans-serif;
         @apply scroll-smooth
     }
 
-    a, p, button, span, h1, h2, h3, h4, h5, h6
+    a, p, button
      {
-        @apply font-jakarta text-[#1C1C1C] transition;
+        @apply font-jetbrains text-[#1C1C1C] transition;
     }
 
 }
@@ -34,7 +36,7 @@
     }
 
     .icon {
-        @apply p-3 border-2 rounded-full bg-gray-200 text-gray-800  hover:bg-[#FEE3B4] hover:border-black transition
+        @apply p-3 border-2 rounded-full bg-gray-200 text-gray-800 hover:shadow-md hover:shadow-gray-400 transition
     }
 }
 
@@ -49,6 +51,10 @@ body {
 .sketch-highlight{
     position:relative;
     padding: 0 5px;
+}
+
+.claps-fixed .claps-body {
+    filter: drop-shadow(0 4px 8px rgb(0 0 0 / 14%)) drop-shadow(0 1px 2px rgb(0 0 0 / 6%));
 }
 
 .sketch-highlight:before{

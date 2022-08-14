@@ -74,7 +74,6 @@ const ProjectCard = ({ data }) => {
           </div>
         </div>
       ))}
-      ;
     </div>
   );
 };

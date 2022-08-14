@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         jakarta: ["Jakarta", "sans-serif"],
+        jetbrains: ["JetBrains Mono", "monospace"],
       },
     },
   },
