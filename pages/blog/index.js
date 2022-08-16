@@ -1,6 +1,5 @@
 import BlogCard from "../../components/card/blogCard";
 import { allPosts } from "contentlayer/generated";
-import { getAllNodes } from "next-mdx";
 
 export async function getStaticProps() {
   const posts = allPosts.sort((a, b) => {
@@ -38,13 +37,5 @@ const BlogPage = ({ posts }) => {
     </div>
   );
 };
-
-export async function getStaticProps() {
-  return {
-    props: {
-      posts: await getAllNodes("post"),
-    },
-  };
-}
 
 export default BlogPage;
