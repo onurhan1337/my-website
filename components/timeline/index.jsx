@@ -46,9 +46,9 @@ const Index = () => {
         },
     ];
     return (
-        <section className="text-gray-600 body-font flex container mx-auto">
+        <div className="flex justify-center items-center mx-auto">
                 <TimelineItem experiences={experiences} />
-        </section>
+        </div>
     )
 }
 
