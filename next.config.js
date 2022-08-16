@@ -1,5 +1,10 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const { withContentLayer } = require("next-contentlayer");
+
+/** 
+ * @type {import('next').NextConfig} 
+ */
+
+module.exports = withContentLayer({
   reactStrictMode: true,
   webpack5: true,
   webpack: (config) => {
@@ -14,6 +19,4 @@ const nextConfig = {
     legacyBrowsers: false,
     browsersListForSwc: true,
   },
-};
-
-module.exports = nextConfig;
+});
