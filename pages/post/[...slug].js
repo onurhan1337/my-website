@@ -50,7 +50,7 @@ const PostPage = ({ post }) => {
         />
       </div>
       <div className="fixed z-50">
-        <Claps fixed="left" replyUrl={post.slug} />
+        <Claps fixed="left" replyUrl={post.tweetUrl} />
       </div>
     </div>
   );
