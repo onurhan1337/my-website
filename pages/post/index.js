@@ -9,6 +9,7 @@ export async function getStaticProps() {
 }
 
 const BlogPage = ({ posts }) => {
+  
   return (
     <div
       className="py-12 px-4 md:px-16 mx-auto overflow-hidden"
@@ -16,7 +17,7 @@ const BlogPage = ({ posts }) => {
     >
       <h1 className="text-3xl font-bold text-[#0D0E10] mb-6">Writing</h1>
       <div className="flex flex-col gap-y-6">
-        {posts.map(({slug, date, title}) => (
+        {posts?.map(({slug, date, title}) => (
           <BlogCard
             key={slug}
             title={title}
@@ -26,7 +27,7 @@ const BlogPage = ({ posts }) => {
         ))}
       </div>
     </div>
-  );
+    );
 };
 
 export default BlogPage;
