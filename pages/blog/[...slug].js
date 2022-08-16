@@ -1,6 +1,5 @@
 import { getMdxNode, getMdxPaths } from "next-mdx/server";
-import { useHydrate } from "next-mdx/client";
-import { mdxComponents } from "../../components/mdx-components";
+import { useMDXComponent } from "next-contentlayer/hooks";
 import Claps from "@upstash/claps";
 
 export async function getStaticPaths() {
@@ -30,9 +29,7 @@ export async function getStaticProps(context) {
 
 const PostPage = ({ post }) => {
 
-  const content = useHydrate(post, {
-    components: mdxComponents,
-  });
+  const Component = useMDXComponent(post.body.code);
 
 
   return (
@@ -45,7 +42,13 @@ const PostPage = ({ post }) => {
         <p className="py-2 text-gray-800">{post.frontMatter.excerpt}</p>
         <hr className="my-4" />
       </article>
-      <div className="prose dark:prose-invert prose-p:font-jakarta">{content}</div>
+      <div className="prose dark:prose-invert prose-p:font-jakarta">
+        <Component
+          components={{
+            ...MDXComponents,
+          }}
+        />
+      </div>
       <div className="fixed z-50">
         <Claps fixed="left" replyUrl={post.url} />
       </div>
