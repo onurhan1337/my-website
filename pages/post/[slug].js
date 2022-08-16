@@ -1,16 +1,21 @@
 import { useMDXComponent } from "next-contentlayer/hooks";
+import MDXComponents from "../../components/mdx-components";
 import { allPosts } from "contentlayer/generated";
 import Claps from "@upstash/claps";
+import {format, parseISO} from "date-fns";
+import {tr} from "date-fns/locale";
 
 export async function getStaticPaths() {
+  const paths = allPosts.map((post) => ( { params: { slug: post.slug } } ));
+
   return {
-    paths: allPosts.map((p) => ({ params: { slug: p.slug } })),
+    paths,
     fallback: false,
-  }
+  };
 }
 
-export async function getStaticProps(params) {
-  const post = allPosts.find((post) => post.slug === params?.slug)
+export async function getStaticProps({ params }) {
+  const post = allPosts.find((post) => post.slug === params.slug)
   
   if (!post) {
     return {
@@ -35,11 +40,12 @@ const PostPage = ({ post }) => {
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       <article>
-        <h1 className="text-4xl font-bold">{post.title}</h1>
-        <time className="py-2 text-gray-500 text-sm">
-          {post.date}
+        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+        <time className="text-gray-500" dateTime={post.date}>
+          {format(parseISO(post.date), "d LLLL yyyy", {
+            locale: tr,
+          })}
         </time>
-        <p className="py-2 text-gray-800">{post.frontMatter.subtitle}</p>
         <hr className="my-4" />
       </article>
       <div className="prose dark:prose-invert prose-p:font-jakarta">
