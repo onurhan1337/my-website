@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",
-    "@mapbox/rehype-prism": "^0.8.0",
     "@svgr/webpack": "^6.3.1",
     "@upstash/claps": "^1.0.0-beta.4",
     "classnames": "^2.3.1",
@@ -21,7 +20,8 @@
     "next-themes": "^0.2.0",
     "react": "18.2.0",
     "react-animated-cursor": "^2.5.1",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "rehype-prism-plus": "^1.4.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.4",
