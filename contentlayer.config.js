@@ -4,7 +4,7 @@ import rehypePrism from "rehype-prism-plus";
 export const Post = defineDocumentType(() => ({
     name: "Post",
     contentType: "mdx",
-    filePathPattern: `content/*.mdx`,
+    filePathPattern: `posts/*.mdx`,
     fields: {
       date: { type: "date", required: true },
       title: { type: "string", required: true },

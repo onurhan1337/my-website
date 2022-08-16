@@ -1,17 +1,19 @@
-import { getMdxNode, getMdxPaths } from "next-mdx/server";
 import { useMDXComponent } from "next-contentlayer/hooks";
+import { allPosts } from "contentlayer/generated";
 import Claps from "@upstash/claps";
 
 export async function getStaticPaths() {
+  const paths = allPosts.map((post) => ({ params: { slug: post.slug } }));
+
   return {
-    paths: await getMdxPaths("post"),
+    paths,
     fallback: false,
   };
 }
 
-export async function getStaticProps(context) {
-  const post = await getMdxNode("post", context);
-
+export async function getStaticProps(params) {
+  const post = allPosts.find((post) => post.slug === params.slug);
+  
   if (!post) {
     return {
       redirect: {
