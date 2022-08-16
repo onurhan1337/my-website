@@ -3,16 +3,14 @@ import { allPosts } from "contentlayer/generated";
 import Claps from "@upstash/claps";
 
 export async function getStaticPaths() {
-  const paths = allPosts.map((post) => ({ params: { slug: post.slug } }));
-
   return {
-    paths,
+    paths: allPosts.map((p) => ({ params: { slug: p.slug } })),
     fallback: false,
-  };
+  }
 }
 
 export async function getStaticProps(params) {
-  const post = allPosts.find((post) => post.slug === params.slug);
+  const post = allPosts.find((post) => post.slug === params?.slug)
   
   if (!post) {
     return {
@@ -37,11 +35,11 @@ const PostPage = ({ post }) => {
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       <article>
-        <h1 className="text-4xl font-bold">{post.frontMatter.title}</h1>
+        <h1 className="text-4xl font-bold">{post.title}</h1>
         <time className="py-2 text-gray-500 text-sm">
-          {post.frontMatter.date}
+          {post.date}
         </time>
-        <p className="py-2 text-gray-800">{post.frontMatter.excerpt}</p>
+        <p className="py-2 text-gray-800">{post.frontMatter.subtitle}</p>
         <hr className="my-4" />
       </article>
       <div className="prose dark:prose-invert prose-p:font-jakarta">
@@ -52,7 +50,7 @@ const PostPage = ({ post }) => {
         />
       </div>
       <div className="fixed z-50">
-        <Claps fixed="left" replyUrl={post.url} />
+        <Claps fixed="left" replyUrl={post.slug} />
       </div>
     </div>
   );

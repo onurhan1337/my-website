@@ -1,19 +1,11 @@
 import BlogCard from "../../components/card/blogCard";
 import { allPosts } from "contentlayer/generated";
+import { pick } from "@contentlayer/client";
 
 export async function getStaticProps() {
-  const posts = allPosts.sort((a, b) => {
-    return compareDesc(new Date(a.date), new Date(b.date));
-  });
+  const posts = allPosts.map((post) => pick(post, ["title", "date", "slug"]));
 
-  return {
-    props: {
-      posts: posts.map((post) => {
-        const { body, type, _raw, ...rest } = post;
-        return rest;
-      }),
-    },
-  };
+  return { props: { posts } };
 }
 
 const BlogPage = ({ posts }) => {
@@ -24,12 +16,12 @@ const BlogPage = ({ posts }) => {
     >
       <h1 className="text-3xl font-bold text-[#0D0E10] mb-6">Writing</h1>
       <div className="flex flex-col gap-y-6">
-        {posts.map((post) => (
+        {posts.map(({slug, date, title}) => (
           <BlogCard
-            key={post.url}
-            title={post.frontMatter.title}
-            date={post.frontMatter.date}
-            slug={post.url}
+            key={slug}
+            title={title}
+            date={date}
+            slug={slug}
           />
         ))}
       </div>
