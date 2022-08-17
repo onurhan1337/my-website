@@ -1,12 +1,15 @@
 import Header from "../components/header";
 import "../styles/globals.css";
 import "@upstash/claps/style.css";
+import "nprogress/nprogress.css";
 import { ThemeProvider } from "next-themes";
 import dynamic from "next/dynamic";
 
 const AnimatedCursor = dynamic(() => import("react-animated-cursor"), {
   ssr: false,
 });
+
+const ProgressBar = dynamic(() => import('components/ProgressBar'), { ssr: false });
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -41,9 +44,10 @@ function MyApp({ Component, pageProps }) {
           ]}
         />
         <Header />
-        <main>
-          <Component {...pageProps} />
-        </main>
+            <main>
+              <Component {...pageProps} />
+            </main>
+        <ProgressBar />
       </div>
     </ThemeProvider>
   );

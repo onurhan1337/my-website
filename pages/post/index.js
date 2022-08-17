@@ -12,8 +12,7 @@ const BlogPage = ({ posts }) => {
   
   return (
     <div
-      className="py-12 px-4 md:px-16 mx-auto overflow-hidden"
-      style={{ maxWidth: "max(24vw, 768px)" }}
+      className="max-w-screen-sm px-6 py-12 mx-auto overflow-hidden"
     >
       <h1 className="text-3xl font-bold text-[#0D0E10] mb-6">Writing</h1>
       <div className="flex flex-col gap-y-6">

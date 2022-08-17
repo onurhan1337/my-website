@@ -24,6 +24,7 @@ const TimelineItem = ({ experiences }) => {
                         <ArrowUpRight className="ml-1" src="photos/arrow-up-right.svg" />
                     </div>
                     <p className="leading-relaxed break-words">{experience.title}</p>
+                    <p className="text-zinc-400 text-sm py-1">{experience.date}</p>
                 </div>
             </div>
         </div>
