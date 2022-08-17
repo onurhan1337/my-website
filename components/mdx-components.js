@@ -18,7 +18,7 @@ function hr(props) {
 function ul(props) {
   return (
     <ul
-      className="list-inside list-disc space-y-2 marker:text-gray-800 dark:text-gray-200"
+      className="list-inside list-disc space-y-2 marker:text-gray-800"
       {...props}
     />
   );
