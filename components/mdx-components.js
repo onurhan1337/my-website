@@ -70,21 +70,21 @@ function Figure({ src, title, full = true, width }) {
 }
 
 function h2(props) {
-  return <h2 className="text-2xl font-bold leading-tight" {...props} />;
+  return <h2 className="text-gray-800 text-2xl font-bold leading-tight" {...props} />;
 }
 
 function h3(props) {
   return (
-    <h3 className="!mb-2 text-xl font-semibold leading-tight" {...props} />
+    <h3 className="text-gray-800 !mb-2 text-xl font-semibold leading-tight" {...props} />
   );
 }
 
 function h4(props) {
-  return <h4 className="!mb-1 text-lg font-semibold leading-snug" {...props} />;
+  return <h4 className="text-gray-800 !mb-1 text-lg font-semibold leading-snug" {...props} />;
 }
 
 function h5(props) {
-  return <h5 className="font-semibold" {...props} />;
+  return <h5 className="text-gray-800 font-semibold" {...props} />;
 }
 
 const MDXComponents = {
