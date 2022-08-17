@@ -6,7 +6,7 @@ function a(props) {
 }
 
 function strong(props) {
-  return <strong className="font-semibold" {...props} />;
+  return <strong className="font-semibold text-black" {...props} />;
 }
 
 function hr(props) {
