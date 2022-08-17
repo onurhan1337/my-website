@@ -18,10 +18,20 @@ function hr(props) {
 function ul(props) {
   return (
     <ul
-      className="list-inside list-disc space-y-2 marker:text-gray-600 dark:text-gray-200 text-gray-800"
+      className="list-inside list-disc space-y-2 marker:text-gray-600 dark:text-gray-200"
       {...props}
     />
   );
+}
+
+function li(props) {
+  return (
+      <li
+        className="text-gray-800"
+      >
+        {...props}
+      </li>
+  )
 }
 
 function ol(props) {
@@ -92,6 +102,7 @@ const MDXComponents = {
   a,
   hr,
   ul,
+  li,
   ol,
   blockquote,
   h2,
