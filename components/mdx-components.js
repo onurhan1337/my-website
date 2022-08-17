@@ -27,7 +27,7 @@ function ul(props) {
 function li(props) {
   return (
       <ul
-          className="text-gray-800"
+          className="text-gray-800 dark:text-gray-700"
           {...props}
       />
   );

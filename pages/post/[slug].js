@@ -48,7 +48,7 @@ const PostPage = ({ post }) => {
         </time>
         <hr className="my-4" />
       </article>
-      <div className="prose dark:prose-invert prose-p:font-jakarta">
+      <div className="prose dark:prose-invert prose-p:font-jakarta prose-li:text-gray-800">
         <Component
           components={{
             ...MDXComponents,
