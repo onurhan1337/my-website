@@ -11,12 +11,14 @@ Hooks, React’ın 16.8 sürümü ile hayatımıza giren ve class component kull
 
 ## Neden custom hooks kullanmalıyız?
 
+<ul>
 <li> Component tree’nin okunulabilirliğini geliştirir ve hata ayıklamayı kolaylaştırır.</li>
 Birleştirilebilir ve yeniden düzenlenebilir mantık. Custom hooks, standart hooklar gibi functional componentlere birden fazla çağırılabilir.
 
 <li> Daha temiz kod yapısı oluşturmamıza olanak sağlar.</li>
 
 <li> Bileşenlerin aksine, özel Hook’larda belirli bir fonksiyon imzasının bulunma zorunluluğu yoktur. Hangi değerlerin parametre olarak verileceğine ve Hook’tan neyin geri döndürüleceğine biz karar verebiliriz. Başka bir deyişle, normal fonksiyonlarda yaptığımız gibi Hook’ları kodlayabiliriz. Sadece react hooks olduğunu anlayabilmesi için başında `use` kullanmamız gerekiyor. </li>
+</ul>
 
 ## Custom hooks — Örnek
 
@@ -43,6 +45,7 @@ Kodda gerçeğe çok yakın bir yaklaşım sergiledik başka şekilde uyarlayıp
 
 ## Kısa notlar
 
+<ul>
 <li>Hook başında “use” kullanmak zorunda değilsiniz ancak tavsiye edilen yaklaşım bu şekilde hem de react tarafında çeşitli [*sorunlarla*](https://reactjs.org/docs/hooks-rules.html "React hooks rules") uğraşabilirsiniz. </li>
 
 <li> Yukarıda örnekte görüldüğü üzere kodun mantığında değişikliğe gitmedik ancak bu bize çok fayda sağladı, iki fonksiyondaki işi teke indirip farklı yerlerde çağırıp kullanabilir hale getirdik. </li>
@@ -50,8 +53,9 @@ Kodda gerçeğe çok yakın bir yaklaşım sergiledik başka şekilde uyarlayıp
 <li> İlk bakışta bir fikir kafanızda canlanabilir, “acaba bu custom hook’u 2 farklı componentlerde kullandığımda onlardaki state çakışır mı?”. Cevap Hayır. Custom hooklar çeşitli işlemleri tekrar kullanabilmek için oluşturulur ancak her defasında state ve içindeki değerler izole edilir o yüzden rahatça kullanabiliriz.</li>
 
 <li> Custom hooklar hayal gücümüz ile şekillenir, standart hooklarda olmayan bir esneklik sunar. Aklımıza gelen çoğu konuda custom hook geliştirebiliriz. Ayrıca eğer karmaşık bir yapı olmadığı sürece custom hook oluşturulmaması öneriliyor. En yaygın olarak redux içeriğindeki reducer yapısının custom hook ile entegre edilip basitleştirilmiş yapılarımızı kullanabiliriz.</li>
+</ul>
 
-Ayrıca custom hook arasında props taşınımı için [dökümanı](https://reactjs.org/docs/hooks-custom.html) ziyaret edebilirsiniz.
+Ayrıca custom hook arasında props taşınımı için ([dökümanı](https://reactjs.org/docs/hooks-custom.html)) ziyaret edebilirsiniz.
 
 ## Kapanış
 

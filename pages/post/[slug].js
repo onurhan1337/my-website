@@ -40,7 +40,7 @@ const PostPage = ({ post }) => {
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       <article>
-        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+        <h1 className="text-4xl text-black font-bold mb-4">{post.title}</h1>
         <time className="text-gray-500" dateTime={post.date}>
           {format(parseISO(post.date), "d LLLL yyyy", {
             locale: tr,
