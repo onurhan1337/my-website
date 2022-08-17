@@ -24,6 +24,15 @@ function ul(props) {
   );
 }
 
+function li(props) {
+  return (
+      <li
+          className="space-y-2 marker:text-gray-800 dark:text-gray-800"
+          {...props}
+      />
+  );
+}
+
 function ol(props) {
   return <ol className="list-inside list-decimal space-y-2" {...props} />;
 }
@@ -92,6 +101,7 @@ const MDXComponents = {
   a,
   hr,
   ul,
+  li,
   ol,
   blockquote,
   h2,
