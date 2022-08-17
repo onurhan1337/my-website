@@ -24,16 +24,14 @@ function ul(props) {
   );
 }
 
-function li(props) {
+function ul(props) {
   return (
-      <li
-        className="text-gray-800"
-      >
-        {...props}
-      </li>
-  )
+      <ul
+          className="text-gray-800"
+          {...props}
+      />
+  );
 }
-
 function ol(props) {
   return <ol className="list-inside list-decimal space-y-2" {...props} />;
 }
