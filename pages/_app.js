@@ -9,7 +9,7 @@ const AnimatedCursor = dynamic(() => import("react-animated-cursor"), {
   ssr: false,
 });
 
-const ProgressBar = dynamic(() => import('components/ProgressBar'), { ssr: false });
+const ProgressBar = dynamic(() => import('../components/progressbar'), { ssr: false });
 
 function MyApp({ Component, pageProps }) {
   return (
