@@ -12,7 +12,7 @@ const MENU = {
   "/contact": "Contact",
 };
 
-const header = () => {
+const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const router = useRouter();
 
@@ -74,4 +74,4 @@ const header = () => {
   );
 };
 
-export default header;
+export default Header;
