@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import ArrowUpRight from '../../public/photos/arrow-up-right.svg';
 
 const TimelineItem = ({ experiences }) => {
@@ -14,7 +15,7 @@ const TimelineItem = ({ experiences }) => {
             <div className="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
                 <div
                     className="flex-shrink-0 w-18 h-18 inline-flex items-center justify-center">
-                    <img className="w-12 h-12" src={experience.companyLogo ? experience.companyLogo : undefined} />
+                    <Image width={48} height={48} className="w-12 h-12" src={experience.companyLogo ? experience.companyLogo : undefined} />
                 </div>
                 <div className="flex-grow sm:pl-6 mt-6 sm:mt-0">
                     <div className="flex flex-row">

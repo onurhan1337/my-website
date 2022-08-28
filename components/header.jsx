@@ -1,6 +1,6 @@
 import NextLink from "next/link";
-import {useRouter} from "next/router";
 import {useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import cx from "classnames";
 import IconArrowDropDown from "./icons/arrow-drop-down";
 
@@ -34,13 +34,15 @@ const header = () => {
   return (
     <header>
       <div className="max-w-screen-sm mx-auto flex flex-row justify-between py-6 px-6">
-        <a className="text-xl">
-          onurhan.dev
-        </a>
+        <NextLink href="/">
+          <a className="text-gray-900 text-xl">
+            <span className="ml-3 font-bold text-xl">onurhan.dev</span>
+          </a>
+        </NextLink>
         <nav
           className={cx(
               isNavOpen ? "flex" : "hidden",
-              "flex-col gap-4 sm:!flex sm:flex-row"
+              "flex-col gap-x-6 sm:!flex sm:flex-row"
           )}
           >
           {Object.keys(MENU).map((path) => {
@@ -71,31 +73,5 @@ const header = () => {
     </header>
   );
 };
-
-{/*
-  <header className="text-gray-600 body-font">
-      <div className="container mx-auto flex flex-wrap p-5 flex-col flex-end md:flex-row items-center">
-        <Link href="/">
-          <a className=" title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <span className="ml-3 font-bold text-xl">onurhan.dev</span>
-          </a>
-        </Link>
-        <nav className="md:ml-auto flex flex-wrap space-x-8 items-center text-base">
-          <Link href="/works">
-            <a className="nav-item">Works</a>
-          </Link>
-          <Link href="/resume">
-            <a className="nav-item">Resume</a>
-          </Link>
-          <Link href="/post">
-            <a className="nav-item">Blog</a>
-          </Link>
-          <Link href="/contact">
-            <a className="nav-item">Contact</a>
-          </Link>
-        </nav>
-      </div>
-    </header>
- */}
 
 export default header;

@@ -5,7 +5,7 @@ const Index = () => {
         {
             id: 1,
             company: "Rosso Agency",
-            companyLogo: "photos/rosso-agency.png",
+            companyLogo: "/photos/rosso-agency.png",
             link: "https://rosso.agency/",
             title: "Front-end Developer",
             date: "July 2022 - Present",
@@ -13,7 +13,7 @@ const Index = () => {
         {
             id: 2,
             company: "Insepter",
-            companyLogo: "photos/insepter.png",
+            companyLogo: "/photos/insepter.png",
             link: "https://insepter.com/",
             title: "Front-end Team Lead",
             date: "May 2022 - July 2022",
@@ -21,7 +21,7 @@ const Index = () => {
         {
             id: 3,
             company: "freeCodeCamp",
-            companyLogo: "photos/freecodecamp.png",
+            companyLogo: "/photos/freecodecamp.png",
             link:
                 "https://www.freecodecamp.org/certification/onurhan/front-end-development-libraries",
             title: "Front-end Development Libraries",
@@ -30,7 +30,7 @@ const Index = () => {
         {
             id: 4,
             company: "BTK Akademi",
-            companyLogo: "photos/btk-akademi.png",
+            companyLogo: "/photos/btk-akademi.png",
             link: "https://www.btkakademi.gov.tr/",
             title: "React ile Web Programcılığı",
             date: "August 2021",
@@ -38,7 +38,7 @@ const Index = () => {
         {
             id: 5,
             company: "Udemy",
-            companyLogo: "photos/udemy.png",
+            companyLogo: "/photos/udemy.png",
             link:
                 "https://www.udemy.com/certificate/UC-ba323a34-20aa-4edf-9fdd-3791a8e1fc46/",
             title: "İleri Seviye Modern Javascript Dersleri ES7+",
