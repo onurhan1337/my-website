@@ -16,18 +16,14 @@ function MyApp({ Component, pageProps }) {
     <ThemeProvider attribute="class">
       <div>
         <AnimatedCursor
-          color="79, 70, 229"
+          color="214, 188, 250"
           innerSize={8}
           outerSize={35}
           innerScale={1}
           outerScale={1.2}
           outerAlpha={0}
           outerStyle={{
-            border: "1px solid black",
-            hover: {
-              backgroundColor: "red",
-              borderColor: "#FEE3B4",
-            },
+            border: "1px solid #2C3333",
           }}
           clickables={[
             "a",

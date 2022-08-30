@@ -8,7 +8,7 @@ const ResumePage = () => {
         <Timeline />
       </section>
       <div className="flex flex-col items-center justify-center space-x-3 space-y-3 mb-6">
-        <p  className="text-normal text-center text-wrap px-3">
+        <p  className="text-normal text-center text-wrap px-3 dark:text-zinc-300">
           You can visit my linkedin account for my tech stack and other skills.
         </p>
         <a

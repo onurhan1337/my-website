@@ -12,7 +12,7 @@ const Hero = (props) => {
       />
       <h5
         className={
-          props.avatarLabel !== 0 ? "title" : "hidden"
+          props.avatarLabel !== 0 ? "title text-zinc-900 dark:text-zinc-300" : "hidden"
         }
       >
         {props.avatarLabel}

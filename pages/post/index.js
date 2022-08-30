@@ -14,7 +14,7 @@ const BlogPage = ({ posts }) => {
     <div
       className="max-w-screen-sm px-6 py-12 mx-auto overflow-hidden"
     >
-      <h1 className="text-3xl font-bold text-[#0D0E10] mb-6">Writing</h1>
+      <h1 className="text-3xl font-bold text-[#0D0E10] dark:text-zinc-500 mb-6">Writing</h1>
       <div className="flex flex-col gap-y-6">
         {posts?.map(({slug, date, title}) => (
           <BlogCard

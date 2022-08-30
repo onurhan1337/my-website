@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { useTheme } from 'next-themes';
 import {useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import cx from "classnames";
@@ -14,6 +15,10 @@ const MENU = {
 
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const { resolvedTheme, setTheme } = useTheme();
+  const [ mounted, setMounted ] = useState(false);
+
   const router = useRouter();
 
   const { pathname } = useRouter();
@@ -23,6 +28,7 @@ const Header = () => {
   useEffect(() => {
     const handleRouteChangeStart = () => {
       setIsNavOpen(false);
+      setMounted(true);
     };
 
     router.events.on("routeChangeStart", handleRouteChangeStart);
@@ -31,18 +37,16 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
   return (
     <header>
       <div className="max-w-screen-sm mx-auto flex flex-row justify-between py-6 px-6">
-        <NextLink href="/">
-          <a className="text-gray-900 text-xl">
-            <span className="ml-3 font-bold text-xl">onurhan.dev</span>
-          </a>
-        </NextLink>
         <nav
           className={cx(
               isNavOpen ? "flex" : "hidden",
-              "flex-col gap-x-6 sm:!flex sm:flex-row"
+              "flex-col ml-3 gap-x-6 sm:!flex sm:flex-row"
           )}
           >
           {Object.keys(MENU).map((path) => {
@@ -50,17 +54,18 @@ const Header = () => {
                 return (
                     <span key={path}>
                        <NextLink href={path}>
-                            <a className={cx( isActive ? "text-zinc-900" : "text-gray-600" )}>{MENU[path]}</a>
+                            <a className={cx( isActive ? "text-zinc-900 dark:text-zinc-200" : "text-gray-600 dark:text-zinc-400" )}>{MENU[path]}</a>
                         </NextLink>
                     </span>
                 );
             })}
         </nav>
 
+        {/* Nav mobile */}
         {!isNavOpen && (
             <button
               type="button"
-              className="flex bg-zinc-100 text-gray-700 px-3 py-1 rounded-full select-none items-center sm:hidden"
+              className="flex select-none items-center sm:hidden text-gray-700 dark:text-zinc-400"
               onClick={() => {
                 setIsNavOpen(true);
               }}
@@ -69,6 +74,13 @@ const Header = () => {
               <IconArrowDropDown className="opacity-50" />
             </button>
         )}
+        {/* Theme switch button */}
+        <button
+            className="flex"
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+        >
+          {resolvedTheme === "dark" ? "🌝" : "🌚"}
+        </button>
       </div>
     </header>
   );

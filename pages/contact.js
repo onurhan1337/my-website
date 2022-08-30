@@ -3,18 +3,18 @@ import SuperpeerLogo from '../public/photos/superpeer_logo.svg';
 
 const ContactPage = () => {
   const title = (
-    <h2 className="text-3xl sm:text-6xl leading-tight font-semibold text-center">
+    <h2 className="text-3xl sm:text-6xl leading-tight dark:text-white font-semibold text-center">
       <span className="sketch-highlight">Hello!</span> I've 
       <br /> waiting for you.
     </h2>
   );
 
   const message = (
-    <p className="text-center pt-2">
+    <p className="text-center text-black dark:text-zinc-500 pt-2">
       Contact to me in superpeer or{" "}
       <a
         href="mailto:onurhandtr@gmail.com"
-        className="underline underline-offset-2 font-semibold"
+        className="underline underline-offset-2 font-semibold dark:text-zinc-300"
       >
         Send me an email
       </a>

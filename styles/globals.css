@@ -11,6 +11,10 @@
         @apply scroll-smooth
     }
 
+    body {
+        @apply bg-white dark:bg-[#100F0F] selection:bg-[#dc28281a] dark:selection:bg-[#2C3333] dark:text-gray-100 bg-gray-50 text-gray-900
+    }
+
     a, p, button
      {
         @apply font-jetbrains text-[#1C1C1C] transition;
@@ -36,16 +40,8 @@
     }
 
     .icon {
-        @apply p-3 border-2 rounded-full bg-gray-200 text-gray-800 hover:shadow-md hover:shadow-gray-400 transition
+        @apply p-3 border-2 rounded-full bg-gray-200 dark:border-zinc-300 text-gray-800 hover:shadow-sm hover:shadow-gray-400 dark:bg-zinc-300 transition
     }
-}
-
-::selection {
-    background-color:  rgba(220, 40, 40, 0.1);;
-}
-
-body {
-    background-color: #FFF;
 }
 
 .sketch-highlight{
@@ -64,7 +60,7 @@ body {
     top:0.14em;
     border-width:2px;
     border-style:solid;
-    border-color: darkblue;
+    border-color: #2FDD92;
     position:absolute;
     border-right-color:transparent;
     width:100%;
@@ -81,7 +77,7 @@ body {
     top:0em;
     border-width:2px;
     border-style:solid;
-    border-color: darkblue;
+    border-color: #2FDD92;
     border-left-color:transparent;
     border-top-color:transparent;
     position:absolute;
