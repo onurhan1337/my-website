@@ -28,7 +28,7 @@ const ContactPage = () => {
       <Hero title={title} message={message} />
       <NextLink href="https://superpeer.com/onurhan">
         <Button 
-            className={"flex flex-none items-center justify-around gap-x-1.5 bg-[#100F0F] ring-black dark:bg-[#458766] dark:text-black"} 
+            className={"flex flex-none items-center justify-around gap-x-1.5 bg-[#100F0F] ring-black dark:bg-[#458766] dark:text-black hover:ring-black"} 
           > 
             superpeer
             
