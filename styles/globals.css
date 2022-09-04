@@ -15,7 +15,7 @@
         @apply bg-white dark:bg-[#100F0F] selection:bg-[#dc28281a] dark:selection:bg-[#2C3333] dark:text-gray-100 bg-gray-50 text-gray-900
     }
 
-    a, p, button
+    a, p
      {
         @apply font-jetbrains text-[#1C1C1C] transition;
     }
@@ -35,8 +35,8 @@
         @apply container mx-auto items-center py-12
     }
 
-    .contact-btn {
-        @apply w-48 h-16 flex flex-none items-center justify-around gap-x-1.5 cursor-pointer leading-none transition-all delay-100 font-medium px-4 py-2.5 text-lg rounded-lg bg-[#1C1C1C] hover:bg-black text-white border border-gray-400 border-opacity-30 hover:border-opacity-50
+    .button {
+        @apply px-5 py-3 font-jetbrains text-white dark:text-gray-900 rounded-lg hover:ring-2 ring-offset-4 dark:ring-offset-[#100F0F] hover:ring-green-700 dark:hover:ring-green-300 dark:focus:ring-green-300 transition-all
     }
 
     .icon {

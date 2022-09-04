@@ -11,6 +11,7 @@ module.exports = {
         jakarta: ["Jakarta", "sans-serif"],
         jetbrains: ["JetBrains Mono", "monospace"],
       },
+      ringWidth: ['hover', 'active'],
     },
   },
   plugins: [require("@tailwindcss/typography")],

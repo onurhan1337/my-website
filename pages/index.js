@@ -2,6 +2,7 @@ import Link from "next/link";
 import dynamic from 'next/dynamic';
 import Hero from "../components/hero";
 import Icons from "../components/icons";
+import Button from "../components/button";
 
 const HomePage = () => {
   const title = (
@@ -24,9 +25,7 @@ const HomePage = () => {
       <Hero avatarLabel="Hi, I'm Onurhan 🤘" title={title} message={message} />
       <Icons />
       <Link href="/contact">
-        <button className="w-48 h-16 mb-6 text-sm bg-[#0D0E10] dark:bg-green-400 dark:text-zinc-900 text-white hover:bg-black transition-all rounded-full">
-          CONNECT WITH ME
-        </button>
+        <Button className={"bg-[#103030] dark:bg-[#DEB6AB] dark:text-black"} > CONNECT WITH ME </Button>
       </Link>
     </div>
   );

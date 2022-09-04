@@ -1,4 +1,6 @@
+import NextLink from 'next/link';
 import Hero from '../components/hero';
+import Button from '../components/button/index';
 import SuperpeerLogo from '../public/photos/superpeer_logo.svg';
 
 const ContactPage = () => {
@@ -24,17 +26,19 @@ const ContactPage = () => {
   return (
     <div className="container mx-auto items-center flex flex-col">
       <Hero title={title} message={message} />
-      <a
-        href="https://superpeer.com/onurhan"
-        className="contact-btn"
-      >
-        superpeer
-        <SuperpeerLogo
-          className="w-8 h-8"
-          src="photos/superpeer_logo.svg"
-          alt="superpeer logo"
-        />
-      </a>
+      <NextLink href="https://superpeer.com/onurhan">
+        <Button 
+            className={"flex flex-none items-center justify-around gap-x-1.5 bg-[#100F0F] ring-black dark:bg-[#458766] dark:text-black"} 
+          > 
+            superpeer
+            
+            <SuperpeerLogo
+            className="w-8 h-8"
+            src="photos/superpeer_logo.svg"
+            alt="superpeer logo"
+          />
+        </Button>
+       </NextLink>
     </div>
   );
 };
