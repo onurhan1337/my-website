@@ -36,7 +36,7 @@
     }
 
     .button {
-        @apply px-5 py-3 font-jetbrains text-white dark:text-gray-900 rounded-lg hover:ring-2 ring-offset-4 dark:ring-offset-[#100F0F] hover:ring-green-700 dark:hover:ring-green-300 dark:focus:ring-green-300 transition-all
+        @apply px-5 py-3 mb-5 font-jetbrains text-white dark:text-gray-900 rounded-lg hover:ring-2 ring-offset-4 dark:ring-offset-[#100F0F] hover:ring-green-700 dark:hover:ring-green-300 dark:focus:ring-green-300 transition-all
     }
 
     .icon {
