@@ -29,7 +29,7 @@ npm
 npm run dev
 ```
 
-Create a `.env` file similar to [`.env.example`](https://github.com/leerob/leerob.io/blob/main/.env.example).
+Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example).
 
 ## Cloning / Forking
 
