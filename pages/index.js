@@ -5,6 +5,11 @@ import Icons from "../components/icons";
 import Button from "../components/button";
 
 const HomePage = () => {
+
+  const avatarLabel = (
+    <h3 className="title text-zinc-900 dark:text-zinc-300">Hi, I'm Onurhan 🤘</h3>
+  )
+
   const title = (
     <h2 className="text-zinc-900 dark:text-white sm:text-6xl leading-tight font-semibold text-center">
       <span className="sketch-highlight">Building</span> digital <br />
@@ -22,7 +27,7 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto items-center flex flex-col">
-      <Hero avatarLabel="Hi, I'm Onurhan 🤘" title={title} message={message} />
+      <Hero avatarLabel={avatarLabel} title={title} message={message} />
       <Icons />
       <Link href="/contact">
         <Button className={"bg-[#103030] dark:bg-[#DEB6AB] dark:text-black"} > CONNECT WITH ME </Button>
