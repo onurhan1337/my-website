@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function IconXCircle({ size = 24, ...props }) {
   return (
     <svg

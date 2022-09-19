@@ -33,9 +33,7 @@ export async function getStaticProps({ params }) {
 }
 
 const PostPage = ({ post }) => {
-
   const Component = useMDXComponent(post.body.code);
-
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
@@ -48,7 +46,7 @@ const PostPage = ({ post }) => {
         </time>
         <hr className="my-4" />
       </article>
-      <div className="prose dark:prose-invert prose-p:font-jakarta dark:prose-headings:text-zinc-200 dark:prose-p:text-zinc-400 prose-li:text-gray-700 dark:prose-li:text-zinc-300 prose-strong:text-black dark:prose-strong:text-green-300">
+      <div className="prose dark:prose-invert prose-p:font-jakarta prose-a:break-words dark:prose-headings:text-zinc-200 dark:prose-p:text-zinc-400 prose-li:text-gray-700 dark:prose-li:text-zinc-300 prose-strong:text-black dark:prose-strong:text-green-300">
         <Component
           components={{
             ...MDXComponents,
@@ -61,7 +59,5 @@ const PostPage = ({ post }) => {
     </div>
   );
 };
-
-
 
 export default PostPage;

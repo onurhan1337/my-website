@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import cx from "classnames";
 import IconArrowDropDown from "./icons/arrow-drop-down";
 import IconXCircle from "./icons/x-circle";
+import IconMoon from "./icons/moon";
+import IconSun from './icons/sun';
 
 const MENU = {
   "/": "Home",
@@ -101,7 +103,7 @@ const Header = () => {
           className="flex my-0 sm:my-4"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
         >
-          {resolvedTheme === "dark" ? "🌝" : "🌚"}
+          {resolvedTheme === "dark" ? <IconSun /> : <IconMoon />}
         </button>
       </div>
 

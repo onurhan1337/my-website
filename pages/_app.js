@@ -14,6 +14,7 @@ const ProgressBar = dynamic(() => import('../components/progressbar'), { ssr: fa
 function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider attribute="class">
+      {/* TODO: cursor color will be change  */}
       <div>
         <AnimatedCursor
           color="214, 188, 250"

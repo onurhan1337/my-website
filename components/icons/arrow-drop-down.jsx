@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function IconArrowDropDown({ size = 24, ...props }) {
   return (
     <svg

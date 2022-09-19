@@ -1,6 +1,8 @@
+import PropTypes from "prop-types"
 import Image from "next/image";
 
 const Hero = (props) => {
+  
   return (
     <div className="site-container flex flex-col">
       <Image
@@ -10,18 +12,21 @@ const Hero = (props) => {
         height={128}
         className="w-32 h-32 object-contain object-center rounded-full"
       />
-      <h5
-        className={
-          props.avatarLabel !== 0 ? "title text-zinc-900 dark:text-zinc-300" : "hidden"
-        }
-      >
-        {props.avatarLabel}
-      </h5>
 
-      <h1 className="title">{props.title}</h1>
-     <p className="text-black px-5">{props.message}</p>
+    {/* I'm not sure of the correctness of the following codes. It will be like this until I find a better method. */}
+
+      {props.avatarLabel}
+      {props.title}
+      {props.message}
+      
     </div>
   );
 };
+
+Hero.propTypes = {
+  avatarLabel: PropTypes.any,
+  message: PropTypes.any,
+  title: PropTypes.any
+}
 
 export default Hero;

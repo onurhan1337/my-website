@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "cypress:open": "cypress open"
+    "lint": "next lint"
   },
   "dependencies": {
     "@svgr/webpack": "^6.3.1",
@@ -28,9 +27,6 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.4",
     "autoprefixer": "^10.4.7",
-    "cypress": "^10.7.0",
-    "eslint": "8.18.0",
-    "eslint-config-next": "12.1.6",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.4"
   }
