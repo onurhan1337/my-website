@@ -11,6 +11,8 @@
   "dependencies": {
     "@svgr/webpack": "^6.3.1",
     "@upstash/claps": "^1.0.0-beta.4",
+    "airtable": "^0.11.5",
+    "axios": "^1.2.0",
     "classnames": "^2.3.1",
     "contentlayer": "^0.2.7",
     "date-fns": "^2.29.1",

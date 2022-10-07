@@ -27,7 +27,7 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto items-center flex flex-col">
-      <Hero avatarLabel={avatarLabel} title={title} message={message} />
+      <Hero avatarLabel={avatarLabel} title={title} message={message} />    
       <Icons />
       <Link href="/contact">
         <Button className={"bg-[#103030] dark:bg-[#DEB6AB] dark:text-black"} > CONNECT WITH ME </Button>
