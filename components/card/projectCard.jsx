@@ -7,7 +7,7 @@ const ProjectCard = ({ data }) => {
       <div className="flex flex-wrap -m-4 justify-center sm:jutify-start">
         {data?.map((project) => (
             <div key={project.name} className="p-4 lg:w-1/3">
-              <div className="h-full bg-gray-100 dark:bg-[#ffffff0f] bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
+              <div className="h-full bg-stone-200 dark:bg-[#ffffff0f] bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
                 <h2 className="tracking-widest text-xs title-font font-medium bg-blue-100 dark:bg-[#d6bcfa29] rounded-full inline-block px-4 py-1 text-blue-400 dark:text-[#D6BCFA] mb-1">
                   {!project.language ? "Other" : project.language}
                 </h2>
