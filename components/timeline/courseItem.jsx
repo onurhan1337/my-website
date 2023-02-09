@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const CourseItem = ({ data }) => {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-6">
       <h1 className="font-bold text-3xl py-2 text-gray-600 rounded-full text-center border-2 border-purple-300 decoration-pink-400 dark:text-stone-400">
         Course
       </h1>
