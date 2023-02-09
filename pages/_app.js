@@ -23,6 +23,7 @@ function MyApp({ Component, pageProps }) {
           innerScale={1}
           outerScale={1.2}
           outerAlpha={0}
+          trailingSpeed={6}
           outerStyle={{
             border: "1px solid #2C3333",
           }}

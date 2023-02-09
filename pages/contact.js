@@ -1,12 +1,12 @@
-import NextLink from 'next/link';
-import Hero from '../components/hero';
-import Button from '../components/button/index';
-import SuperpeerLogo from '../public/photos/superpeer_logo.svg';
+import NextLink from "next/link";
+import Hero from "../components/hero";
+import Button from "../components/button/index";
+import SuperpeerLogo from "../public/photos/superpeer_logo.svg";
 
 const ContactPage = () => {
   const title = (
     <h2 className="text-3xl sm:text-6xl leading-tight dark:text-white font-semibold text-center">
-      <span className="sketch-highlight">Hello!</span> I've 
+      <span className="sketch-highlight">Hello!</span> I've
       <br /> waiting for you.
     </h2>
   );
@@ -27,18 +27,19 @@ const ContactPage = () => {
     <div className="container mx-auto items-center flex flex-col">
       <Hero title={title} message={message} />
       <NextLink href="https://superpeer.com/onurhan">
-        <Button 
-            className={"flex flex-none items-center justify-around gap-x-1.5 bg-[#100F0F] ring-black dark:bg-[#458766] dark:text-black hover:ring-black"} 
-          > 
-            superpeer
-            
-            <SuperpeerLogo
+        <Button
+          className={
+            "flex flex-none items-center justify-around gap-x-1.5 bg-transparent text-black border-2 border-gray-400 hover:ring-green-300 dark:text-white"
+          }
+        >
+          superpeer
+          <SuperpeerLogo
             className="w-8 h-8"
             src="photos/superpeer_logo.svg"
             alt="superpeer logo"
           />
         </Button>
-       </NextLink>
+      </NextLink>
     </div>
   );
 };

@@ -1,14 +1,15 @@
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import Hero from "../components/hero";
 import Icons from "../components/icons";
 import Button from "../components/button";
 
 const HomePage = () => {
-
   const avatarLabel = (
-    <h3 className="title text-zinc-900 dark:text-zinc-300">Hi, I'm Onurhan 🤘</h3>
-  )
+    <h3 className="title text-zinc-900 dark:text-zinc-300">
+      Hi, I'm Onurhan 🤘
+    </h3>
+  );
 
   const title = (
     <h2 className="text-zinc-900 dark:text-white sm:text-6xl leading-tight font-semibold text-center">
@@ -27,17 +28,24 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto items-center flex flex-col">
-      <Hero avatarLabel={avatarLabel} title={title} message={message} />    
+      <Hero avatarLabel={avatarLabel} title={title} message={message} />
       <Icons />
       <Link href="/contact">
-        <Button className={"bg-[#103030] dark:bg-[#DEB6AB] dark:text-black"} > CONNECT WITH ME </Button>
+        <Button
+          className={"bg-purple-500 hover:ring-purple-400 dark:bg-purple-300"}
+        >
+          {" "}
+          CONNECT WITH ME{" "}
+        </Button>
       </Link>
     </div>
   );
 };
-{/*Hydration failed because the initial UI does not match what was rendered on the server
+{
+  /*Hydration failed because the initial UI does not match what was rendered on the server
   error solved with next/dynamic
-*/}
+*/
+}
 export default dynamic(() => Promise.resolve(HomePage), {
-  ssr: false
+  ssr: false,
 });

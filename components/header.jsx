@@ -6,7 +6,7 @@ import cx from "classnames";
 import IconArrowDropDown from "./icons/arrow-drop-down";
 import IconXCircle from "./icons/x-circle";
 import IconMoon from "./icons/moon";
-import IconSun from './icons/sun';
+import IconSun from "./icons/sun";
 
 const MENU = {
   "/": "Home",
@@ -61,7 +61,7 @@ const Header = () => {
                   <a
                     className={cx(
                       isActive
-                        ? "text-zinc-900 dark:text-zinc-200 bg-zinc-200 dark:bg-zinc-700 px-2 py-1 rounded-md"
+                        ? "text-zinc-900 dark:text-zinc-700 bg-green-200 dark:bg-purple-300 px-2 py-1 rounded-md"
                         : "text-gray-600 dark:text-zinc-400 hover:underline underline-offset-4 px-2 py-1"
                     )}
                   >
@@ -73,40 +73,41 @@ const Header = () => {
           })}
         </nav>
 
-       {/* Nav mobile open and close button condition */}
+        {/* Nav mobile open and close button condition */}
         <div className="flex flex-row justify-between">
-        {!isNavOpen ? (
-          <button
-            type="button"
-            className="flex select-none items-center sm:hidden text-gray-700 dark:text-zinc-400"
-            onClick={() => {
-              setIsNavOpen(true);
-            }}
-          >
-            <span>{MENU[pathName]}</span>
-            <IconArrowDropDown className="opacity-50" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="flex select-none sm:hidden text-gray-700 dark:text-zinc-400"
-            onClick={() => {
-              setIsNavOpen(false);
-            }}
-          >
-            <IconXCircle className="opacity-50" />
-          </button>
-        )}
+          {!isNavOpen ? (
+            <button
+              type="button"
+              className="flex select-none items-center sm:hidden text-gray-700 dark:text-zinc-400"
+              onClick={() => {
+                setIsNavOpen(true);
+              }}
+            >
+              <span>{MENU[pathName]}</span>
+              <IconArrowDropDown className="opacity-50" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="flex select-none sm:hidden text-gray-700 dark:text-zinc-400"
+              onClick={() => {
+                setIsNavOpen(false);
+              }}
+            >
+              <IconXCircle className="opacity-50" />
+            </button>
+          )}
 
-        {/* Theme switch button */}
-        <button
-          className="flex my-0 sm:my-4"
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-        >
-          {resolvedTheme === "dark" ? <IconSun /> : <IconMoon />}
-        </button>
-      </div>
-
+          {/* Theme switch button */}
+          <button
+            className="flex my-0 sm:my-4"
+            onClick={() =>
+              setTheme(resolvedTheme === "dark" ? "light" : "dark")
+            }
+          >
+            {resolvedTheme === "dark" ? <IconSun /> : <IconMoon />}
+          </button>
+        </div>
       </div>
     </header>
   );
