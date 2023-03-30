@@ -32,7 +32,7 @@ const HomePage = () => {
       <Icons />
       <Link href="/contact">
         <Button
-          className={"bg-purple-500 hover:ring-purple-400 dark:bg-purple-300"}
+          className={"bg-gray-900 hover:ring-purple-400 dark:bg-purple-300"}
         >
           {" "}
           CONNECT WITH ME{" "}
