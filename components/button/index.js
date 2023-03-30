@@ -5,10 +5,10 @@ const Button = ({ children, onClick, className, disabled, ...props }) => {
             onClick={onClick}
             disabled={disabled}
             {...props}
-            >
+        >
             {children}
-            </button>
+        </button>
     )
 }
 
-export default Button;
+export default Button
