@@ -1,10 +1,11 @@
-const IconBookmark = ({ size = 24, color = "currentColor" }) => {
+const IconBookmark = ({ size = 24, color = "currentColor", className }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       width={size}
       height={size}
+      className={className}
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"

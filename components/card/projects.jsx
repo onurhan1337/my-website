@@ -14,7 +14,7 @@ const ProjectsCard = ({ projects }) => {
                 <div className="flex w-full h-full items-center justify-between space-x-6 p-8 bg-white border-2 border-gray-200 bg-opacity-40 backdrop-blur-m drop-shadow-md  cursor-pointer hover:shadow-sm hover:shadow-gray-400/30 dark:bg-zinc-950 dark:border-gray-700 max-w-md rounded-lg overflow-hidden text-start relative">
                   <div className="flex text-ellipsis overflow-hidden flex-col items-start justify-between h-full">
                     <div className="flex flex-row items-center gap-x-2">
-                      <IconBookmark size={20} />
+                      <IconBookmark size={20} className="dark:fill-gray-100" />
                       <h1 className="text-base font-bold text-gray-900 dark:text-white title-font">
                         {project.name}
                       </h1>
