@@ -26,7 +26,7 @@ const ContactPage = () => {
     return (
         <div className="container mx-auto items-center flex flex-col">
             <Hero title={title} message={message} />
-            <NextLink href="https://superpeer.com/onurhan">
+            <NextLink href="https://superpeer.com/onurhan" legacyBehavior>
                 <Button
                     className={
                         "flex flex-none items-center justify-around gap-x-1.5 bg-transparent text-black border-2 border-gray-400 hover:ring-green-300 dark:text-white"
@@ -37,7 +37,7 @@ const ContactPage = () => {
                 </Button>
             </NextLink>
         </div>
-    )
+    );
 }
 
 export default ContactPage

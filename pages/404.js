@@ -11,7 +11,7 @@ function Error() {
                     The page you were looking for <span className="font-bold underline">could not</span> be found.
                 </p>
                 <p className="text-black dark:text-stone-200">To return to the Home Page,</p>
-                <NextLink href="/">
+                <NextLink href="/" legacyBehavior>
                     <Button className={" bg-[#100F0F] hover:ring-black dark:bg-[#458766] dark:text-black mt-2"}>
                         Go Home
                     </Button>
@@ -19,7 +19,7 @@ function Error() {
             </div>
             <NotFound size={200} className="w-72 h-72 object-contain object-center rounded-full" />
         </div>
-    )
+    );
 }
 
 export default Error

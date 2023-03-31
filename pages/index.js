@@ -26,11 +26,11 @@ const HomePage = () => {
         <div className="container mx-auto items-center flex flex-col">
             <Hero avatarLabel={avatarLabel} title={title} message={message} />
             <Icons />
-            <Link href="/contact">
+            <Link href="/contact" legacyBehavior>
                 <Button className={"bg-gray-900 hover:ring-purple-400 dark:bg-purple-300"}> CONNECT WITH ME </Button>
             </Link>
         </div>
-    )
+    );
 }
 {
     /*Hydration failed because the initial UI does not match what was rendered on the server

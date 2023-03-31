@@ -52,19 +52,19 @@ const Header = () => {
                         const isActive = path === pathName
                         return (
                             <span key={path}>
-                                <NextLink href={path}>
-                                    <a
-                                        className={cx(
-                                            isActive
-                                                ? "text-zinc-900 dark:text-zinc-700 bg-green-200 dark:bg-purple-300 px-2 py-1 rounded-md"
-                                                : "text-gray-600 dark:text-zinc-400 hover:underline underline-offset-4 px-2 py-1"
-                                        )}
-                                    >
-                                        {MENU[path]}
-                                    </a>
+                                <NextLink
+                                    href={path}
+                                    className={cx(
+                                        isActive
+                                            ? "text-zinc-900 dark:text-zinc-700 bg-green-200 dark:bg-purple-300 px-2 py-1 rounded-md"
+                                            : "text-gray-600 dark:text-zinc-400 hover:underline underline-offset-4 px-2 py-1"
+                                    )}>
+
+                                    {MENU[path]}
+
                                 </NextLink>
                             </span>
-                        )
+                        );
                     })}
                 </nav>
 
@@ -103,7 +103,7 @@ const Header = () => {
                 </div>
             </div>
         </header>
-    )
+    );
 }
 
 export default Header

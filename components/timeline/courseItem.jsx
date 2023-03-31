@@ -18,11 +18,14 @@ const CourseItem = ({ data }) => {
                                 <p className="text-gray-400 dark:text-stone-700">{data.fields.CourseDate}</p>
                             </div>
                             <div className="flex flex-col items-center lg:items-end">
-                                <Link href={data.fields.CourseLink}>
-                                    <a className="text-xl font-bold text-gray-700 dark:text-stone-500" target="_blank">
-                                        {data.fields.CourseName}
-                                        <IconArrowRight className="inline-block w-4 h-4 ml-2" />
-                                    </a>
+                                <Link
+                                    href={data.fields.CourseLink}
+                                    className="text-xl font-bold text-gray-700 dark:text-stone-500"
+                                    target="_blank">
+
+                                    {data.fields.CourseName}
+                                    <IconArrowRight className="inline-block w-4 h-4 ml-2" />
+
                                 </Link>
                                 <p className="text-gray-400 dark:text-stone-700">{data.fields.CourseTitle}</p>
                             </div>
@@ -31,7 +34,7 @@ const CourseItem = ({ data }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default CourseItem

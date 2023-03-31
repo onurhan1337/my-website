@@ -4,7 +4,7 @@ import { tr } from "date-fns/locale"
 
 const BlogCard = ({ title, date, slug }) => {
     return (
-        <NextLink href={`/post/${slug}`}>
+        <NextLink href={`/post/${slug}`} legacyBehavior>
             <div>
                 <a className="flex flex-col gap-y-1 rounded-md p-2.5 -m-2.5 transition-colors dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer">
                     <span className="font-normal word-break">{title}</span>
@@ -18,7 +18,7 @@ const BlogCard = ({ title, date, slug }) => {
                 </a>
             </div>
         </NextLink>
-    )
+    );
 }
 
 export default BlogCard
