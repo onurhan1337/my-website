@@ -3,7 +3,7 @@ import { allPosts } from "contentlayer/generated";
 import { pick } from "@contentlayer/client";
 
 export async function getStaticProps() {
-  const posts = allPosts.map((post) => pick(post, ["title", "date", "slug"]));
+  const posts = allPosts.map(post => pick(post, ["title", "date", "slug"]));
 
   return { props: { posts } };
 }
@@ -11,7 +11,7 @@ export async function getStaticProps() {
 const BlogPage = ({ posts }) => {
   return (
     <div className="max-w-screen-sm px-6 py-12 mx-auto overflow-hidden">
-      <h1 className="text-2xl font-bold text-gray-600 border-2 border-green-300 text-center rounded-full py-2 dark:text-zinc-500 mb-6">
+      <h1 className="text-2xl font-bold text-black border-2 border-black text-center rounded-full py-2 dark:text-white dark:border-white mb-6">
         Writing
       </h1>
       <div className="flex flex-col gap-y-6">

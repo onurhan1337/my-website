@@ -12,7 +12,7 @@
   }
 
   body {
-    @apply bg-white dark:bg-[#100F0F] selection:bg-[#dc28281a] dark:selection:bg-[#2C3333] dark:text-gray-100 bg-gray-50 text-gray-900;
+    @apply dark:bg-black selection:bg-green-400 dark:selection:text-black dark:text-gray-100 bg-gray-50 text-gray-900;
   }
 
   a,
@@ -27,7 +27,7 @@
   }
 
   .title {
-    @apply text-2xl text-black font-bold py-4;
+    @apply text-lg sm:text-2xl text-black font-bold py-4;
   }
 
   .site-container {
@@ -35,7 +35,7 @@
   }
 
   .button {
-    @apply px-5 py-3 mb-5 font-jetbrains text-white dark:text-gray-900 rounded-lg hover:ring-2 ring-offset-4 dark:ring-offset-[#100F0F] dark:hover:ring-[#81e7c2] dark:focus:ring-green-300 transition-all;
+    @apply px-5 py-3 mb-5 font-jetbrains text-white dark:text-gray-900 rounded-lg dark:ring-offset-[#100F0F] dark:hover:ring-[#81e7c2] dark:focus:ring-green-300 transition-all;
   }
 
   .icon {
