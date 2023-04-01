@@ -15,22 +15,40 @@ const HomePage = () => {
           products, brands, and
           experience."
         />
-        <meta property="og:image" content="/photos/avatar.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="Onurhan | Front-end Developer" />
+        <meta
+          property="og:description"
+          content="Building digital products, brands, and experience."
+        />
+        <meta property="og:url" content="https://onurhan.dev" />
+
+        <meta property="og:image" content="/avatar.png" />
+        <meta property="twitter:site" content="@onurhan1337" />
+        <meta
+          property="twitter:title"
+          content="Onurhan | Front-end Developer"
+        />
+        <meta property="twitter:creator" content="@onurhan1337" />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:image" content="/avatar.png" />
+
         <meta locale="tr-TR" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container mx-auto items-center flex flex-col">
         <div className="site-container flex flex-col">
           <Image
-            src="/photos/avatar.png"
+            src="/avatar.png"
             alt="avatar"
+            loading="lazy"
+            priority
             width={128}
             height={128}
             className="w-32 h-32 object-contain object-center rounded-full"
           />
 
-          <h3 className="title text-black dark:text-zinc-300">
+          <h3 className="title text-sm sm:text-lg text-black dark:text-zinc-300">
             Hi, I&apos;m Onurhan
           </h3>
 

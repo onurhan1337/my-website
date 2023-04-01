@@ -2,24 +2,21 @@ import Header from "../components/header";
 import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
 import "@upstash/claps/style.css";
-import "nprogress/nprogress.css";
 import { ThemeProvider } from "next-themes";
-import dynamic from "next/dynamic";
+import { Inter } from "next/font/google";
 
-const ProgressBar = dynamic(() => import("../components/progressbar"), {
-  ssr: false,
+const inter = Inter({
+  subsets: ["latin"],
 });
 
 function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider attribute="class">
-      {/* TODO: cursor color will be change  */}
       <div>
         <Header />
-        <main>
+        <main className={inter.className}>
           <Component {...pageProps} />
         </main>
-        <ProgressBar />
       </div>
       <Analytics />
     </ThemeProvider>

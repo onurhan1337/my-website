@@ -2,6 +2,7 @@ import NextLink from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 import cx from "classnames";
 import IconArrowDropDown from "./icons/arrow-drop-down";
 import IconXCircle from "./icons/x-circle";
@@ -98,14 +99,18 @@ const Header = () => {
           )}
 
           {/* Theme switch button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            type="button"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className="flex my-0 sm:my-4"
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
           >
             {resolvedTheme === "dark" ? <IconSun /> : <IconMoon />}
-          </button>
+          </motion.button>
         </div>
       </div>
     </header>

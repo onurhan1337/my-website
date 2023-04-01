@@ -14,12 +14,12 @@ const ContactPage = () => {
           content="
       all my social media links and contact information here"
         />
-        <meta property="og:image" content="/photos/avatar.png" />
+        <meta property="og:image" content="/avatar.png" />
       </Head>
 
       <div className="container mx-auto items-center flex flex-col">
         <Image
-          src="/photos/avatar.png"
+          src="/avatar.png"
           alt="avatar"
           width={128}
           height={128}
