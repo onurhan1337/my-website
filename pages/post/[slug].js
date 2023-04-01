@@ -41,7 +41,7 @@ const PostPage = ({ post }) => {
       <Head>
         <title>{post.title} | Onurhan Demir</title>
         <meta name="description" content={post.description} />
-        <meta property="og:image" content="/card.png" />
+        <meta property="og:image" content="/Avatar.png" />
       </Head>
       <div className="max-w-2xl mx-auto px-6 py-12">
         <article>
