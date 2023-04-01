@@ -45,7 +45,7 @@ export default function ResumePage() {
     <>
       <Head>
         <title>Resume | Onurhan Demir</title>
-        <meta property="og:image" content="/Avatar.png" />
+        <meta property="og:image" content="/avatar.png" />
         <meta
           name="description"
           content="Visit my resume page to see my skills and experiences"

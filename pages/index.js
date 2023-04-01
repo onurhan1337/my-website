@@ -15,7 +15,7 @@ const HomePage = () => {
           products, brands, and
           experience."
         />
-        <meta property="og:image" content="/Avatar.png" />
+        <meta property="og:image" content="/avatar.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta locale="tr-TR" />
         <link rel="icon" href="/favicon.ico" />
