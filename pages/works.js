@@ -12,7 +12,7 @@ const WorksPage = ({ data, errorCode }) => {
       <Head>
         <title>Works | Onurhan Demir</title>
         <meta name="description" content="see all my projects here" />
-        <meta property="og:image" content="/avatar.png" />
+        <meta property="og:image" content="/photos/avatar.png" />
       </Head>
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">

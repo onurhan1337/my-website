@@ -15,7 +15,7 @@ const BlogPage = ({ posts }) => {
       <Head>
         <title>Blog | Onurhan Demir</title>
         <meta name="description" content="see all my blog posts here" />
-        <meta property="og:image" content="/avatar.png" />
+        <meta property="og:image" content="/photos/avatar.png" />
       </Head>
       <div className="max-w-screen-sm px-6 py-12 mx-auto overflow-hidden">
         <h1 className="text-2xl font-bold text-black border-2 border-black text-center rounded-full py-2 dark:text-white dark:border-white mb-6">
