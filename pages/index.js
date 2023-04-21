@@ -1,4 +1,5 @@
 import Head from "next/head";
+import va from "@vercel/analytics";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -72,6 +73,7 @@ const HomePage = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-3 rounded-lg bg-amber-100  text-amber-900 transition-all hover:bg-amber-200 hover:no-underline dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600 px-4 py-3"
+            onClick={() => va.recordEvent("click", "support")}
           >
             <span className="text-sm">Support my content</span>
             <span className="shrink-0 w-8 h-8 rounded-full bg-white dark:bg-zinc-600 flex items-center justify-center">
