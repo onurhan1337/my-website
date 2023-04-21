@@ -1,3 +1,4 @@
+import Link from "next/link";
 import IconArrowRight from "../icons/arrow-right";
 
 const CompanyCard = ({ data }) => {
@@ -18,18 +19,19 @@ const CompanyCard = ({ data }) => {
                   {data.fields.Title}
                 </span>
               </div>
-              <div>
-                <p className="text-sm text-gray-500 font-semibold">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Atque, distinctio.
-                </p>
-              </div>
             </div>
             <div>
-              <button className="button text-black float-right dark:text-white">
-                Details
-                <IconArrowRight className="inline-block w-4 h-4 ml-2" />
-              </button>
+              <Link
+                href={data.fields.CompanyLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                passHref
+              >
+                <button className="button text-black float-right dark:text-white">
+                  Details
+                  <IconArrowRight className="inline-block w-4 h-4 ml-2" />
+                </button>
+              </Link>
             </div>
           </div>
         ))}
