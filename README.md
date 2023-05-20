@@ -1,3 +1,44 @@
+# onurhan.dev
+
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Database**: [Upstash Redis](https://upstash.com/)
+- **Deployment**: [Vercel](https://vercel.com)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- **Like**: [Upstash Claps](https://github.com/upstash/claps)
+
+## Overview
+
+- `pages/api/*` - [API Routes](https://nextjs.org/docs/api-routes/introduction), claps.
+- `app/post/*` - Static pre-rendered blog pages using Contentlayer.
+ `app/*` - All other static pages.
+- `components/` - All components.
+- `components/ui` - Primitive components.
+- `public/*` - Static assets including images for blogs and other all images.
+- `data/posts` - Contains posts.
+- `styles/*` - A small amount of global styles. I'm mostly using vanilla Tailwind CSS.
+
+## Demo
+
+```bash
+https://onurhan.dev
+```
+
+## Running Locally
+
+This application requires Node.js v16.13+.
+
+```bash
+git clone https://github.com/onurhan1337/my-website.git
+cd my-website
+npm install
+npm run dev
+```
+
+Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example). You don't need to fill them out for the site to work. However, it is required to be able to use the [Upstash/Claps](https://github.com/upstash/claps) package.
+
+## Cloning / Forking
+
+Please review the [license](https://github.com/onurhan1337/my-website/blob/master/LICENSE.txt) and remove all of my personal information (resume, blog posts, images, etc.).
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -30,5 +71,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+# Thanks
+The names I have listed below have greatly contributed to the development of this site (probably without not knowledge), I thank each and every one of them.
+- [@ademilter](https://twitter.com/ademilter)
+- [@rauchg](https://twitter.com/rauchg/)
+- [@shadcn](https://twitter.com/shadcn)
+- [@leerob](https://twitter.com/leeerob)
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
