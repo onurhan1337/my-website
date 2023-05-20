@@ -5,6 +5,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { usePathname } from "next/navigation";
 
 import { Button } from "./ui/button";
+import SupportButton from "./post/support";
 
 const headerItems = {
   "/": {
@@ -51,8 +52,12 @@ const MainNav = () => {
             </>
           );
         })}
-        <ThemeToggle />
       </nav>
+
+      <div className="flex flex-row ml-0 sm:ml-4 space-x-2 items-center justify-center sm:justify-end w-28">
+        <ThemeToggle />
+        <SupportButton />
+      </div>
     </header>
   );
 };
