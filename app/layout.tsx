@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const title = "Onurhan Demir";
 const description = "Building digital products, brands, and experience.";
-const image = "/avatar.png";
+const image = "https://onurhan.dev/avatar.png";
 const url = "https://onurhan.dev";
 const locale = "tr-TR";
 
@@ -25,6 +25,12 @@ export const metadata: Metadata = {
     title,
     description,
     url,
+    images: [
+      {
+        url: image,
+        alt: title,
+      },
+    ],
     siteName: title,
     locale,
     type: "website",
