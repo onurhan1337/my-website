@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
 import { usePathname } from "next/navigation";
 
 import { Button } from "./ui/button";
@@ -37,17 +38,20 @@ const MainNav = () => {
         {Object.entries(headerItems).map(([path, { name }]) => {
           const isActive = path === pathname;
           return (
-            <Button variant={"link"} key={path} asChild>
-              <Link href={path}>
-                {path === pathname ? (
-                  <span className="font-semibold">{name}</span>
-                ) : (
-                  name
-                )}
-              </Link>
-            </Button>
+            <>
+              <Button variant={"link"} key={path} asChild>
+                <Link href={path}>
+                  {path === pathname ? (
+                    <span className="font-semibold">{name}</span>
+                  ) : (
+                    name
+                  )}
+                </Link>
+              </Button>
+            </>
           );
         })}
+        <ThemeToggle />
       </nav>
     </header>
   );

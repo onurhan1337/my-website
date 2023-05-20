@@ -53,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`dark:text-gray-100 max-w-2xl m-auto ${inter.className}`}
+        className={`dark:text-gray-100 dark:bg-zinc-950 max-w-2xl m-auto ${inter.className}`}
       >
         <main className="p-6 pt-3 md:pt-6">
           <MainNav />
