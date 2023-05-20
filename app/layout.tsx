@@ -10,7 +10,8 @@ import MainNav from "@/components/header";
 const inter = Inter({ subsets: ["latin"] });
 
 const title = "Onurhan Demir";
-const description = "Developer, designer.";
+const description = "Building digital products, brands, and experience.";
+const image = "/avatar.png";
 const url = "https://onurhan.dev";
 const locale = "tr-TR";
 
