@@ -1,8 +1,0 @@
-.cache
-node_modules
-package-lock.json
-*.lock
-public
-.contentlayer
-.next
-.vercel
