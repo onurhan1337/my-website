@@ -2,6 +2,10 @@
 
 import Claps from "@upstash/claps";
 
-export default function ClapsButton({ url }) {
+interface ClapsButtonProps {
+  url: string;
+}
+
+export default function ClapsButton({ url }: ClapsButtonProps) {
   return <Claps replyUrl={url} />;
 }
