@@ -3,7 +3,7 @@
 import Claps from "@upstash/claps";
 
 interface ClapsButtonProps {
-  url: string;
+  url: string | undefined;
 }
 
 export default function ClapsButton({ url }: ClapsButtonProps) {
