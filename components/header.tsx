@@ -39,17 +39,15 @@ const MainNav = () => {
         {Object.entries(headerItems).map(([path, { name }]) => {
           const isActive = path === pathname;
           return (
-            <>
-              <Button variant={"link"} key={path} asChild>
-                <Link href={path}>
-                  {path === pathname ? (
-                    <span className="font-semibold">{name}</span>
-                  ) : (
-                    name
-                  )}
-                </Link>
-              </Button>
-            </>
+            <Button variant={"link"} key={path} asChild>
+              <Link href={path}>
+                {path === pathname ? (
+                  <span className="font-semibold">{name}</span>
+                ) : (
+                  name
+                )}
+              </Link>
+            </Button>
           );
         })}
       </nav>
