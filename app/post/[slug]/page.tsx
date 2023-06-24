@@ -6,6 +6,7 @@ import { tr } from "date-fns/locale";
 
 import ClapsButton from "@/components/ui/claps";
 import { Mdx } from "@/components/mdx";
+import Comment from "@/components/comment/comment";
 
 type Props = {
   params: {
@@ -63,6 +64,7 @@ export default async function BlogPost({ params }: any) {
 
         <Mdx code={post.body.code} />
 
+        <Comment />
         <div className="mt-20 flex justify-center">
           <ClapsButton url={post.tweetUrl} />
         </div>
