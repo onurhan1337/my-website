@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import Social from "@/components/social";
+
 export const metadata: Metadata = {
   title: "About",
   description: "Front-end Engineer at Utilify.",
@@ -35,38 +37,7 @@ const About = () => {
           packages that will both solve the problems I have on the web and
           facilitate our development process.
         </p>
-        <div className="flex flex-col gap-2 md:flex-row md:gap-2">
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://twitter.com/onurhan1337"
-            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
-          >
-            <div className="flex items-center">
-              <div className="ml-3">Twitter</div>
-            </div>
-          </a>
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://github.com/onurhan1337"
-            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
-          >
-            <div className="flex items-center">
-              <div className="ml-3">GitHub</div>
-            </div>
-          </a>
-          <a
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://www.youtube.com/@onurhan1337"
-            className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
-          >
-            <div className="flex items-center">
-              <div className="ml-3">YouTube</div>
-            </div>
-          </a>
-        </div>
+        <Social />
       </div>
     </section>
   );
