@@ -1,7 +1,10 @@
 # onurhan.dev
 
+<a href="https://www.buymeacoffee.com/onurhan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=onurhan&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" /></a>
+
 - **Framework**: [Next.js](https://nextjs.org/)
 - **Database**: [Upstash Redis](https://upstash.com/)
+- **Post**: [Contentlayer](https://www.contentlayer.dev/)
 - **Deployment**: [Vercel](https://vercel.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
 - **Like**: [Upstash Claps](https://github.com/upstash/claps)
@@ -14,7 +17,9 @@
 - `components/` - All components.
 - `components/ui` - Primitive components.
 - `public/*` - Static assets including images for blogs and other all images.
-- `data/posts` - Contains posts.
+- `post/` - Contains posts.
+- `lib/`- Contains metadata and util functions.
+- `types/`- Contains all types and interfaces.
 - `styles/*` - A small amount of global styles. I'm mostly using vanilla Tailwind CSS.
 
 ## Demo
@@ -72,8 +77,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-# Thanks
-The names I have listed below have greatly contributed to the development of this site (probably without not knowledge), I thank each and every one of them.
+# Inspiration
+
 - [@ademilter](https://twitter.com/ademilter)
 - [@rauchg](https://twitter.com/rauchg/)
 - [@shadcn](https://twitter.com/shadcn)
