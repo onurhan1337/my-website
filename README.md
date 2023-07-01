@@ -13,7 +13,7 @@
 
 - `pages/api/*` - [API Routes](https://nextjs.org/docs/api-routes/introduction), claps.
 - `app/post/*` - Static pre-rendered blog pages using Contentlayer.
- `app/*` - All other static pages.
+- `app/*` - All other static pages.
 - `components/` - All components.
 - `components/ui` - Primitive components.
 - `public/*` - Static assets including images for blogs and other all images.
