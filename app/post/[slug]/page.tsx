@@ -63,8 +63,9 @@ export default async function BlogPost({ params }: any) {
 
         <Mdx code={post.body.code} />
 
-        <div className="mt-20 flex justify-center">
-          <ClapsButton url={post.tweetUrl} />
+        <div className="mt-20 flex justify-center dark:text-slate-700">
+          <ClapsButton
+          url={post.tweetUrl} />
         </div>
       </section>
     </div>
