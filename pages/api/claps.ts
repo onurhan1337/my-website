@@ -2,6 +2,6 @@
 import createClapsAPI from "@upstash/claps/api";
 
 const ClapsAPI = createClapsAPI({
-  // maxClaps: 10
+  maxClaps: 30,
 });
 export default ClapsAPI;
