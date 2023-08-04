@@ -1,0 +1,119 @@
+---
+date: "2023-08-04"
+title: "Clean Code nedir?"
+subtitle: "Kariyerinin başında olan insanların sıkça duyduğu, ortalarında olanların ise muzdarip olduğu bir konudur clean code. Peki nedir bu?"
+tweetUrl: "https://onurhan.dev/post/clean-code-nedir"
+---
+
+Eminim ki kariyerinin başında olan insanların sıkça duyduğu, ortalarında olanların ise muzdarip olduğu bir konudur clean code. Peki sürekli bahsedilen ve her yerde konuşulan bu konunun detayları nedir? Bugün bunları konuşacağız.
+
+> Bu yazımda yazdıklarım, Clean Code kitabından aldığım notlardan oluşmaktadır.
+
+### Bad Code
+
+Bir kod bloğunun iyi olup olmadığını nasıl ve neye göre ayırt edebiliriz? Bunun için öncelikle bad code nedir onu bilmemiz gerekiyor.
+
+Zamanında severek kullandığınız ve bir süre sonra hatalardan, geliştirilmemesinden yakınıp bırakmak zorunda olduğunuz bir uygulama var mı? Eminim bir çoğumuzun böyle bir kötü deneyimi vardır. Kitapta buna örnek olarak o şirketlerden birisinde önceden çalışan biriyle görüşüyor. Orada neler yaşandı? Sorusunun ardından şu yanıtları alıyor;
+
+Ürünü pazara sürmek için acele ettik ve kodda büyük bir karmaşa yarattık. Gittikçe daha fazla özellik ekledikçe, kod yönetilemeyecek hale gelene kadar durum kötüleşmeye devam etti. En sonunda ise **BAD CODE** yüzünden şirket iflas etti.
+
+Kötü kod yüzünden yavaşladığımızı ve sürekli bir engele takıldığımızı hissetmiş olabiliriz. Hatta bunun için bir şirkette çalışmaya gerek yok, eğer düzenli çalışıyorsanız bir kaç ay önce yazdığınız kodlara tekrar dönüp bakmanız da yeterli, orada sorgulanacak çok fazla şey olacağına eminim.
+
+Peki o zaman neden kötü kod yazıyoruz? Bir yapıyı hızlıca mı geliştirmemiz gerekiyordu ya da acelemiz mi vardı? Muhtemelen öyle. Kariyerinin başındaki bir yazılımcı olarak bu bahsedilenlere tamamiyle katılabilirim çünkü o ana odaklanıp olabildiğince çok şey yapma hevesi ve o tatmin duygusu ile bir çok detayı bilinçli veya bilinçsiz atlıyoruz. Peki bunun bilincinde iseniz ve patronunuzun size kızacağını düşündüğünüzden yapmıyorsanız?
+
+Her birimiz o kod karmaşası içerisinde daha sonra yaparım dedik. Çünkü o gün kodun çalıştığını görmek ve rahat bir nefes almak istedik. Ama kitapta bunun için güzel bir örnek var. **LeBlanc’s Law states: “Later equals never”.**
+
+İlk başlarda bir çita hızında yenilikler ve geliştirme yaparken bir salyangoza dönüşmüş hissediyorsanız bunun en temel sebeplerinden birisi de dağınık ve kötü kodlar. Çünkü kodda yapılan her değişiklik artık yeni bir sorunu doğurur, bunu daha iyi kaş yaparken göz çıkarmak deyimi ile açıklayabilirim. Zamanla bu sorunlar o kadar artmaya ve büyümeye başlar ki artık temizlenmeyecek bir hale gelir.
+
+Bu karışıklık devam ettikçe ekibin üretkenliği sıfıra kadar azalmaya devam eder. Verimlilik azaldıkça yönetim ekibi bunun kod ile değil de ekip ile alakalı olduğunu düşünerek yeni alımlar yapar. Ancak yeni katılan kişiler codebase’de bilgili değil ve herkes bu darboğaz içerisinde inanılmaz bir baskı altındalar. Kelebek etkisi olarak düşünebiliriz, kötü bir kod parçası projenin hazin sonunu getirebilir.
+
+Kitapta, **The Grand Redesign in the Sky** örneğini sizlerle paylaşmak istiyorum, başlığı aratarak bu konuda daha detaylı içeriklere de göz atabilirsiniz.
+
+Bir yazılım ekibi artık kötü kod ile geliştirme yapmak istemediğinden isyan eder. yönetime bilgi verir ve redesign talep ederler. Yönetim hali hazırda devam eden bir proje için tekrardan maliyet çıkaracak bir redesign istemiyor ancak üretkenliğin korkunç derecede az olduğunu da inkar edemiyorlar. En sonunda yazılım ekibinin talepleri onaylanır ve redesign sürecine başlarlar.
+
+Bunun için kaplan takımı seçilir ve o takım en iyilerden oluşur. Baştan başlanır ve yeni alınan bir kitap kokusu gibi güzeldir o yüzden herkes o ekipte olabilmek için rekabet eder. Artık 2 takım var ve bunlar kıyasıya yarıştalar çünkü kaplan takımı hem aktif olan projedeki tüm özellikleri ve parçaları yeni bir şekilde getirmeye çalışırken bir yandan da aktif projeye gelen yenilikleri takip edip aynı tempoda ayak uydurabilmelidir. Kitapta bunun için harika bir tabir var, professional survival. Bu insanlar belki temiz kod ile projeyi yeniden ayaklandırmak için 10 yıllarını verecekler ve en başından beri proje içerisinde bir çok kişi değişecek. Peki onca yıldan sonra ne olacak? Yeni gelenler bu kodun temiz olmadığını ve tekrardan geliştirme talep edecekler. İşte bu yüzden yukarıda işaretlediğim profesyonel hayatta kalma meselesidir asla son bulmaz.
+
+> CODE IS NEVER PERFECT.
+
+### Temiz Kod ve İletişim
+
+Öncelikle şu soru ile başlayacağım, hiç sadece bir kaç saatinizi alacağını düşündüğünüz bir işi haftalar boyu tamamlayamadığınız oldu mu? Evet sanırım bu hepimizin kaderi. Bu durum için eminim bir çok sebep bulunabilir bunlardan birisi de çok sıkı olan programlar olabilir. Peki bunun sebebi pazarlama ve yönetim ekibinin bu sorunda bir suçu yok mu? Hayır yok. Çünkü onlar vaatlerde bulunmak için bizim bilgilerimize başvururlar ve onlara ne düşündüğümüzü söylemekten çekinmemeliyiz. Kullanıcılar, proje yöneticileri, pazarlamacılar bize bakıyor.
+
+Projenin planlanmasında yazılımcılar olarak büyük rol oynuyoruz ve herhangi bir sorunda sorumluluğun büyük bir kısmı bize düşer. Özellikle bu sorunlar kodlar ile alakalıysa. Peki içten içe ama onların söylediklerini yapmazsam işimden olabilirim! Muhtemelen öyle olmayacak. Çünkü onlar da bizler gibi projenin ilerlemesini ve iyi yazılmış temiz kod ile ilermelesini istiyorlar. Onların da bizler gibi bir takvimi var, karşı çıksalar bile onlara karşı kodu ve sürecimizi savunmakta bizim işimiz. Bu noktada kitapta sevdiğim bir örneklendirme var;
+
+Bir doktor olduğunuzu varsayın, çok fazla zamanınızı aldığından dolayı ameliyata girmeden önce el yıkamaz mıydınız? Peki bunu talep eden ve acele etmenizi isteyen bir hastanız olsaydı? Ne kadar saçma bir durum değil mi çünkü bu işin sorumluluğunda olan ve bilgili olan bizleriz. Orada yaşanacak enfeksiyon ve hastalık risklerinde daha çok şey biliyoruz.
+
+Temiz kod da benzerdir. Eğer acele etmek için yazdığınız kodda zaman alacğını düşünerek es geçtiğiniz bir parça bir kanser hücresi gibi tüm projeye yayılıp yazının başında bahsettiğim gibi bir kaos yaratabilir. Bu nedenle başkalarının iradesine boyun eğmek yerine kendi yetkinliğimiz ile bunu tartmalı ve onlarla iletişim haline olup iyi bir süreç yürütmeliyiz.
+
+Ayrıca bunun dışında kitapta bad code konusunda harika bir kırık pencere metaforu var. Kırık bir pencereli ev onun umursanmadığını gösterir ve insanlar da umursamayı bırakır. Daha fazla pencerenin kırılmasına müsaade ederler ve grafiti yapıp çöplerin atılmasına neden olur. İşte kırık pencere burada bir kötü kod parçasıdır.
+
+Umuyorum ki bad code konusunda artık duyduğumuzda kafamızda daha net bir şeyler canlanıyor. Sadece karmaşık kodlardan ibaret olmadığı, iletişimin, kötü planlamanın da bir sonucu olduğunu biliyoruz. Artık clean code nedir? sorusunu tekrardan sorabiliriz.
+
+### Clean Code
+
+Clean code, net bir ifade olamayabilir herkes için hitap eden bazı noktaları vardır. Bu yazımda, kitapta ele alınan kişilerin kendileri için önemli parçaları ve kendi nezdinde açıklamalarından aldığım notları aktaracağım.
+
+### Bjarne Stroustrup
+
+Kendisi C++ dilinin yaratıcısıdır. Açıklamalarında özellikle **zarif ve verimlilik** kelimelerine ağırlık verir. Kendisine clean code nedir sorusu yöneltildiğinde hataların kolay tespit edilebildiği, minimum bağımlılıklar ve eklemli bir stratejiyle hata yönetimini vurgular. En sevdiğim noktası ise temiz kod bir şeyi iyi yapar cümlesi. Ona göre clean code iyi tasarlanmış bir araba gibi sizi gülümsetir.
+
+Ayrıca, yukarıda temiz kod bir şeyi iyi yapar cümlesine ithafen bir paragraf bulunuyor: Kötü kod çok fazla şey yapmaya çalışır, niyeti ve amaç belirsizliğini karıştırır. Temiz kod odaklanmıştır, her işlev, her sınıf ve her modül tek bir fikirli bir. tutum ortaya çıkarır.
+
+### Grady Booch
+
+Kendisi Object Oriented Analysis ve Design With Applications kitaplarının yazarı. Açıklamalarında özellikle **okunabilirlik** kelimesine ağırlık veriyor. Ona göre clean code, basit ve doğrudandır. Normal bir düzyazı gibi okunur. Kitapta bunu açıklamak için kitap örneği veriliyor. Okuduğunuz gerçekten iyi bir kitabı düşünün, kelimeleri okudukça size film izlemek gibi karakterleri görüp, sesleri duyabildiğiniz bir deneyim yaşatıyor.
+
+Temiz kod okumak bir Yüzüklerin Efendisi okumak gibi hissettiremeyecek tabii ki ama kaliteli bir roman gibi noktaları açıkça ortaya çıkarmalıdır.
+
+### “Big” Dave Thomas
+
+OTI’nin kurucusu. Kendisi temiz kodu; Geliştirici dışında yazılımcıların da rahatça okuyabildiği, unit ve acceptance testleri olan, anlamlı isimlendirmelere sahip, minimum bağımlılıklara sahip, okunabilir ve birçok yol yerine tek yol sağlayan kod olarak tanımlıyor.
+
+Ayrıca kendisi de Grady gibi **okunabilirliğe** vurgu yapıyor. Ayrıca en çok vurguladığı konulardan birisi ise test yazmak. Ayrıca Dave şunu vurguluyor;
+
+Kodunuz ne kadar zarif olursa olsun, ne kadar okunabilir ve erişilebilir olursa olsun eğer test yazılmamışsa kirli koddur.
+
+Kendisine zamanında çok kaş kaldırılsa da Test Driven Development disiplinini savunmuştur. Ve bu disiplin günümüzde en temel disiplinlerimizden birisi haline geldi.
+
+Dave ayrıca minimal kelimesini vurguluyor. Bunu için sürekli paylaştığım bir söz var, **less is more**.
+
+### Michael Feathers
+
+Working Effectively with Legacy Code kitabının yazarı. Kendisi diğerlerine nazaran temiz kodu farklı bir açıdan değerlendirerek yorumluyor. Temiz kodun ona göre umursayan biri tarafından yazılmış koddur. Peki neden böyle söylemiş? Kötü koddan yukarıda bahsederken kodun sürekliliğine de değinmiştim. İşte bu konuda aslında Bakım’dan bahsediliyor.
+
+Code is never perfect demiştik ve bu doğruluğunu yitirmiş değil. Aksine gün geçtikçe kodumuz daha da kötü noktaya evriliyor. O yüzden umursayan birisi bakım yapar, iyileştirir, canlı tutar. Ayrıntılara özen gösterilmesi, basit ve düzenli tutulması için zaman ayırılması. İşte tüm olay bu.
+
+### Ron Jeffries
+
+Kendisi inanılmaz birisi kesinlikle üzerine araştırıp başka konudaki görüşlerini incelemenizi önerdiğim birisi. O yüzden bu konudaki düşüncelerini dikkate almamızda yarar var. Kendisi temiz kodu;
+
+- tüm testleri bulunan
+- tekrar etmeyen
+- class & method & function gibi varlıkların sayısını en aza indirildiği
+
+kodlar olarak tanımlar. Burada Ron’un vurguladığı kelime **duplication**. Aynı şey tekrar tekrar yapıldığında, zihnimizde bu kodda iyi olmayan bir şeyler olduğunu ve her şeyin yerli yerince olmadığını anlayabiliyoruz. Bu aşamada Ron, kendisi üzerinden tavsiye vermiş. Kendisinin böyle bir durumda ne olduğunu anlamaya çalışıp ardından o fikri daha iyi ifade etmeye çalışıyormuş.
+
+Dikkat ettiği hususlar; İsimlendirme ( hiçbir zaman ilk yaptığı isimlendirme kalmıyormuş ), objelerin birden fazla iş yapıp yapmadığına bakıyor eğer yapıyorsa muhtemelen birden fazla parçaya ayırılabilir olduğundan onları ayırıyor, eğer bir method ise üzerinde her zaman extract method refactoring kullanarak ne yaptığını daha iyi ifade eden ve nasıl yapıldığını gösteren alt yöntemler oluşturmaya yarayacaktır.
+
+Ayrıca kitapta **Ward Cunningham**’a da yer verilmiş ancak orada biraz daha iç sorgulamaya teşvik eden konuşma bulunduğundan burada yer vermedim. Eğer kitabı okuma fırsatınız olursa kesinlikle ihmal etmeyin özellikle programlama dili seçimiyle alakalı da güzel bir bilgilendirme yer alıyor.
+
+Son olarak, her birinin bahsettiklerini derlemek istiyorum. Unutmayın hiçbir zaman bunlarla sınırlı değildir o yüzden bu konuda araştırmaya okumaya ve pratik yapmaya devam edin.
+
+Clean Code;
+
+- zarif ve verimlidir
+- minimum bağımlılıklara sahiptir
+- Çok şeyi yapmaya çalışmaz bir şeye odaklanır ve onu iyi yapar, detaycıdır
+- İyi isimlendirmelere ve işlevlerine göre ayırılmış class & objelere sahiptir ayrıca methodlar için açıklayıcı ifadeler yer almaktadır
+  Tüm testleri yazılmıştır
+- Okunabilirdir, kodu okuyan birisi için minimum efor ile okuma sağlar
+  Umursayan biri tarafından yazılmıştır, bakımlıdır ve canlı tutulur
+- Duplication yoktur kendini tekrarlamaz.
+
+İzci kuralı,
+
+> kamp alanını bulduğunuzdan daha temiz bırakın
+
+Yukarıdaki ifade izci kuralı olsa da temiz kod yazmak ile de bir o kadar alakalıdır. Eğer hepimiz olan kodu iyileşitrmek için efor sarf edersek ve temizliği o kadar büyük bir şey olmasına gerekte yok: bir değişken adını iyileştirmek ve büyük bir fonksiyonu parçalamak veya bir if kontrolünü ortadan kaldırmakta olabilir.
+
+**İnanın küçük değişiklikler büyük bir değişimin parçasıdır.**
