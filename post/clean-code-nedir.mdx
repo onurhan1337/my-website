@@ -7,7 +7,9 @@ tweetUrl: "https://onurhan.dev/post/clean-code-nedir"
 
 Eminim ki kariyerinin başında olan insanların sıkça duyduğu, ortalarında olanların ise muzdarip olduğu bir konudur clean code. Peki sürekli bahsedilen ve her yerde konuşulan bu konunun detayları nedir? Bugün bunları konuşacağız.
 
-> Bu yazımda yazdıklarım, Clean Code kitabından aldığım notlardan oluşmaktadır.
+<Callout>
+  Bu yazımda yazdıklarım, Clean Code kitabından aldığım notlardan oluşmaktadır.
+</Callout>
 
 ### Bad Code
 
@@ -33,7 +35,7 @@ Bir yazılım ekibi artık kötü kod ile geliştirme yapmak istemediğinden isy
 
 Bunun için kaplan takımı seçilir ve o takım en iyilerden oluşur. Baştan başlanır ve yeni alınan bir kitap kokusu gibi güzeldir o yüzden herkes o ekipte olabilmek için rekabet eder. Artık 2 takım var ve bunlar kıyasıya yarıştalar çünkü kaplan takımı hem aktif olan projedeki tüm özellikleri ve parçaları yeni bir şekilde getirmeye çalışırken bir yandan da aktif projeye gelen yenilikleri takip edip aynı tempoda ayak uydurabilmelidir. Kitapta bunun için harika bir tabir var, professional survival. Bu insanlar belki temiz kod ile projeyi yeniden ayaklandırmak için 10 yıllarını verecekler ve en başından beri proje içerisinde bir çok kişi değişecek. Peki onca yıldan sonra ne olacak? Yeni gelenler bu kodun temiz olmadığını ve tekrardan geliştirme talep edecekler. İşte bu yüzden yukarıda işaretlediğim profesyonel hayatta kalma meselesidir asla son bulmaz.
 
-> CODE IS NEVER PERFECT.
+<Callout>CODE IS NEVER PERFECT.</Callout>
 
 ### Temiz Kod ve İletişim
 
@@ -85,11 +87,16 @@ Code is never perfect demiştik ve bu doğruluğunu yitirmiş değil. Aksine gü
 
 ### Ron Jeffries
 
-Kendisi inanılmaz birisi kesinlikle üzerine araştırıp başka konudaki görüşlerini incelemenizi önerdiğim birisi. O yüzden bu konudaki düşüncelerini dikkate almamızda yarar var. Kendisi temiz kodu;
+Kendisi inanılmaz birisi kesinlikle üzerine araştırıp başka konudaki görüşlerini incelemenizi önerdiğim birisi. O yüzden bu konudaki düşüncelerini dikkate almamızda yarar var.
 
-- tüm testleri bulunan
-- tekrar etmeyen
-- class & method & function gibi varlıkların sayısını en aza indirildiği
+<ProsCard
+  title="Kendisi temiz kodu;"
+  pros={[
+    "tüm testleri bulunan",
+    "tekrar etmeyen",
+    "class & method & function gibi varlıkların sayısını en aza indirildiği",
+  ]}
+/>
 
 kodlar olarak tanımlar. Burada Ron’un vurguladığı kelime **duplication**. Aynı şey tekrar tekrar yapıldığında, zihnimizde bu kodda iyi olmayan bir şeyler olduğunu ve her şeyin yerli yerince olmadığını anlayabiliyoruz. Bu aşamada Ron, kendisi üzerinden tavsiye vermiş. Kendisinin böyle bir durumda ne olduğunu anlamaya çalışıp ardından o fikri daha iyi ifade etmeye çalışıyormuş.
 
@@ -99,21 +106,24 @@ Ayrıca kitapta **Ward Cunningham**’a da yer verilmiş ancak orada biraz daha 
 
 Son olarak, her birinin bahsettiklerini derlemek istiyorum. Unutmayın hiçbir zaman bunlarla sınırlı değildir o yüzden bu konuda araştırmaya okumaya ve pratik yapmaya devam edin.
 
-Clean Code;
-
-- zarif ve verimlidir
-- minimum bağımlılıklara sahiptir
-- Çok şeyi yapmaya çalışmaz bir şeye odaklanır ve onu iyi yapar, detaycıdır
-- İyi isimlendirmelere ve işlevlerine göre ayırılmış class & objelere sahiptir ayrıca methodlar için açıklayıcı ifadeler yer almaktadır
-  Tüm testleri yazılmıştır
-- Okunabilirdir, kodu okuyan birisi için minimum efor ile okuma sağlar
-  Umursayan biri tarafından yazılmıştır, bakımlıdır ve canlı tutulur
-- Duplication yoktur kendini tekrarlamaz.
+<ProsCard
+  title="Clean Code;"
+  pros={[
+    "zarif ve verimlidir",
+    "minimum bağımlılıklara sahiptir",
+    "Çok şeyi yapmaya çalışmaz bir şeye odaklanır ve onu iyi yapar, detaycıdır",
+    "İyi isimlendirmelere ve işlevlerine göre ayırılmış class & objelere sahiptir ayrıca methodlar için açıklayıcı ifadeler yer almaktadır",
+    "Tüm testleri yazılmıştır",
+    "Okunabilirdir, kodu okuyan birisi için minimum efor ile okuma sağlar",
+    "Umursayan biri tarafından yazılmıştır, bakımlıdır ve canlı tutulur",
+    "Duplication yoktur kendini tekrarlamaz.",
+  ]}
+/>
 
 İzci kuralı,
 
-> kamp alanını bulduğunuzdan daha temiz bırakın
+<Callout>kamp alanını bulduğunuzdan daha temiz bırakın</Callout>
 
 Yukarıdaki ifade izci kuralı olsa da temiz kod yazmak ile de bir o kadar alakalıdır. Eğer hepimiz olan kodu iyileşitrmek için efor sarf edersek ve temizliği o kadar büyük bir şey olmasına gerekte yok: bir değişken adını iyileştirmek ve büyük bir fonksiyonu parçalamak veya bir if kontrolünü ortadan kaldırmakta olabilir.
 
-**İnanın küçük değişiklikler büyük bir değişimin parçasıdır.**
+İnanın küçük değişiklikler büyük bir değişimin parçasıdır.

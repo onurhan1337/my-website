@@ -30,7 +30,7 @@ function RoundedImage(props) {
 function Callout(props) {
   return (
     <div className="flex bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 my-8">
-      <div className="flex items-center w-4 mr-4">{props.emoji}</div>
+      <div className="flex items-center w-4 mr-4">⇢</div>
       <div className="w-full callout">{props.children}</div>
     </div>
   );
@@ -39,7 +39,7 @@ function Callout(props) {
 function ProsCard({ title, pros }) {
   return (
     <div className="border border-emerald-200 dark:border-emerald-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-4 w-full">
-      <span>{`You might use ${title} if...`}</span>
+      <span>{title}</span>
       <div className="mt-4">
         {pros.map((pro) => (
           <div key={pro} className="flex font-medium items-baseline mb-2">

@@ -21,7 +21,7 @@ const Hero = () => {
           <Balancer>Building digital</Balancer>
         </p>
         <p className="text-2xl">
-          <Balancer> products, brands, and</Balancer>
+          <Balancer> products, interfaces, and</Balancer>
         </p>
         <p className="text-2xl">
           <Balancer> experience.</Balancer>
