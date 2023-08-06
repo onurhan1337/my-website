@@ -12,18 +12,34 @@ There are several reasons for this. The main one is consistency. When you are go
 
 In addition, it will make your project very successful in terms of testability. It can also be part of something bigger than you can imagine, an open source project. It can allow you to build a large component library across a large number of projects.
 
-Below are projects that I think are inspiring and successful. Be sure to take a look at each one and get inspired. 
-* [shadcn/ui](https://ui.shadcn.com/)
-* [material/ui](https://mui.com/material-ui/getting-started/overview/)
-* [antdesign](https://ant.design/)
-* [adobecl](https://www.aemcomponents.dev/content/core-components-examples/library.html)
+Below are projects that I think are inspiring and successful. Be sure to take a look at each one and get inspired.
+
+<LinkCardList
+  cards={[
+    {
+      title: "shadcn/ui",
+      link: "https://ui.shadcn.com/",
+    },
+    {
+      title: "material/ui",
+      link: "https://mui.com/material-ui/getting-started/overview/",
+    },
+    {
+      title: "antdesign",
+      link: "https://ant.design/",
+    },
+    {
+      title: "adobecl",
+      link: "https://www.aemcomponents.dev/content/core-components-examples/library.html",
+    },
+  ]}
+/>
 
 In my chat with [Shadcn](https://twitter.com/shadcn) he gave me a very valuable advice and I would like to pass it on to you.
 
 > I did try building from scratch but it's a lot of work. I've learned a lot of myself by building on top of proven libraries. And once you've implemented one or two components you start to get a feel on how the library is structured and this helps with understanding how you can extend it and build your own custom components.
-> 
 
-I absolutely agree with him because, as I mentioned at the beginning, we don't need to reinvent anything.  Building on proven libraries would be a good choice.
+I absolutely agree with him because, as I mentioned at the beginning, we don't need to reinvent anything. Building on proven libraries would be a good choice.
 
 The examples I share below include packages that can be used when creating a component library.
 
@@ -40,6 +56,7 @@ In addition to the packages I shared above, we come to the tech stack selection 
 - Vitest - a successful framework for unit testing
 
 **Tips**
+
 - Take care to use Typescript
 - Don't forget to create your readme file or docs website and support it with detailed content
 - Study the Storybook document in detail and make sure to use it, I am sure it will be very useful

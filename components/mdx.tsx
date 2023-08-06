@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useMDXComponent } from "next-contentlayer/hooks";
+import { ArrowUpRight } from "lucide-react";
 
 const CustomLink = (props) => {
   const href = props.href;
@@ -65,6 +66,40 @@ function ProsCard({ title, pros }) {
   );
 }
 
+function LinkCardList({ cards }) {
+  return (
+    <div
+      className=" bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6
+    my-4 w-full gap-12"
+    >
+      {cards.map((card) => (
+        <LinkCard key={card.title} title={card.title} link={card.link} />
+      ))}
+    </div>
+  );
+}
+
+function LinkCard({ title, link }) {
+  return (
+    <Link
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="no-underline"
+    >
+      <button className="flex flex-row justify-start items-center w-full cursor-pointer ">
+        <div
+          className="h-4 w-4
+        mr-2"
+        >
+          <ArrowUpRight size={16} className="text-blue-700" />
+        </div>
+        <span className="font-medium text-blue-600 ">{title}</span>
+      </button>
+    </Link>
+  );
+}
+
 function ConsCard({ title, cons }) {
   return (
     <div className="border border-red-200 dark:border-red-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-6 w-full">
@@ -94,7 +129,9 @@ const components = {
   Image: RoundedImage,
   a: CustomLink,
   Callout,
+  LinkCardList,
   ProsCard,
+  LinkCard,
   ConsCard,
 };
 
