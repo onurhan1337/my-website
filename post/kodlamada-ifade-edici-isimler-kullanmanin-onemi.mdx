@@ -15,13 +15,13 @@ Bir değişken, fonksiyon veya class; neden var olduğu, ne yaptığı ve nasıl
 
 Yukarıdaki cümleyi desteklemek adına sabah karşılaştığım bir örnek üzerinden bu durumu özetlemeye çalışacağım.
 
-```ts title="index.ts"
+```ts
 const f = "Onurhan"; // a user's first name
 ```
 
 Yukarıda TypeScript ile yazılmış **f** adında bir değişken var. Bu size neyi çağrıştırıyor? Açıkçası hiçbir şey ifade etmiyor. Belki statik bir değer değildi, o zaman gerçekten hiç fikriniz olmazdı. Peki aşağıda ufak bir isim değişikliği ile tekrar bakalım.
 
-```ts title="index.ts"
+```ts
 const firstName = "Onurhan";
 ```
 
@@ -29,7 +29,7 @@ Bu sadece basit bir örnek ancak ne kadar etkili olduğunu iyice kavramanızı i
 Amacını ortaya koyan isimlendirmeler seçmek hem kodu anlamayı hem de değiştirmeyi çok daha kolay hale getirebilir.
 Kitapta, aşağıdakine benzer ancak Java ile yazılmış bir örnek kod vardı bunu Typescript ile değiştirdim.
 
-```ts title="index.ts"
+```ts
 const list1 = [
   [4, 1, 1],
   [0, 1, 2],
@@ -60,7 +60,7 @@ function getData(): number[][] {
 
 Yukarıdaki soruları yanıtlamaya çalıştığımızda aslında isimlendirmenin önemini ve ifade biçimini temsil ettiğini daha net anlıyorsunuz. Şimdi kodun yapısal hiçbir özelliğini değiştirmeden **sadece isimlendirmeleri** değiştireceğim.
 
-```ts title="index.ts"
+```ts
 const gameBoard = [
   [4, 1, 1],
   [0, 1, 2],
@@ -94,7 +94,7 @@ Yukarıda ifade ettiğim gibi, **yapısal kod ve çalışmasında hiçbir farkl�
 
 Yine de bu notlarım bir isimlendirme iyileştirmesinden ziyade genel manada clean code mantığını kapsadığından kodu bu halde bırakamayız. O yüzden biraz daha geliştirelim:
 
-```ts title="index.ts"
+```ts
 interface Cell {
   isFlagged: boolean;
   x: number;

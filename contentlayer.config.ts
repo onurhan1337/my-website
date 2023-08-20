@@ -5,6 +5,7 @@ import {
 } from "contentlayer/source-files";
 import readingTime from "reading-time";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 
 const computedFields = defineComputedFields<"Post">({
@@ -40,6 +41,26 @@ export default makeSource({
     rehypePlugins: [
       rehypeSlug,
       [
+        rehypePrettyCode,
+        {
+          theme: {
+            dark: "material-theme-ocean",
+            light: "github-light",
+          },
+          onVisitLine(node) {
+            // Prevent lines from collapsing in `display: grid` mode, and allow empty
+            // lines to be copy/pasted
+            if (node.children.length === 0) {
+              node.children = [{ type: "text", value: " " }];
+            }
+          },
+          onVisitHighlightedLine(node) {
+            node.properties.className.push("line--highlighted");
+          },
+          onVisitHighlightedWord(node) {
+            node.properties.className = ["word--highlighted"];
+          },
+        },
         rehypeAutolinkHeadings,
         {
           properties: {

@@ -17,7 +17,7 @@ export const themeEffect = function () {
     document.head
       .querySelector("meta[name=theme-color]")
       ?.setAttribute("content", "#1c1c1c");
-
+    togglePreStyles("dark");
     requestAnimationFrame(() => {
       document.documentElement.classList.remove("pause-transitions");
     });
@@ -28,9 +28,29 @@ export const themeEffect = function () {
     document.head
       .querySelector("meta[name=theme-color]")
       ?.setAttribute("content", "#fcfcfc");
+    togglePreStyles("light");
     requestAnimationFrame(() => {
       document.documentElement.classList.remove("pause-transitions");
     });
     return "light";
   }
 };
+
+function togglePreStyles(theme: string) {
+  document.querySelectorAll("pre")?.forEach((el) => {
+    switch (el.getAttribute("data-theme")) {
+      case "light":
+        theme === "dark"
+          ? el.classList.add("hidden")
+          : el.classList.remove("hidden");
+        break;
+      case "dark":
+        theme === "dark"
+          ? el.classList.remove("hidden")
+          : el.classList.add("hidden");
+        break;
+      default:
+        el.setAttribute("data-theme", "dark");
+    }
+  });
+}
