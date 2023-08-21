@@ -8,6 +8,18 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 
+// Define a type for the node parameter
+type RehypeNode = {
+  // Define the properties you expect in the node
+  children: Array<any>;
+  properties: {
+    className: Array<string>;
+    ariaLabel?: string;
+  };
+  // Add any other properties you expect in the node
+  // ...
+};
+
 const computedFields = defineComputedFields<"Post">({
   slug: {
     type: "string",
@@ -47,17 +59,17 @@ export default makeSource({
             dark: "material-theme-ocean",
             light: "github-light",
           },
-          onVisitLine(node) {
+          onVisitLine(node: RehypeNode) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted
             if (node.children.length === 0) {
               node.children = [{ type: "text", value: " " }];
             }
           },
-          onVisitHighlightedLine(node) {
+          onVisitHighlightedLine(node: RehypeNode) {
             node.properties.className.push("line--highlighted");
           },
-          onVisitHighlightedWord(node) {
+          onVisitHighlightedWord(node: RehypeNode) {
             node.properties.className = ["word--highlighted"];
           },
         },
