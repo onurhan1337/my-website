@@ -55,10 +55,7 @@ export default makeSource({
       [
         rehypePrettyCode,
         {
-          theme: {
-            dark: "material-theme-ocean",
-            light: "github-light",
-          },
+          theme: "poimandres",
           onVisitLine(node: RehypeNode) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted
