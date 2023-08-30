@@ -41,7 +41,7 @@ const MainNav = () => {
           return (
             <Button variant={"link"} key={path} asChild>
               <Link href={path}>
-                {path === pathname ? (
+                {isActive ? (
                   <span className="font-semibold">{name}</span>
                 ) : (
                   name
