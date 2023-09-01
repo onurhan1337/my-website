@@ -2,12 +2,12 @@ import BlogList from "@/components/post/list";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Post",
   description:
     "Read about my thoughts on frontend development, design and more.",
 };
 
-const Blog = () => {
+const Post = () => {
   return (
     <div>
       <h1 className="text-2xl font-serif">Posts and notes</h1>
@@ -16,4 +16,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default Post;
