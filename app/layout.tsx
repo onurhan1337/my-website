@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import MainNav from "@/components/header";
+import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -63,7 +63,7 @@ export default function RootLayout({
         className={`dark:text-gray-100 dark:bg-zinc-950 max-w-2xl m-auto ${inter.className}`}
       >
         <main className="p-6 pt-3 md:pt-6">
-          <MainNav />
+          <Header />
           {children}
         </main>
         <Analytics />

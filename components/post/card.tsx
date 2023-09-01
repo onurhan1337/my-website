@@ -20,12 +20,14 @@ interface PostCardProps {
 
 const PostCard = ({ data }: PostCardProps) => {
   return (
-    <div className="flex flex-col rounded-lg py-4 no-underline text-neutral-800 dark:text-neutral-200 transition-all">
-      <NextLink href={`/post/${data.slug}`}>
-        <h4 className="text-lg font-semibold cursor-pointer">{data.title}</h4>
-      </NextLink>
-      <p className="text-sm my-1">{data.subtitle}</p>
-      <div className="flex items-center mt-1 space-x-2">
+    <article>
+      <header>
+        <NextLink href={`/post/${data.slug}`}>
+          <h4 className="text-lg font-semibold cursor-pointer">{data.title}</h4>
+        </NextLink>
+        <p className="text-sm my-1">{data.subtitle}</p>
+      </header>
+      <footer className="flex items-center mt-1 space-x-2">
         <time dateTime={data.date} className="text-sm">
           {format(parseISO(data.date!), "d LLLL yyyy", {
             locale: tr,
@@ -33,8 +35,8 @@ const PostCard = ({ data }: PostCardProps) => {
         </time>
         <span className="opacity-60">·</span>
         <span className="text-sm">{data.readingTime.text}</span>
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 };
 

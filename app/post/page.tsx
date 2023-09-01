@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 const Blog = () => {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-serif">Blog</h1>
+    <div>
+      <h1 className="text-2xl font-serif">Posts and notes</h1>
       <BlogList />
     </div>
   );

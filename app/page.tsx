@@ -7,8 +7,8 @@ export async function generateMetadata({ params }: any) {
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center py-24">
+    <section className="flex flex-col items-center py-24">
       <Hero />
-    </div>
+    </section>
   );
 }

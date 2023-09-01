@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import IconArrowRightUp from "./icons/arrow-right-up";
 import IconYoutube from "./icons/youtube";
-import IconTwitter from "./icons/twitter";
 import IconGithub from "./icons/github";
 
 import { SocialButtonProps } from "@/types";

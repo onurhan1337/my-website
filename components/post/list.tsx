@@ -21,11 +21,11 @@ const BlogList = () => {
   const posts: Post[] = getData();
 
   return (
-    <div>
+    <section className="flex flex-col space-y-8 py-4 text-neutral-800 dark:text-neutral-200">
       {posts.map((post: Post) => (
         <PostCard key={post._id} data={post} />
       ))}
-    </div>
+    </section>
   );
 };
 

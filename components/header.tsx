@@ -7,19 +7,13 @@ import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import SupportButton from "./post/support";
 
-const headerItems = {
-  "/": {
-    name: "home",
-  },
-  "/about": {
-    name: "about",
-  },
-  "/post": {
-    name: "post",
-  },
+const HEADER_ITEMS = {
+  "/": "home",
+  "/about": "about",
+  "/post": "post",
 };
 
-const MainNav = () => {
+const Header = () => {
   const pathname = usePathname();
 
   return (
@@ -36,15 +30,15 @@ const MainNav = () => {
           "font-mono text-xs grow justify-end items-center flex gap-1 md:gap-3"
         }
       >
-        {Object.entries(headerItems).map(([path, { name }]) => {
-          const isActive = path === pathname;
+        {Object.entries(HEADER_ITEMS).map(([key, value]) => {
+          const isActive = key === pathname;
           return (
-            <Button variant={"link"} key={path} asChild>
-              <Link href={path}>
+            <Button variant={"link"} key={key} asChild>
+              <Link href={key}>
                 {isActive ? (
-                  <span className="font-semibold">{name}</span>
+                  <span className="font-semibold">{value}</span>
                 ) : (
-                  name
+                  value
                 )}
               </Link>
             </Button>
@@ -60,4 +54,4 @@ const MainNav = () => {
   );
 };
 
-export default MainNav;
+export default Header;
