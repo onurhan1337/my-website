@@ -7,14 +7,14 @@ function getData() {
 }
 
 const SnippetList = () => {
-  const snippets = getData();
+  const snippets: Snippet[] = getData();
 
   return (
-    <div>
-      {snippets.map((snippet) => (
+    <section>
+      {snippets.map((snippet: Snippet) => (
         <SnippetCard data={snippet} key={snippet.title} />
       ))}
-    </div>
+    </section>
   );
 };
 
