@@ -5,7 +5,7 @@ import SnippetTag from "@/components/snippet/tag";
 
 interface SnippetsWithFilterProps {
   params: {
-    tags: string[];
+    tags: string;
   };
 }
 
