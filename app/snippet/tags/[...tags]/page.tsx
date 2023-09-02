@@ -9,14 +9,13 @@ interface SnippetsWithFilterProps {
   };
 }
 
+// url: /snippet/tags/typeScript     ↓↓↓    params.tags = ["typeScript"]
 function getTags({ params }: SnippetsWithFilterProps) {
   const lastTag = params.tags[params.tags.length - 1];
 
   const snippets = allSnippets.filter((snippet) => {
-    return (
-      snippet.categories &&
-      snippet.categories.some((tag) => lastTag.includes(tag))
-    );
+    console.log("deneme: ", snippet.categories?.includes(lastTag));
+    return snippet.categories && snippet.categories.includes(lastTag);
   });
 
   return snippets;
