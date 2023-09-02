@@ -1,5 +1,3 @@
-"use client";
-
 import { allSnippets } from "contentlayer/generated";
 
 import SnippetCard from "@/components/snippet/card";
