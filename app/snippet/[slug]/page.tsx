@@ -18,16 +18,32 @@ export async function generateMetadata({
 }: {
   params: Props["params"];
 }) {
-  const snippet = allSnippets.find(
-    (snippet: Snippet) => snippet.slug === params.slug
-  ) as Snippet;
+  try {
+    const snippet = allSnippets.find(
+      (snippet: Snippet) => snippet.slug === params.slug
+    ) as Snippet;
 
-  return {
-    title: snippet.title,
-    description: snippet.description,
-    logo: snippet.logo,
-    categories: snippet.categories,
-  };
+    if (!snippet) {
+      throw new Error("Snippet not found");
+    }
+
+    return {
+      title: snippet.title,
+      description: snippet.description,
+      logo: snippet.logo,
+      categories: snippet.categories,
+    };
+  } catch (error) {
+    console.error("Error while generating metadata:", error);
+    // Handle the error, return a default metadata, or throw it further.
+    // For example, you could return a default metadata object.
+    return {
+      title: "",
+      description: "",
+      logo: "",
+      categories: [],
+    };
+  }
 }
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
