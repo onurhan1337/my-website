@@ -13,15 +13,10 @@ function getTags({ params }: SnippetsWithFilterProps) {
   const lastTag = params.tags[params.tags.length - 1];
 
   const snippets = allSnippets.filter((snippet) => {
-    try {
-      return (
-        snippet.categories &&
-        snippet.categories.some((tag) => lastTag.includes(tag))
-      );
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
+    return (
+      snippet.categories &&
+      snippet.categories.some((tag) => lastTag.includes(tag))
+    );
   });
 
   return snippets;
@@ -54,7 +49,7 @@ export default function SnippetsWithFilter({
           <SnippetCard data={snippet} key={snippet.title} />
         ))}
 
-      {filteredSnippets.length === 0 && (
+      {filteredSnippets && filteredSnippets.length === 0 && (
         <div className="mx-auto bg-red-100 dark:bg-red-300 flex max-w-2xl flex-wrap justify-center px-3 py-1.5 rounded-full gap-2 my-4">
           <h3 className="text-lg text-red-800 font-semibold">
             No snippets found for tag: <b>{lastTag}</b>
