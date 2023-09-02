@@ -20,10 +20,10 @@ type RehypeNode = {
   // ...
 };
 
-const computedFields = defineComputedFields<"Post">({
+const computedFields = defineComputedFields<any>({
   slug: {
     type: "string",
-    resolve: (doc: any) => doc._raw.flattenedPath,
+    resolve: (doc) => doc._raw.sourceFileName.replace(/\.mdx$/, ""),
   },
   readingTime: {
     type: "json",
@@ -36,7 +36,7 @@ const computedFields = defineComputedFields<"Post">({
 const Post = defineDocumentType(() => ({
   name: "Post",
   contentType: "mdx",
-  filePathPattern: `**/*.mdx`,
+  filePathPattern: `post/**/*.mdx`,
   fields: {
     date: { type: "date", required: true },
     title: { type: "string", required: true },
@@ -46,9 +46,22 @@ const Post = defineDocumentType(() => ({
   computedFields,
 }));
 
+const Snippet = defineDocumentType(() => ({
+  name: "Snippet",
+  filePathPattern: "snippet/**/*.mdx",
+  contentType: "mdx",
+  fields: {
+    title: { type: "string", required: true },
+    description: { type: "string", required: true },
+    logo: { type: "string", required: true },
+    categories: { type: "list", of: { type: "string", required: true } },
+  },
+  computedFields,
+}));
+
 export default makeSource({
-  contentDirPath: "post",
-  documentTypes: [Post],
+  contentDirPath: "data",
+  documentTypes: [Post, Snippet],
   mdx: {
     rehypePlugins: [
       rehypeSlug,

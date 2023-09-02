@@ -11,6 +11,7 @@ const HEADER_ITEMS = {
   "/": "home",
   "/about": "about",
   "/post": "post",
+  "/snippet": "snippet",
 };
 
 const Header = () => {
@@ -26,9 +27,7 @@ const Header = () => {
 
       <nav
         id="nav"
-        className={
-          "font-mono text-xs grow justify-end items-center flex gap-1 md:gap-3"
-        }
+        className={"font-mono text-xs grow justify-end items-center flex gap-1"}
       >
         {Object.entries(HEADER_ITEMS).map(([key, value]) => {
           const isActive = key === pathname;
