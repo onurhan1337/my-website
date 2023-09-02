@@ -27,7 +27,9 @@ function getTags({ params }: SnippetsWithFilterProps) {
   return snippets;
 }
 
-const SnippetsWithFilter = ({ params }: SnippetsWithFilterProps) => {
+export default function SnippetsWithFilter({
+  params,
+}: SnippetsWithFilterProps) {
   const filteredSnippets = getTags({ params });
 
   // url: /snippet/tags/typeScript     ↓↓↓
@@ -61,6 +63,4 @@ const SnippetsWithFilter = ({ params }: SnippetsWithFilterProps) => {
       )}
     </section>
   );
-};
-
-export default SnippetsWithFilter;
+}
