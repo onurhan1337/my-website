@@ -16,8 +16,15 @@ export const metadata = {
     type: "website",
     locale: "en_IE",
     url: "https://onurhan.dev",
-    title: "Onurhan | Front-end Developer",
+    title: "Onurhan Demir | Front-end Developer",
     description: "Building digital products, interfaces, and experience.",
-    image: "/avatar.png",
+    images: [
+      {
+        url: "/avatar.png",
+        width: 800,
+        height: 600,
+        alt: "Onurhan Demir",
+      },
+    ],
   },
 };
