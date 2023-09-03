@@ -1,5 +1,8 @@
 export const metadata = {
-  title: "Onurhan | Front-end Developer",
+  // metadataBase is a convenience option to set a base URL prefix...
+  // for metadata fields that require a fully qualified URL.
+  metadataBase: new URL("https://onurhan.dev"),
+  title: "Onurhan Demir | Front-end Developer",
   description: "Building digital products, interfaces, and experience.",
   url: "https://onurhan.dev",
   email: "onurhandtr@gmail.com",
