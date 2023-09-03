@@ -4,7 +4,7 @@
 
 - **Framework**: [Next.js](https://nextjs.org/)
 - **Database**: [Upstash Redis](https://upstash.com/)
-- **Post**: [Contentlayer](https://www.contentlayer.dev/)
+- **Post and Snippet**: [Contentlayer](https://www.contentlayer.dev/)
 - **Deployment**: [Vercel](https://vercel.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
 - **Like**: [Upstash Claps](https://github.com/upstash/claps)
@@ -13,11 +13,12 @@
 
 - `pages/api/*` - [API Routes](https://nextjs.org/docs/api-routes/introduction), claps.
 - `app/post/*` - Static pre-rendered blog pages using Contentlayer.
+- `app/snippet/*` - Static pre-rendered code snippets using Contentlayer.
 - `app/*` - All other static pages.
 - `components/` - All components.
 - `components/ui` - Primitive components.
 - `public/*` - Static assets including images for blogs and other all images.
-- `post/` - Contains posts.
+- `data/` - Contains all posts and snippets.
 - `lib/`- Contains metadata and util functions.
 - `types/`- Contains all types and interfaces.
 - `styles/*` - A small amount of global styles. I'm mostly using vanilla Tailwind CSS.
