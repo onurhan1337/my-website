@@ -2,14 +2,9 @@ import BlogList from "@/components/post/list";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Post",
+  title: "Onurhan Demir | Post",
   description:
     "Read about my thoughts on frontend development, design and more.",
-  openGraph: {
-    title: "Post",
-    description:
-      "Read about my thoughts on frontend development, design and more.",
-  },
 };
 
 const Post = () => {

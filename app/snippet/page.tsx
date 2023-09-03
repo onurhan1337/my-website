@@ -7,11 +7,6 @@ export const metadata: Metadata = {
   title: "Snippets",
   description:
     "A collection of solutions to small problems I've faced in the past.",
-  openGraph: {
-    title: "Snippets",
-    description:
-      "A collection of solutions to small problems I've faced in the past.",
-  },
 };
 
 const Snippets = () => {
