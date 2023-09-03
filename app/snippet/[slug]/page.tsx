@@ -81,8 +81,10 @@ const SnippetCode = ({ params }: { params: Props["params"] }) => {
       </div>
       <Mdx code={snippet.body.code} />
 
-      <div className="mt-20 flex flex-col items-center justify-center dark:text-slate-700">
-        <ClapsButton url={snippet.slug} />
+      <div className="mt-20 flex flex-col items-center justify-center">
+        <div className="dark:text-slate-700">
+          <ClapsButton url={snippet.slug} />
+        </div>
         <div className="gap-2 my-4">
           <Link href={"/snippet"}>
             <Button size={"sm"} variant={"outline"} className="gap-2">
