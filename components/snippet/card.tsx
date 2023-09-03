@@ -11,7 +11,7 @@ const SnippetCard = (props: SnippetCardProps) => {
   return (
     <NextLink href={`snippet/${snippet.slug}`}>
       <article
-        className="border-2 bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 rounded-md p-6 my-4 space-y-3"
+        className="border-2 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 rounded-xl p-6 my-4 space-y-3"
         key={snippet.title}
       >
         <div className="rounded-md overflow-hidden inline-flex">

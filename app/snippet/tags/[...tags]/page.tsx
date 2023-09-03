@@ -1,7 +1,10 @@
+import Link from "next/link";
 import { allSnippets } from "contentlayer/generated";
+import { ArrowLeftIcon } from "lucide-react";
 
 import SnippetCard from "@/components/snippet/card";
 import SnippetTag from "@/components/snippet/tag";
+import { Button } from "@/components/ui/button";
 
 interface SnippetsWithFilterProps {
   params: {
@@ -9,12 +12,10 @@ interface SnippetsWithFilterProps {
   };
 }
 
-// url: /snippet/tags/typeScript     ↓↓↓    params.tags = ["typeScript"]
 function getTags({ params }: SnippetsWithFilterProps) {
   const lastTag = params.tags[params.tags.length - 1];
 
   const snippets = allSnippets.filter((snippet) => {
-    console.log("deneme: ", snippet.categories?.includes(lastTag));
     return snippet.categories && snippet.categories.includes(lastTag);
   });
 
@@ -26,35 +27,59 @@ export default function SnippetsWithFilter({
 }: SnippetsWithFilterProps) {
   const filteredSnippets = getTags({ params });
 
-  // url: /snippet/tags/typeScript     ↓↓↓
-  // params.tags = ["typeScript"] -> lastTag = "typeScript"
   const lastTag = params.tags[params.tags.length - 1];
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col items-center flex-wrap justify-center gap-2">
-      <h1 className={"text-2xl font-serif"}>Snippets</h1>
-      <h6 className={"my-3 text-sm font-medium leading-none"}>
-        A collection of solutions to small problems I&apos;ve faced in the past.
-      </h6>
+    <section className="px-3">
+      <div className="mx-auto flex max-w-2xl flex-col items-center flex-wrap justify-center gap-2">
+        <h1 className={"text-2xl font-serif"}>Snippets</h1>
+        <h6 className={"my-3 text-sm font-medium leading-none"}>
+          A collection of solutions to small problems I&apos;ve faced in the
+          past.
+        </h6>
 
-      {params.tags && (
-        <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-2 my-4">
-          <SnippetTag tag={lastTag} />
-        </div>
-      )}
+        {params.tags && (
+          <Link href={"/snippet"}>
+            <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-2 my-4">
+              <SnippetTag tag={lastTag} />
+            </div>
+          </Link>
+        )}
 
-      {filteredSnippets &&
-        filteredSnippets.map((snippet) => (
-          <SnippetCard data={snippet} key={snippet.title} />
-        ))}
+        {filteredSnippets &&
+          filteredSnippets.map((snippet) => (
+            <div
+              className="flex flex-col items-start justify-center gap-2 w-full"
+              key={snippet.title}
+            >
+              <SnippetCard data={snippet} />
+              <div>
+                <Link href={"/snippet"}>
+                  <Button size={"sm"} variant={"outline"} className="gap-2">
+                    <ArrowLeftIcon size={16} />
+                    See All
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ))}
 
-      {filteredSnippets && filteredSnippets.length === 0 && (
-        <div className="mx-auto bg-red-100 dark:bg-red-300 flex max-w-2xl flex-wrap justify-center px-3 py-1.5 rounded-full gap-2 my-4">
-          <h3 className="text-lg text-red-800 font-semibold">
-            No snippets found for tag: <b>{lastTag}</b>
-          </h3>
-        </div>
-      )}
+        {filteredSnippets && filteredSnippets.length === 0 && (
+          <div className="flex flex-col text-center justify-between bg-zinc-50 dark:bg-zinc-900 shadow-inline rounded-lg w-full gap-4 p-6">
+            <p className="text-md font-medium leading-none">
+              No snippets found for &apos;{lastTag}&apos;
+            </p>
+            <div>
+              <Link href={"/snippet"}>
+                <Button variant={"link"} size={"sm"} className="gap-2">
+                  <ArrowLeftIcon size={16} />
+                  Go Back
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

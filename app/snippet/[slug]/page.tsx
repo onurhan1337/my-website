@@ -1,10 +1,13 @@
 import { allSnippets, Snippet } from "contentlayer/generated";
+import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-
-import ClapsButton from "@/components/ui/claps";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "lucide-react";
 import { Balancer } from "react-wrap-balancer";
+
 import { Mdx } from "@/components/mdx";
+import ClapsButton from "@/components/ui/claps";
 import SnippetTag from "@/components/snippet/tag";
 
 type Props = {
@@ -18,32 +21,20 @@ export async function generateMetadata({
 }: {
   params: Props["params"];
 }) {
-  try {
-    const snippet = allSnippets.find(
-      (snippet: Snippet) => snippet.slug === params.slug
-    ) as Snippet;
+  const snippet = allSnippets.find(
+    (snippet: Snippet) => snippet.slug === params.slug
+  ) as Snippet;
 
-    if (!snippet) {
-      throw new Error("Snippet not found");
-    }
-
-    return {
-      title: snippet.title,
-      description: snippet.description,
-      logo: snippet.logo,
-      categories: snippet.categories,
-    };
-  } catch (error) {
-    console.error("Error while generating metadata:", error);
-    // Handle the error, return a default metadata, or throw it further.
-    // For example, you could return a default metadata object.
-    return {
-      title: "",
-      description: "",
-      logo: "",
-      categories: [],
-    };
+  if (!snippet) {
+    throw new Error("Snippet not found");
   }
+
+  return {
+    title: snippet.title,
+    description: snippet.description,
+    logo: snippet.logo,
+    categories: snippet.categories,
+  };
 }
 
 export async function generateStaticParams(): Promise<Props["params"][]> {
@@ -89,8 +80,17 @@ const SnippetCode = ({ params }: { params: Props["params"] }) => {
         )}
       </div>
       <Mdx code={snippet.body.code} />
-      <div className="mt-20 flex justify-center dark:text-slate-700">
+
+      <div className="mt-20 flex flex-col items-center justify-center dark:text-slate-700">
         <ClapsButton url={snippet.slug} />
+        <div className="gap-2 my-4">
+          <Link href={"/snippet"}>
+            <Button size={"sm"} variant={"outline"} className="gap-2">
+              <ArrowLeftIcon size={16} />
+              See All
+            </Button>
+          </Link>
+        </div>
       </div>
     </article>
   );
