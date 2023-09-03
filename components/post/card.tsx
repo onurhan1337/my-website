@@ -4,21 +4,11 @@ import NextLink from "next/link";
 
 import { format, parseISO } from "date-fns";
 import { tr } from "date-fns/locale";
+import { Post } from "@/.contentlayer/generated";
 
-interface PostCardProps {
-  data: {
-    date: string;
-    slug: string;
-    title: string;
-    readingTime: {
-      text: string;
-    };
-    tweetUrl?: string;
-    subtitle?: string;
-  };
-}
+const PostCard = (props: { data: Post }) => {
+  const { data } = props;
 
-const PostCard = ({ data }: PostCardProps) => {
   return (
     <article>
       <header>
