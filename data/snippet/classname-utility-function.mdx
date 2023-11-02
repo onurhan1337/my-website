@@ -1,0 +1,15 @@
+---
+title: ClassName Utility Function
+description: simplifies the creation of class names by merging multiple class values using the popular libraries clsx and twMerge.
+logo: /static/logos/typescript.png
+categories: ["typescript", "react", "nextjs"]
+---
+
+```ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
