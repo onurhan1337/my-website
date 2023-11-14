@@ -1,0 +1,48 @@
+---
+title: Async Data Store with Zustand
+description: A TypeScript utility for creating an asynchronous data store using Zustand. This snippet defines a generic createDataStore function that sets up a Zustand store with state for data, loading status, and errors. It includes a fetch method to asynchronously update the state based on the provided fetchData function."
+logo: /static/logos/typescript.png
+categories: ["typescript", "react", "nextjs"]
+---
+
+```ts
+import create, { SetState, GetState, StoreApi } from "zustand";
+
+type State<T> = {
+  data: T;
+  loading: boolean;
+  error: Error | null;
+  fetch: () => Promise<void>;
+};
+
+export const createDataStore = <T>(fetchData: () => Promise<T>) => {
+  const middleware =
+    (config: (partial: Partial<State<T>>) => void) =>
+    (
+      set: SetState<State<T>>,
+      get: GetState<State<T>>,
+      api: StoreApi<State<T>>
+    ) =>
+      config((partial) => {
+        console.log("State change:", partial);
+        set(partial);
+      });
+
+  return create<State<T>>(
+    middleware((set) => ({
+      data: null,
+      loading: false,
+      error: null,
+      fetch: async () => {
+        set({ loading: true, error: null });
+        try {
+          const data = await fetchData();
+          set({ data, loading: false });
+        } catch (error) {
+          set({ error, loading: false });
+        }
+      },
+    }))
+  );
+};
+```

@@ -67,7 +67,7 @@ const SnippetCode = ({ params }: { params: Props["params"] }) => {
           {snippet.title}
         </h1>
       </div>
-      <span className="text-sm text-gray-600 dark:text-zinc-400 font-medium leading-none">
+      <span className="text-sm text-gray-600 dark:text-zinc-400 font-medium leading-tight">
         <Balancer>{snippet.description}</Balancer>
       </span>
       <div>

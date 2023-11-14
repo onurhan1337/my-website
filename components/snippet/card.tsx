@@ -23,7 +23,7 @@ const SnippetCard = (props: SnippetCardProps) => {
           />
         </div>
         <h2 className="text-lg font-semibold">{snippet.title}</h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium leading-none">
+        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium leading-tight">
           {snippet.description}
         </p>
       </article>
