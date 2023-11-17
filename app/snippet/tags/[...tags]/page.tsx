@@ -53,14 +53,6 @@ export default function SnippetsWithFilter({
               key={snippet.title}
             >
               <SnippetCard data={snippet} />
-              <div>
-                <Link href={"/snippet"}>
-                  <Button size={"sm"} variant={"outline"} className="gap-2">
-                    <ArrowLeftIcon size={16} />
-                    See All
-                  </Button>
-                </Link>
-              </div>
             </div>
           ))}
 
@@ -79,6 +71,15 @@ export default function SnippetsWithFilter({
             </div>
           </div>
         )}
+
+        <div>
+          <Link href={"/snippet"}>
+            <Button size={"sm"} variant={"outline"} className="gap-2">
+              <ArrowLeftIcon size={16} />
+              See All
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
