@@ -32,7 +32,7 @@ const TechStackSlider = () => {
   useAnimationFrame(animate);
 
   return (
-    <div className="relative m-auto w-full overflow-hidden bg-white before:absolute before:left-0 before:top-0 before:z-[2] before:h-full before:w-[100px] before:bg-[linear-gradient(to_right,white_0%,rgba(255,255,255,0)_100%)] before:content-[''] after:absolute after:right-0 after:top-0 after:z-[2] after:h-full after:w-[100px] after:-scale-x-100 after:bg-[linear-gradient(to_right,white_0%,rgba(255,255,255,0)_100%)] after:content-['']">
+    <div className="relative m-auto w-[500px] overflow-hidden bg-white before:absolute before:left-0 before:top-0 before:z-[2] before:h-full before:w-[100px] before:bg-[linear-gradient(to_right,white_0%,rgba(255,255,255,0)_100%)] before:content-[''] after:absolute after:right-0 after:top-0 after:z-[2] after:h-full after:w-[100px] after:-scale-x-100 after:bg-[linear-gradient(to_right,white_0%,rgba(255,255,255,0)_100%)] after:content-['']">
       <div
         ref={sliderRef}
         style={{ transform: `translateX(${translateX}px)` }}
@@ -45,10 +45,29 @@ const TechStackSlider = () => {
                 <div
                   onMouseEnter={() => setHoveredItem(index)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  className={cn(
-                    "flex w-[125px] items-center justify-center",
-                    hoveredItem === index ? "animate-none" : "slide"
-                  )}
+                  className={"slide flex w-[125px] items-center justify-center"}
+                >
+                  {logo.icon}
+                </div>
+              </TooltipTrigger>
+              {hoveredItem === index && logo.name && (
+                <Portal>
+                  <TooltipContent>
+                    <p>{logo.name}</p>
+                  </TooltipContent>
+                </Portal>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+        ))}
+        {LOGOS.map((logo, index) => (
+          <TooltipProvider key={index}>
+            <Tooltip key={index} delayDuration={300}>
+              <TooltipTrigger>
+                <div
+                  onMouseEnter={() => setHoveredItem(index)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  className={"slide flex w-[125px] items-center justify-center"}
                 >
                   {logo.icon}
                 </div>
