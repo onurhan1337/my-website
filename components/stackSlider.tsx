@@ -39,48 +39,46 @@ const TechStackSlider = () => {
         className={cn("flex w-[calc(250px*10)] animate-infinite-slider")}
       >
         {LOGOS.map((logo, index) => (
-          <TooltipProvider key={index}>
-            <Tooltip key={index} delayDuration={300}>
-              <TooltipTrigger>
-                <div
-                  onMouseEnter={() => setHoveredItem(index)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={"slide flex w-[125px] items-center justify-center"}
-                >
-                  {logo.icon}
-                </div>
-              </TooltipTrigger>
-              {hoveredItem === index && logo.name && (
-                <Portal>
-                  <TooltipContent>
-                    <p>{logo.name}</p>
-                  </TooltipContent>
-                </Portal>
-              )}
-            </Tooltip>
-          </TooltipProvider>
+          <div
+            className={"slide flex w-[125px] items-center justify-center"}
+            onMouseEnter={() => setHoveredItem(index)}
+            onMouseLeave={() => setHoveredItem(null)}
+            key={index}
+          >
+            <TooltipProvider>
+              <Tooltip key={index} delayDuration={300}>
+                <TooltipTrigger>{logo.icon}</TooltipTrigger>
+                {hoveredItem === index && logo.name && (
+                  <Portal>
+                    <TooltipContent>
+                      <p>{logo.name}</p>
+                    </TooltipContent>
+                  </Portal>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         ))}
         {LOGOS.map((logo, index) => (
-          <TooltipProvider key={index}>
-            <Tooltip key={index} delayDuration={300}>
-              <TooltipTrigger>
-                <div
-                  onMouseEnter={() => setHoveredItem(index)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={"slide flex w-[125px] items-center justify-center"}
-                >
-                  {logo.icon}
-                </div>
-              </TooltipTrigger>
-              {hoveredItem === index && logo.name && (
-                <Portal>
-                  <TooltipContent>
-                    <p>{logo.name}</p>
-                  </TooltipContent>
-                </Portal>
-              )}
-            </Tooltip>
-          </TooltipProvider>
+          <div
+            className={"slide flex w-[125px] items-center justify-center"}
+            onMouseEnter={() => setHoveredItem(index)}
+            onMouseLeave={() => setHoveredItem(null)}
+            key={index}
+          >
+            <TooltipProvider key={index}>
+              <Tooltip key={index} delayDuration={300}>
+                <TooltipTrigger>{logo.icon}</TooltipTrigger>
+                {hoveredItem === index && logo.name && (
+                  <Portal>
+                    <TooltipContent>
+                      <p>{logo.name}</p>
+                    </TooltipContent>
+                  </Portal>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         ))}
       </div>
     </div>
