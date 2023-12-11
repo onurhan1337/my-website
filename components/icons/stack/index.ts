@@ -1,0 +1,12 @@
+export { default as IconFigma } from "./figma";
+export { default as IconVercel } from "./vercel";
+export { default as IconTypescript } from "./typescript";
+export { default as IconTailwindCss } from "./tailwindcss";
+export { default as IconNextjs } from "./next";
+export { default as IconReact } from "./react";
+export { default as IconRadixUi } from "./radix";
+export { default as IconShadcnUi } from "./shadcn";
+export { default as IconPrisma } from "./prisma";
+export { default as IconZod } from "./zod";
+export { default as IconGraphql } from "./graphql";
+export { default as IconVitest } from "./vitest";

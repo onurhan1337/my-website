@@ -2,7 +2,7 @@ import BlogList from "@/components/post/list";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Onurhan Demir | Post",
+  title: "Post",
   description:
     "Read about my thoughts on frontend development, design and more.",
 };

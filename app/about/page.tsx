@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import Social from "@/components/social";
+import TechStackSlider from "@/components/stackSlider";
 
 export const metadata: Metadata = {
   title: "About",
@@ -37,6 +38,9 @@ const About = () => {
           packages that will both solve the problems I have on the web and
           facilitate our development process.
         </p>
+        <div className="pb-8">
+          <TechStackSlider />
+        </div>
         <Social />
       </div>
     </section>

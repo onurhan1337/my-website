@@ -7,7 +7,7 @@ import { Inter } from "next/font/google";
 
 import Header from "@/components/header";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 const title = "Onurhan Demir";
 const description = "Building digital products, brands, and experience.";
