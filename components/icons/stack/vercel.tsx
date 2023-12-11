@@ -10,6 +10,7 @@ export default function IconVercel({ size = 24, ...props }: ISVGProps) {
       width={size}
       height={size}
       {...props}
+      className="fill-slate-800 dark:fill-slate-200"
     >
       <title>Vercel</title>
       <path d="M24 22.525H0l12-21.05 12 21.05z" />

@@ -10,6 +10,7 @@ export default function IconFigma({ size = 24, ...props }: ISVGProps) {
       width={size}
       height={size}
       {...props}
+      className="fill-slate-800 dark:fill-slate-200"
     >
       <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <title>Figma</title>
