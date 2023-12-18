@@ -33,11 +33,11 @@ const Hero = () => {
         </Button>
         <Button variant={"ghost"} asChild>
           <Link
-            href="https://twitter.com/onurhan1337"
+            href="https://x.com/onurhan1337"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Twitter
+            X(Twitter)
           </Link>
         </Button>
         <Button variant={"ghost"}>
