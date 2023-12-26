@@ -18,7 +18,7 @@ const About = () => {
       </p>
       <div className="prose prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
         <p>
-          I&apos;m currently the <b>Front-end Engineer at independently</b>,
+          I&apos;m currently the <b>Front-end Engineer independently</b>,
           developing interfaces. I focus on crafting and developing the
           interfaces for users and brands.
         </p>
