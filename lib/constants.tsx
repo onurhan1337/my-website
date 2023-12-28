@@ -63,3 +63,5 @@ export const LOGOS = [
     name: "Vitest",
   },
 ];
+
+export const LOGO_WIDTH = 125;

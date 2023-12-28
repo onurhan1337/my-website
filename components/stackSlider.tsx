@@ -1,7 +1,8 @@
 "use client";
 
-import * as React from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Portal } from "@radix-ui/react-portal";
+
 import {
   Tooltip,
   TooltipTrigger,
@@ -9,17 +10,15 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { LOGOS } from "@/lib/constants";
+import { LOGOS, LOGO_WIDTH } from "@/lib/constants";
 import { useAnimationFrame } from "@/lib/hooks/useAnimationFrame";
 
-const LOGO_WIDTH = 125;
-
 const TechStackSlider = () => {
-  const [hoveredItem, setHoveredItem] = React.useState<number | null>(null);
-  const sliderRef = React.useRef<HTMLDivElement | null>(null);
-  const [translateX, setTranslateX] = React.useState<number>(0);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const [translateX, setTranslateX] = useState<number>(0);
 
-  const animate = React.useCallback(() => {
+  const animate = useCallback(() => {
     if (sliderRef.current) {
       setTranslateX((prevTranslateX) =>
         prevTranslateX - 1 <= -LOGO_WIDTH
