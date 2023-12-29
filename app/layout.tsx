@@ -3,11 +3,15 @@ import "@upstash/claps/style.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 
 import Header from "@/components/header";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const geist = {
+  sans: GeistSans,
+  mono: GeistMono,
+};
 
 const title = "Onurhan Demir";
 const description = "Building digital products, brands, and experience.";
@@ -60,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`dark:text-gray-100 dark:bg-zinc-950 max-w-2xl m-auto ${inter.className}`}
+        className={`dark:text-gray-100 dark:bg-zinc-950 max-w-2xl m-auto ${geist.sans.variable} ${geist.mono.variable} font-sans`}
       >
         <main className="p-6 pt-3 md:pt-6">
           <Header />
