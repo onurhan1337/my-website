@@ -8,6 +8,7 @@ import { GeistMono } from "geist/font/mono";
 
 import Header from "@/components/header";
 import { cn } from "@/lib/utils";
+import NextAuthSessionProvider from "./session-provider";
 
 const geist = {
   sans: GeistSans,
@@ -50,7 +51,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  themeColor: "#ffffff",
   icons: {
     icon: "/avatar.png",
     apple: "/avatar.png",
@@ -74,10 +74,12 @@ export default function RootLayout({
       <body
         className={`max-w-2xl m-auto antialiased font-sans bg-white dark:bg-[#111010]`}
       >
-        <main className="p-6 pt-3 md:pt-6">
-          <Header />
-          {children}
-        </main>
+        <NextAuthSessionProvider>
+          <main className="p-6 pt-3 md:pt-6">
+            <Header />
+            {children}
+          </main>
+        </NextAuthSessionProvider>
         <Analytics />
       </body>
     </html>
