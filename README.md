@@ -3,7 +3,8 @@
 <a href="https://www.buymeacoffee.com/onurhan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=onurhan&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" /></a>
 
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Upstash Redis](https://upstash.com/)
+- **Database**: [Upstash Redis](https://upstash.com/) & [Prisma](https://www.prisma.io/) & [PlanetScale](https://planetscale.com/)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
 - **Post and Snippet**: [Contentlayer](https://www.contentlayer.dev/)
 - **Deployment**: [Vercel](https://vercel.com)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
