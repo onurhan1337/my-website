@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 const About = () => {
   return (
     <section>
-      <h1 className="text-2xl font-serif dark:text-zinc-200">About me</h1>
+      <h1 className="text-2xl font-serif text-center dark:text-zinc-200">
+        About me
+      </h1>
 
       <p className="my-5 text-zinc-800 dark:text-zinc-200">
         Hey, I&apos;m Onurhan.
