@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 
 import { GuestbookForm } from "@/components/guestbook/form";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { deleteGuestbookEntry, getGuestbookEntries } from "../db/actions";
+import { authOptions } from "@/lib/auth";
+import { getGuestbookEntries } from "../db/actions";
 import { DeleteGuestbook } from "@/components/guestbook/buttons";
 
 export const metadata: Metadata = {
