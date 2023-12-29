@@ -45,12 +45,12 @@ export default async function BlogPost({ params }: any) {
     <div>
       <section className="post">
         <header>
-          <h1 className="font-bold text-3xl font-serif max-w-[650px]">
+          <h1 className="font-bold text-3xl font-mono max-w-[650px] dark:text-zinc-300">
             <Balancer>{post.title}</Balancer>
           </h1>
-          <h2 className="mt-2 text-xl">{post.subtitle}</h2>
+          <h2 className="mt-2 text-xl dark:text-zinc-300">{post.subtitle}</h2>
 
-          <div className="mt-10 flex items-center space-x-2 opacity-60">
+          <div className="mt-10 flex items-center space-x-2 opacity-60 dark:text-zinc-300">
             <time dateTime={post.date}>
               {format(parseISO(post.date), "d LLLL yyyy", {
                 locale: tr,
@@ -64,8 +64,7 @@ export default async function BlogPost({ params }: any) {
         <Mdx code={post.body.code} />
 
         <div className="mt-20 flex justify-center dark:text-slate-700">
-          <ClapsButton
-          url={post.tweetUrl} />
+          <ClapsButton url={post.tweetUrl} />
         </div>
       </section>
     </div>

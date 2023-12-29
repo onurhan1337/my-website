@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 const About = () => {
   return (
     <section>
-      <h1 className="text-2xl font-serif">About me</h1>
+      <h1 className="text-2xl font-serif dark:text-zinc-200">About me</h1>
 
-      <p className="my-5 text-neutral-800 dark:text-neutral-200">
+      <p className="my-5 text-zinc-800 dark:text-zinc-200">
         Hey, I&apos;m Onurhan.
       </p>
-      <div className="prose prose-neutral dark:prose-invert text-neutral-800 dark:text-neutral-200">
+      <div className="prose prose-zinc dark:prose-invert text-zinc-800 dark:text-zinc-200">
         <p>
           I&apos;m currently the <b>Front-end Engineer independently</b>,
           developing interfaces. I focus on crafting and developing the

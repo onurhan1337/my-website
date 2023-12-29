@@ -1,54 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
 import { usePathname } from "next/navigation";
 
 import { Button } from "./ui/button";
-import SupportButton from "./post/support";
+import { cn } from "@/lib/utils";
 
 const HEADER_ITEMS = {
   "/": "home",
   "/about": "about",
   "/post": "post",
   "/snippet": "snippet",
+  "/guestbook": "guestbook",
 };
 
 const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="flex flex-col sm:flex-row mb-5 md:mb-10 items-center">
-      <span className="text-md md:text-lg whitespace-nowrap font-bold">
-        <Link href="/">
-          <span className="font-serif cursor-default pr-2">Onurhan Demir</span>
-        </Link>
-      </span>
-
+    <header className="flex flex-col py-8 sm:py-5 items-center bg-white dark:bg-[#111010]">
       <nav
         id="nav"
-        className={"font-mono text-xs grow justify-end items-center flex gap-1"}
+        className={
+          "dark:bg-[#111010] font-mono text-xs grow justify-end items-center flex gap-1"
+        }
       >
         {Object.entries(HEADER_ITEMS).map(([key, value]) => {
           const isActive = key === pathname;
           return (
-            <Button variant={"link"} key={key} asChild>
-              <Link href={key}>
-                {isActive ? (
-                  <span className="font-semibold">{value}</span>
-                ) : (
-                  value
+            <Button variant={"link"} className="py-1 px-2" key={key} asChild>
+              <Link
+                href={key}
+                className={cn(
+                  isActive
+                    ? "font-semibold underline text-zinc-700 dark:text-zinc-100"
+                    : "text-zinc-700 dark:text-zinc-300"
                 )}
+              >
+                {value}
               </Link>
             </Button>
           );
         })}
       </nav>
-
-      <div className="flex flex-row ml-0 sm:ml-4 space-x-2 items-center justify-center sm:justify-end w-28">
-        <ThemeToggle />
-        <SupportButton />
-      </div>
     </header>
   );
 };

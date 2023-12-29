@@ -32,8 +32,10 @@ export default function SnippetsWithFilter({
   return (
     <section className="px-3">
       <div className="mx-auto flex max-w-2xl flex-col items-center flex-wrap justify-center gap-2">
-        <h1 className={"text-2xl font-serif"}>Snippets</h1>
-        <h6 className={"my-3 text-sm font-medium leading-none"}>
+        <h1 className={"text-2xl font-serif dark:text-zinc-200"}>Snippets</h1>
+        <h6
+          className={"my-3 text-sm font-medium leading-none dark:text-zinc-200"}
+        >
           A collection of solutions to small problems I&apos;ve faced in the
           past.
         </h6>
@@ -74,7 +76,11 @@ export default function SnippetsWithFilter({
 
         <div>
           <Link href={"/snippet"}>
-            <Button size={"sm"} variant={"outline"} className="gap-2">
+            <Button
+              size={"sm"}
+              variant={"ghost"}
+              className="gap-2 dark:text-zinc-300 dark:hover:text-zinc-400"
+            >
               <ArrowLeftIcon size={16} />
               See All
             </Button>

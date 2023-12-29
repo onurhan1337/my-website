@@ -7,6 +7,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
 import Header from "@/components/header";
+import { cn } from "@/lib/utils";
 
 const geist = {
   sans: GeistSans,
@@ -62,9 +63,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={cn(
+        "bg-white text-zinc-900 dark:bg-[#111010] dark:text-zinc-100",
+        geist.sans.variable,
+        geist.mono.variable
+      )}
+    >
       <body
-        className={`dark:text-gray-100 dark:bg-zinc-950 max-w-2xl m-auto ${geist.sans.variable} ${geist.mono.variable} font-sans`}
+        className={`max-w-2xl m-auto antialiased font-sans bg-white dark:bg-[#111010]`}
       >
         <main className="p-6 pt-3 md:pt-6">
           <Header />

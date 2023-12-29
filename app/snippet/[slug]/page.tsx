@@ -87,7 +87,11 @@ const SnippetCode = ({ params }: { params: Props["params"] }) => {
         </div>
         <div className="gap-2 my-4">
           <Link href={"/snippet"}>
-            <Button size={"sm"} variant={"outline"} className="gap-2">
+            <Button
+              size={"sm"}
+              variant={"ghost"}
+              className="gap-2 dark:text-zinc-300 dark:hover:text-zinc-400"
+            >
               <ArrowLeftIcon size={16} />
               See All
             </Button>

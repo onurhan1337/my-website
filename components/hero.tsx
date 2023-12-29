@@ -17,21 +17,29 @@ const Hero = () => {
         priority
       />
       <div className="text-center py-12">
-        <p className="text-2xl ">
+        <p className="text-2xl text-zinc-700 dark:text-zinc-300">
           <Balancer>Building digital</Balancer>
         </p>
-        <p className="text-2xl">
+        <p className="text-2xl text-zinc-700 dark:text-zinc-300">
           <Balancer> products, interfaces, and</Balancer>
         </p>
-        <p className="text-2xl">
+        <p className="text-2xl text-zinc-700 dark:text-zinc-300">
           <Balancer> experience.</Balancer>
         </p>
       </div>
       <div>
-        <Button variant={"ghost"} asChild>
+        <Button
+          variant={"ghost"}
+          className="dark:text-zinc-200 text-zinc-700 dark:hover:text-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 hover:bg-zinc-100"
+          asChild
+        >
           <Link href="mailto:onurhandtr@gmail.com">Email</Link>
         </Button>
-        <Button variant={"ghost"} asChild>
+        <Button
+          variant={"ghost"}
+          className="dark:text-zinc-200 text-zinc-700 dark:hover:text-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 hover:bg-zinc-100"
+          asChild
+        >
           <Link
             href="https://x.com/onurhan1337"
             target="_blank"
@@ -40,7 +48,11 @@ const Hero = () => {
             X(Twitter)
           </Link>
         </Button>
-        <Button variant={"ghost"}>
+        <Button
+          variant={"ghost"}
+          className="dark:text-zinc-200 text-zinc-700 dark:hover:text-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 hover:bg-zinc-100"
+          asChild
+        >
           <Link
             href="https://github.com/onurhan1337"
             target="_blank"

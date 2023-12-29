@@ -12,8 +12,10 @@ export const metadata: Metadata = {
 const Snippets = () => {
   return (
     <section className="mx-auto flex max-w-2xl flex-col items-center flex-wrap justify-center gap-2">
-      <h1 className={"text-2xl font-serif"}>Snippets</h1>
-      <h6 className={"my-3 text-sm font-medium leading-none"}>
+      <h1 className={"text-2xl font-serif dark:text-zinc-200"}>Snippets</h1>
+      <h6
+        className={"my-3 text-sm font-medium leading-none dark:text-zinc-200"}
+      >
         A collection of solutions to small problems I&apos;ve faced in the past.
       </h6>
 
