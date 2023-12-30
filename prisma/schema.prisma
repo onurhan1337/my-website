@@ -76,6 +76,7 @@ model Comment {
   name      String
   postSlug  String
   email     String
+  avatarUrl String
   message   String
   createdAt DateTime @default(now())
   userId    String?
