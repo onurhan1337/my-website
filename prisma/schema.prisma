@@ -47,6 +47,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   guestbookEntries GuestbookEntry[]
+  comments Comment[]
 }
 
 model VerificationToken {
@@ -61,6 +62,21 @@ model GuestbookEntry {
   id        String   @id @default(cuid())
   name      String
   email     String
+  message   String
+  createdAt DateTime @default(now())
+  userId    String?
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  name      String
+  postSlug  String
+  email     String
+  avatarUrl String
   message   String
   createdAt DateTime @default(now())
   userId    String?
