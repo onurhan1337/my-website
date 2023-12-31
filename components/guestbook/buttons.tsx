@@ -22,6 +22,7 @@ export function SignIn() {
 export function SignOut() {
   return (
     <button
+      type="button"
       className="text-xs text-neutral-700 dark:text-neutral-300 mt-2 mb-6"
       onClick={() => signOut()}
     >
