@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { ChevronDown, XIcon } from "lucide-react";
 
-const HEADER_ITEMS = {
+const HEADER_ITEMS: Record<string, string> = {
   "/": "home",
   "/about": "about",
   "/post": "post",
@@ -15,18 +17,33 @@ const HEADER_ITEMS = {
 };
 
 const Header = () => {
-  const pathname = usePathname();
+  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
+  const segment = useSelectedLayoutSegment();
+  const path = segment ? `/${segment}` : "/";
+
+  useEffect(() => {
+    setIsNavOpen(false);
+  }, [segment]);
 
   return (
-    <header className="flex flex-col py-8 sm:py-5 items-center bg-white dark:bg-[#111010]">
+    <header className="py-8 sm:py-5 bg-white dark:bg-[#111010]">
+      {isNavOpen && (
+        <span>
+          <XIcon
+            className="text-zinc-700 dark:text-zinc-400 opacity-50"
+            onClick={() => setIsNavOpen(false)}
+          />
+        </span>
+      )}
       <nav
         id="nav"
-        className={
-          "dark:bg-[#111010] font-mono text-xs grow justify-end items-center flex gap-1"
-        }
+        className={cn(
+          isNavOpen ? "flex items-baseline" : "hidden",
+          "dark:bg-[#111010] font-mono text-xs grow flex-col gap-1 sm:flex sm:flex-row sm:justify-center"
+        )}
       >
         {Object.entries(HEADER_ITEMS).map(([key, value]) => {
-          const isActive = key === pathname;
+          const isActive = key === path;
           return (
             <Button variant={"link"} className="py-1 px-2" key={key} asChild>
               <Link
@@ -43,6 +60,21 @@ const Header = () => {
           );
         })}
       </nav>
+
+      {!isNavOpen && (
+        <button
+          type="button"
+          className="flex select-none items-center gap-1 sm:hidden"
+          onClick={() => {
+            setIsNavOpen(true);
+          }}
+        >
+          <span className="text-zinc-700 dark:text-zinc-400">
+            {HEADER_ITEMS[path]}
+          </span>
+          <ChevronDown className="text-zinc-700 dark:text-zinc-400" size={16} />
+        </button>
+      )}
     </header>
   );
 };
