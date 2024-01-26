@@ -9,7 +9,7 @@ interface SnippetCardProps {
 const SnippetCard = (props: SnippetCardProps) => {
   const { data: snippet } = props;
   return (
-    <NextLink href={`snippet/${snippet.slug}`}>
+    <NextLink href={`/snippet/${snippet.slug}`}>
       <article
         className="border-2 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 rounded-xl p-6 my-4 space-y-3"
         key={snippet.title}
