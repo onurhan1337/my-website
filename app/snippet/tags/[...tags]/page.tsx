@@ -50,12 +50,7 @@ export default function SnippetsWithFilter({
 
         {filteredSnippets &&
           filteredSnippets.map((snippet) => (
-            <div
-              className="flex flex-col items-start justify-center gap-2 w-full"
-              key={snippet.title}
-            >
-              <SnippetCard data={snippet} />
-            </div>
+            <SnippetCard data={snippet} key={snippet.title} />
           ))}
 
         {filteredSnippets && filteredSnippets.length === 0 && (
