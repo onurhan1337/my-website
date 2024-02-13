@@ -78,4 +78,9 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  .page-header {
+    @apply text-2xl text-center dark:text-zinc-200 tracking-wider uppercase 
+    drop-shadow-md text-zinc-800 dark:drop-shadow-lg font-semibold;
+  }
 }

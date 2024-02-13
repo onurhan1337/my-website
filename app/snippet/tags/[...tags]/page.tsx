@@ -32,14 +32,15 @@ export default function SnippetsWithFilter({
   return (
     <section className="px-3">
       <div className="mx-auto flex max-w-2xl flex-col items-center flex-wrap justify-center gap-2">
-        <h1 className={"text-2xl font-serif dark:text-zinc-200"}>Snippets</h1>
-        <h6
-          className={"my-3 text-sm font-medium leading-none dark:text-zinc-200"}
+        <h1 className="page-header">Snippets</h1>
+        <p
+          className="mt-1 text-zinc-800 dark:text-zinc-200 
+      text-center tracking-wide leading-relaxed
+      "
         >
           A collection of solutions to small problems I&apos;ve faced in the
           past.
-        </h6>
-
+        </p>
         {params.tags && (
           <Link href={"/snippet"}>
             <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-2 my-4">

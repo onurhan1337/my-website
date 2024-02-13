@@ -20,9 +20,14 @@ const Guestbook = async () => {
 
   return (
     <section>
-      <h1 className={"text-2xl font-serif text-center dark:text-zinc-200"}>
-        Leave a message in my guestbook
-      </h1>
+      <h1 className="page-header">Leave a message in my guestbook</h1>
+      <p
+        className="mt-1 text-zinc-800 dark:text-zinc-200 
+      text-center tracking-wide leading-relaxed
+      "
+      >
+        Feel free to leave a message, just say hi.
+      </p>
 
       <div className="py-4 grid place-items-center">
         <GuestbookForm />

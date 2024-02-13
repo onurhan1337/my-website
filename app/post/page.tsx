@@ -10,9 +10,7 @@ export const metadata: Metadata = {
 const Post = () => {
   return (
     <div>
-      <h1 className="text-2xl font-serif text-center dark:text-zinc-200">
-        Posts and notes
-      </h1>
+      <h1 className="page-header">Posts and notes</h1>
       <BlogList />
     </div>
   );
