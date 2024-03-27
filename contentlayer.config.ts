@@ -66,9 +66,10 @@ export default makeSource({
     rehypePlugins: [
       rehypeSlug,
       [
+        // @ts-expect-error
         rehypePrettyCode,
         {
-          theme: "poimandres",
+          theme: "vesper",
           onVisitLine(node: RehypeNode) {
             // Prevent lines from collapsing in `display: grid` mode, and allow empty
             // lines to be copy/pasted
