@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Navbar } from "@/components/layout/nav";
+import { Header } from "@/components/header";
 import { ThemeProvider } from "./theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,7 +28,7 @@ export default function RootLayout({
         >
           <main className=" antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row  mt-2 sm:mt-8 lg:mx-auto">
             <section className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-              <Navbar />
+              <Header />
 
               {children}
             </section>
