@@ -1,0 +1,277 @@
+---
+title: "Supabase & Lemon Squeezy magic link integration"
+publishedAt: "2024-03-28"
+summary: "Simplify customer access and streamline sales processes."
+---
+
+In the realm of online sales, the journey from seller to buyer is often marked by complexities. However, with the strategic fusion of Supabase and Lemon Squeezy, a new paradigm emerges, simplifying this journey for both parties.
+
+### How it works
+
+To create a plot, a seller (X) puts their product for sale on Lemonsqueezy and a buyer (Y) purchases it. We use the Lemon Squeezy API KEY and a magic link form with Supabase to check if the buyer's email is linked to the purchase. If it is, a magic link is sent to the buyer's email for product access.
+
+### Create your store
+
+To create your store, go to [Lemon Squeezy](https://www.lemonsqueezy.com/). Follow the steps explained there to add your first product. Get the API KEY by going to **Settings > API** tab from the Store panel and creating one.
+
+### Create project
+
+```bash
+npx create-next-app@latest
+```
+
+Add environment variables
+
+```bash
+  LEMON_SQUEEZY_KEY=
+  NEXT_PUBLIC_SUPABASE_URL=
+  NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+After creating the project and adding environment variables, include Supabase.
+
+```bash
+npm i @supabase/ssr @supabase/supabase-js
+```
+
+Include the following files in **lib > supabase** in the main directory of your project.
+
+<LinkCardList
+  cards={[
+    {
+      title: "client",
+      link: "https://github.com/onurhan1337/course/blob/master/lib/supabase/client.ts",
+    },
+    {
+      title: "server",
+      link: "https://github.com/onurhan1337/course/blob/master/lib/supabase/server.ts",
+    },
+    {
+      title: "middleware",
+      link: "https://github.com/onurhan1337/course/blob/master/lib/supabase/middleware.ts",
+    },
+  ]}
+/>
+
+Now I will create a magic link form and then the API file. Then we will include the pages that will be shown to the user who will log in with the magic link.
+
+**magic-link-form.tsx**
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+export default function MagicLinkForm() {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const response = await fetch(
+      `/api/customers?email=${encodeURIComponent(email)}`
+    );
+    const data = await response.json();
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 rounded-md p-4"
+    >
+      <div>
+        <label
+          htmlFor="email"
+          className="text-gray-1100 mb-1.5 block text-[13px]"
+        >
+          Email
+        </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          placeholder="name@domain.com"
+          onChange={(e) => setEmail(e.target.value)}
+          className="bg-gray-00 h-10 w-full rounded-md border border-gray-300 px-3 outline-none placeholder:text-gray-500 md:text-sm"
+          required
+          autoFocus
+        />
+      </div>
+      <button
+        className="relative mt-3 flex h-10 w-full items-center justify-center gap-2 overflow-hidden rounded-md border border-gray-300 bg-gray-200/50 text-sm font-medium transition-all hover:bg-[#F5F5F5]"
+        type="submit"
+      >
+        Send me a login link
+      </button>
+    </form>
+  );
+}
+```
+
+The code takes user input in the form of an email address and sends it to **/api/customers?email=** to check if the user has made any purchases through the Lemon Squeezy API.
+
+**app/api/customers/route.ts**
+
+```ts
+import { createClient } from "@/lib/supabase/server";
+
+const BASE_URL = "https://course-onurhan.vercel.app";
+
+export async function GET(request: Request) {
+  const supabase = createClient();
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get("email");
+
+  if (!email) {
+    return new Response(JSON.stringify({ error: "Email is required" }), {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.lemonsqueezy.com/v1/customers?filter[email]=${email}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.LEMON_SQUEEZY_KEY}`,
+          Accept: "application/json",
+        },
+      }
+    );
+
+    const { data: foundCustomers } = await res.json();
+
+    if (foundCustomers.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No customer found with that email" }),
+        {
+          status: 404,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    const { data: magicLink, error: authError } =
+      await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: true,
+          emailRedirectTo: `${BASE_URL}/videos`,
+        },
+      });
+
+    if (authError) {
+      throw new Error(authError.message);
+    }
+
+    return new Response(JSON.stringify({ magicLink }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error: any) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+}
+```
+
+<ProsCard
+  pros={[
+    "created BASE_URL for the domain, but you can create separate keys for both localhost and production in your `.env.local` file and use them, it will be much better.",
+    "used the searchParams property to access the user's form input.",
+    "Through the Lemon Squeezy API, I check if the user is a customer with the email address they typed in.",
+    "When a customer was present, I utilized Supabase's signInWithOtp feature to send them a magic link.",
+  ]}
+/>
+
+<Callout>
+  To edit the site URL and magic link in the email content sent to the user, go
+  to the Authentication section from the Supabase panel and then from the URL
+  Configuration area, Email templates > Magic Link for Magic link mail content.
+</Callout>
+
+The email template sent to the user does not have the information we want by default. For this, I need to edit the Magic link content as follows.
+
+```jsx
+<h2>Magic Link</h2>
+
+<p>Follow this link to login:</p>
+<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink">Log In</a></p>
+```
+
+After completing these steps, we can now move on to the next step. The user who clicks on the Log In button in the email will be directed to the verification page. Now I am going to build this verification page.
+
+**app/auth/confirm/route.ts**
+
+```ts
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { type EmailOtpType } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
+  const next = searchParams.get("next") ?? "/";
+  const redirectTo = request.nextUrl.clone();
+  redirectTo.pathname = next;
+
+  if (token_hash && type) {
+    const cookieStore = cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            cookieStore.set({ name, value, ...options });
+          },
+          remove(name: string, options: CookieOptions) {
+            cookieStore.delete({ name, ...options });
+          },
+        },
+      }
+    );
+
+    const { error } = await supabase.auth.verifyOtp({
+      type,
+      token_hash,
+    });
+    if (!error) {
+      return NextResponse.redirect(redirectTo);
+    }
+  }
+
+  // return the user to an error page with some instructions
+  redirectTo.pathname = "/auth/auth-code-error";
+  return NextResponse.redirect(redirectTo);
+}
+```
+
+<ProsCard
+  pros={[
+    "get token_hash and type information from the user.",
+    "If this information is available, a cookie is set for the user.",
+    "If verifyOtp property has no error, redirectTo function is executed and user is redirected to relevant page.",
+
+]}
+/>
+
+After that, you can now offer your logged-in user the opportunity to view any page and content using **Supabase** stuffs.
+
+While writing this post I was inspired by [@emilkowalski](https://twitter.com/emilkowalski_)'s story of creating the Video course platform project. I would like to express my gratitude to him. Check out his [project](https://animations.dev/).
