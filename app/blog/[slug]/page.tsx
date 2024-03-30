@@ -1,9 +1,52 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+
 import { getBlogPosts } from "@/app/db/blog";
 import { CustomMDX } from "@/components/mdx";
-import Container from "@/components/shared/container";
 import { formatDate } from "@/lib/utils";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+
+export async function generateMetadata({
+  params,
+}): Promise<Metadata | undefined> {
+  let blog = getBlogPosts().find((blog) => blog.slug === params.slug);
+  if (!blog) {
+    return;
+  }
+
+  let {
+    title,
+    publishedAt: publishedTime,
+    summary: description,
+    image,
+  } = blog.metadata;
+  let ogImage = image
+    ? `https://onurhan.dev${image}`
+    : `https://onurhan.dev/og?title=${title}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      publishedTime,
+      url: `https://onurhan.dev/blog/${blog.slug}`,
+      images: [
+        {
+          url: ogImage,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 export default function BlogDetailPage({ params }) {
   const blog = getBlogPosts().find((blog) => blog.slug === params.slug);
@@ -13,7 +56,7 @@ export default function BlogDetailPage({ params }) {
   }
 
   return (
-    <section>
+    <section className="mx-auto px-2 sm:px-6 lg:px-8 w-full sm:max-w-screen-lg">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -46,7 +89,7 @@ export default function BlogDetailPage({ params }) {
           </p>
         </Suspense>
       </div>
-      <article className="prose prose-quoteless prose-neutral dark:prose-invert text-justify">
+      <article className="prose prose-quoteless prose-neutral dark:prose-invert text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
     </section>

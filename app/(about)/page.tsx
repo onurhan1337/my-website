@@ -3,7 +3,7 @@ import Social from "@/components/social";
 
 export default function About() {
   return (
-    <Container>
+    <Container size="large">
       <p className="my-5 text-zinc-800 dark:text-zinc-200">
         Hi, I&apos;m Onurhan.
       </p>

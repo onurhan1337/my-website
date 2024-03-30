@@ -1,29 +1,29 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
-export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: string;
-  size?: "default" | "large";
-  children: React.ReactNode;
-}
-
-const Container: React.FC<ContainerProps> = ({
-  as = "div",
-  size = "default",
-  children,
-  className,
-  ...props
-}: ContainerProps) => {
-  const sizes = {
-    default: "max-w-screen-sm mx-auto px-6",
-    large: "max-w-screen-xl mx-auto px-6",
-  };
-
-  return React.createElement(
-    as,
-    { className: cn(sizes[size], className), ...props },
-    children
-  );
+type ContainerProps = {
+  children: ReactNode;
+  size?: "small" | "medium" | "large";
 };
 
-export default Container;
+export default function Container({
+  children,
+  size = "large",
+}: ContainerProps) {
+  let width;
+  switch (size) {
+    case "small":
+      width = "w-full sm:max-w-screen-sm";
+      break;
+    case "medium":
+      width = "w-full sm:max-w-screen-md";
+      break;
+    case "large":
+    default:
+      width = "w-full sm:max-w-screen-lg";
+      break;
+  }
+
+  return (
+    <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${width}`}>{children}</div>
+  );
+}
