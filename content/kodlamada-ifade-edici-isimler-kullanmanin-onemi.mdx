@@ -1,0 +1,131 @@
+---
+title: "Kodlamada İfade Edici İsimler Kullanmanın Önemi"
+publishedAt: "2023-08-13"
+summary: "Amacını ortaya koyan isimlendirmeler seçmek hem kodu anlamayı hem de değiştirmeyi çok daha kolay hale getirebilir."
+---
+
+İyi bir isim seçmek ilk başta zamanınızı alıyor gibi görünür ancak aldığından daha çoğunu da kazanmanıza olanak tanır. Yani isimlendirmelerinize önem verin ve onları daha iyi bir tanesini keşfettiğinizde onunla değiştirin. Eğer yaparsanız siz dahil kodunuzu okuyan herkes daha mutlu olacaktır.
+
+Bir değişken, fonksiyon veya class; neden var olduğu, ne yaptığı ve nasıl kullanıldığı hakkında bilgi vermelidir.
+
+<Callout>
+  Eğer bir isim, yorum satırına ihtiyaç duyuyorsa amacını açıklayamaz.
+</Callout>
+
+Yukarıdaki cümleyi desteklemek adına sabah karşılaştığım bir örnek üzerinden bu durumu özetlemeye çalışacağım.
+
+```ts
+const f = "Onurhan"; // a user's first name
+```
+
+Yukarıda TypeScript ile yazılmış **f** adında bir değişken var. Bu size neyi çağrıştırıyor? Açıkçası hiçbir şey ifade etmiyor. Belki statik bir değer değildi, o zaman gerçekten hiç fikriniz olmazdı. Peki aşağıda ufak bir isim değişikliği ile tekrar bakalım.
+
+```ts
+const firstName = "Onurhan";
+```
+
+Bu sadece basit bir örnek ancak ne kadar etkili olduğunu iyice kavramanızı istiyorum, bununla alakalı sayısız örneği kariyeriniz boyunca göreceksiniz.
+Amacını ortaya koyan isimlendirmeler seçmek hem kodu anlamayı hem de değiştirmeyi çok daha kolay hale getirebilir.
+Kitapta, aşağıdakine benzer ancak Java ile yazılmış bir örnek kod vardı bunu Typescript ile değiştirdim.
+
+```ts
+const list1 = [
+  [4, 1, 1],
+  [0, 1, 2],
+  [0, 1, 3],
+];
+
+function getData(): number[][] {
+  let list2: number[][] = [];
+  list1.forEach((item) => {
+    if (item[0] === 4) {
+      list2.push(item);
+    }
+  });
+  return list2;
+}
+```
+
+Şimdi bu kod üzerine biraz tartışalım, burada liste, fonksiyon, değişken isimlendirme ve işlevi sizlere ne ifade ediyor? Burada karmaşık bir şey yok. Aslında hepsi mantık olarak doğru kullanılsa ve boşluklar doğru da olsa bir eksiklik veya karmaşa hissediyorsunuz diye tahmin ediyorum. Burada problem karmaşıklık değil ifade etme biçimi. Bunu daha kolay anlamak için bir kaç soru yeterli;
+
+<ConsCard
+  cons={[
+    "list1 içerisinde neleri barındırır? Sadece rastgele sayılardan mı ibaret?",
+    "item(0) ne ifade eder? Neden bizim için önemlidir?",
+    "4 'ün önemi nedir? Neden sadece onun için bir kontrol ifadesi yazdık?",
+    "Return edilen list2 ifadesini nasıl kullanabiliriz? Neleri barındırır ve neden vardır?",
+  ]}
+/>
+
+Yukarıdaki soruları yanıtlamaya çalıştığımızda aslında isimlendirmenin önemini ve ifade biçimini temsil ettiğini daha net anlıyorsunuz. Şimdi kodun yapısal hiçbir özelliğini değiştirmeden **sadece isimlendirmeleri** değiştireceğim.
+
+```ts
+const gameBoard = [
+  [4, 1, 1],
+  [0, 1, 2],
+  [0, 1, 3],
+];
+
+function geFlaggedCells(): number[][] {
+  let flaggedCells: number[][] = [];
+  gameBoard.forEach((cell) => {
+    if (cell[0] === 4) {
+      flaggedCells.push(cell);
+    }
+  });
+  return flaggedCells;
+}
+```
+
+<ProsCard
+  pros={[
+    "Bir anlam ifade etmeyen list1 ifadesini gameBoard olarak değiştirdim ve bu sayede aslında anlamsız bir array list olmadığını, bir oyun tahtası olduğunu ifade ettiğini anlamış oldunuz.",
+    "getData ifadesi başlı başına bir anlam ifade etmiyor çünkü neyin verilerini bize getireceğini bilmiyoruz. Bu yüzden getFlaggedCells olarak güncelledim ve bu sayede işaretlenen hücreleri getirdiğini anlayabiliyorsunuz.",
+    "list2 ifadesi boş bir array list ve neden içerisine veri girdiğimizi dahi bilmiyoruz ancak flaggedCell olarak güncellediğimde onun aslında işaretlenen hücrelerin barındığı bir array list olduğunu anlayabiliyorsunuz.",
+    "Artık cell[0] ve 4 ifadeleri bizim için bir anlam ifade ediyor. 4'ün işaretli bir alan olduğunu anlamamızı sağladı.",
+    "Return edilen flaggedCells, list2 ifadesine kıyasla çok daha anlamlı ve nerede kullanabileceğimizi kestirdiğimiz bir ifadeye dönüştü. Onunla birlikte artık işaretli hücreleri bize getireceğini biliyoruz.",
+  ]}
+/>
+
+<Callout>The power of choosing good names.</Callout>
+
+Yukarıda ifade ettiğim gibi, **yapısal kod ve çalışmasında hiçbir farklılık yok sadece isimlendirmeler değişti** ve farkın ne kadar büyük olduğunu umuyorum ki sizlerde fark etmişsinizdir. Sadece isimlendirmeleri düzenleyerek; okunabilirlik, ifade edilebilirlik ve mutluluk kazandık.
+
+Yine de bu notlarım bir isimlendirme iyileştirmesinden ziyade genel manada clean code mantığını kapsadığından kodu bu halde bırakamayız. O yüzden biraz daha geliştirelim:
+
+```ts
+interface Cell {
+  isFlagged: boolean;
+  x: number;
+  y: number;
+}
+
+const gameBoard: Cell[] = [
+  [4, 1, 1],
+  [0, 1, 2],
+  [0, 1, 3],
+].map((cell) => ({ isFlagged: cell[0] === 4, x: cell[1], y: cell[2] }));
+function getFlaggedCells(): Cell[] {
+  let flaggedCells: Cell[] = [];
+  gameBoard.forEach((cell) => {
+    if (cell.isFlagged) {
+      flaggedCells.push(cell);
+    }
+  });
+  return flaggedCells;
+}
+```
+
+<ProsCard
+  pros={[
+    "Cell adında bir interface oluşturdum. Bu ifade içerisine hücrenin x ve y ekseninde konumunu belirten işaretlenip işaretlenmediğini belirten ifadeleri taşıyor.",
+    "gameBoard içerisine örnek değerler yerleştirdik ve sadece bir array list yerine Cell interface'ini de dahil ettim.",
+  ]}
+/>
+
+Aktardığım kısımın orijinalinde java ile yazıldığından söz etmiştim. Eğer Java halini incelemek istiyorsanız aşağıdaki linkten erişebilirsiniz.
+
+<LinkCard
+  title="Meaningful Names - Use Intention-Revealing Names"
+  link="https://github.com/jnguyen095/clean-code/issues/2"
+/>

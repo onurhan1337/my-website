@@ -1,0 +1,167 @@
+---
+title: "How to Set Up Cypress for Next.js with TypeScript: A Step-by-Step Guide"
+publishedAt: "2023-03-06"
+summary: "Learn how to configure and integrate Cypress testing framework into your Next.js project using TypeScript, with a comprehensive, easy-to-follow tutorial."
+---
+
+Hello everyone, today I'll talk about how to include Cypress in a nextjs & typescript project and how to write a component test.
+
+## Next.js Project Setup
+
+To create a Next.js Typescript project, use the following code:
+
+```bash
+npx create-next-app@latest --typescript
+```
+
+## Include Cypress in the project
+
+```bash
+npm i cypress -D
+yarn add cypress --dev
+```
+
+## let's write our first component
+
+After completing the setup successfully, we need to make some adjustments when using typescript.
+
+Firstly, we add "cypress": "cypress open" to the package.json file.
+
+```json
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "cypress": "cypress open"
+  },
+```
+
+Next, we go to the terminal and run Cypress.
+
+```bash
+npm run cypress
+yarn cypress
+```
+
+Then we click on the **component testing** option as shown below.
+
+After that, Next.js will automatically detect and display the configuration files it needs to include, and we confirm each of them.
+
+And voila! We have successfully completed the process. Then we click on the "create from component" option that we see in the above picture. At this stage, I'm creating a simple reusable button component that we can write a test file in.
+
+I created a component in the **components>Button>Button.tsx** file path.
+
+```js
+import React from "react";
+
+type ButtonProps = Omit<React.ComponentProps<"button">, "type"> & {
+  onClick: () => void,
+  type?: "button" | "submit" | "reset",
+  disabled?: boolean,
+  className?: string,
+};
+
+const defaultProps: ButtonProps = {
+  disabled: false,
+  onClick: () => {},
+};
+
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  type,
+  disabled,
+  children,
+  className,
+}: ButtonProps) => {
+  const handleClick = () => {
+    if (!disabled && onClick) {
+      onClick();
+    }
+  };
+  return (
+    <button
+      type={type}
+      onClick={handleClick}
+      disabled={disabled}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+};
+
+Button.defaultProps = defaultProps;
+export default Button;
+```
+
+Now we go back to the Cypress panel and select this component we created from the "create from component" option.
+
+After selecting it, it creates a test file named "Button.cy.tsx" for us. We can write our test codes in this file. You can find more detailed information on this topic [here ](https://docs.cypress.io/guides/component-testing/react/examples).
+
+```js
+import React from "react";
+import Button from "./Button";
+
+describe("<Button />", () => {
+  it("renders with text and onClick", () => {
+    cy.mount(<Button onClick={() => {}}>Click me</Button>);
+
+    cy.get("Button")
+      .should("have.text", "Click me")
+      .and("not.have.attr", "disabled");
+
+    cy.get("Button").click();
+
+    cy.get("Button")
+      .should("have.text", "Click me")
+      .and("not.have.attr", "disabled");
+  });
+
+  it("renders with text and onClick and disabled", () => {
+    cy.mount(
+      <Button onClick={() => {}} disabled>
+        Click me
+      </Button>
+    );
+
+    cy.get("Button").should("have.attr", "disabled");
+  });
+
+  it("renders with text and onClick and disabled and type", () => {
+    cy.mount(
+      <Button onClick={() => {}} disabled type="submit">
+        Click me
+      </Button>
+    );
+
+    cy.get("Button").should("have.attr", "type", "submit");
+  });
+
+  it("renders with text and onClick and disabled and type and className", () => {
+    cy.mount(
+      <Button onClick={() => {}} disabled type="submit" className="test">
+        Click me
+      </Button>
+    );
+
+    cy.get("Button").should("have.attr", "type", "submit");
+  });
+});
+```
+
+Above, we wrote sample tests for our Button component, and you can expand and experiment with it as you wish. When we run this test file and inspect it, we get an output like the one shown in the image below.
+
+> NOTE: Do not include the Cypress file in the .gitignore file.
+
+When building, you may encounter the "'commands.ts' cannot be compiled under '--isolatedModules'..." error. In this case, we go to the cypress > support > commands.tsx file, and after including export{}, there will be no problem when building.
+
+```js
+/// <reference types="cypress" />
+export {}
+...
+...
+...
+```
+
+> **WARNING**: Nextjs getServerSideProps or getStaticProps _do not work_ in component tests since they only run on the server side. However, an end-to-end test runs and tests an entire page. Therefore, it is recommended that you use E2E Testing for Next.js pages instead of Component Testing and Component Testing for separate components in a Next.js application. _(via Cypress document)_

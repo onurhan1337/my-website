@@ -1,82 +1,64 @@
 "use client";
 
-import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
-
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { ChevronDown, XIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ModeToggle } from "./ui/theme-toggle";
 
-const HEADER_ITEMS: Record<string, string> = {
-  "/": "home",
-  "/about": "about",
-  "/post": "post",
-  "/snippet": "snippet",
-  "/guestbook": "guestbook",
+const NAV_ITEMS = {
+  about: "/",
+  blog: "/blog",
+  work: "/work",
 };
 
-const Header = () => {
-  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
-  const segment = useSelectedLayoutSegment();
-  const path = segment ? `/${segment}` : "/";
-
-  useEffect(() => {
-    setIsNavOpen(false);
-  }, [segment]);
+export const Header = () => {
+  const pathname = usePathname();
 
   return (
-    <header className="py-8 sm:py-5 bg-white dark:bg-[#111010]">
-      {isNavOpen && (
-        <span>
-          <XIcon
-            className="text-zinc-700 dark:text-zinc-400 opacity-50"
-            onClick={() => setIsNavOpen(false)}
-          />
-        </span>
-      )}
+    <header className="mx-auto px-0 sm:px-6 lg:px-8 w-full sm:max-w-screen-lg">
       <nav
-        id="nav"
-        className={cn(
-          isNavOpen ? "flex items-baseline" : "hidden",
-          "dark:bg-[#111010] font-mono text-xs grow flex-col gap-1 sm:flex sm:flex-row sm:justify-center"
-        )}
+        className="flex flex-col fade items-center md:items-start justify-start py-8 tracking-tight w-full sm:pr-0 md:pr-6 lg:pr-0"
+        aria-label="Main navigation"
       >
-        {Object.entries(HEADER_ITEMS).map(([key, value]) => {
-          const isActive = key === path;
-          return (
-            <Button variant={"link"} className="py-1 px-2" key={key} asChild>
+        <div className="flex flex-row items-center">
+          <Link href="/">
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              width={40}
+              height={40}
+              priority={true}
+            />
+            <span className="sr-only">Onurhan Demir</span>
+          </Link>
+
+          <div className="flex flex-col ml-4">
+            <span className="text-medium inline-block font-medium">
+              Onurhan Demir
+            </span>
+            <span className="opacity-60">frontend engineer</span>
+          </div>
+        </div>
+
+        <div className="flex flex-row items-center justify-between sm:justify-end w-full mt-8 sm:mt-4 mb-0 sm:mb-4 tracking-tight">
+          <div className="inline-flex items-center">
+            {Object.entries(NAV_ITEMS).map(([name, href]) => (
               <Link
-                href={key}
+                key={name}
+                href={href}
                 className={cn(
-                  isActive
-                    ? "font-semibold underline text-zinc-700 dark:text-zinc-100"
-                    : "text-zinc-700 dark:text-zinc-300"
+                  pathname === href ? "font-semibold" : "font-normal",
+                  "transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2"
                 )}
               >
-                {value}
+                {name}
               </Link>
-            </Button>
-          );
-        })}
+            ))}
+          </div>
+          <ModeToggle />
+        </div>
       </nav>
-
-      {!isNavOpen && (
-        <button
-          type="button"
-          className="flex select-none items-center gap-1 sm:hidden"
-          onClick={() => {
-            setIsNavOpen(true);
-          }}
-        >
-          <span className="text-zinc-700 dark:text-zinc-400">
-            {HEADER_ITEMS[path]}
-          </span>
-          <ChevronDown className="text-zinc-700 dark:text-zinc-400" size={16} />
-        </button>
-      )}
     </header>
   );
 };
-
-export default Header;

@@ -1,86 +1,76 @@
-import "@/styles/globals.css";
-import "@upstash/claps/style.css";
-
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
-import { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import Header from "@/components/header";
-import { cn } from "@/lib/utils";
-import NextAuthSessionProvider from "./session-provider";
+import { Header } from "@/components/header";
+import { ThemeProvider } from "./theme-provider";
 
-const geist = {
-  sans: GeistSans,
-  mono: GeistMono,
-};
-
-const title = "Onurhan Demir";
-const description = "Building digital products, brands, and experience.";
-const image = "https://onurhan.dev/avatar.png";
-const url = "https://onurhan.dev";
-const locale = "tr-TR";
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://onurhan.dev"),
   title: {
-    default: title,
-    template: `%s | ${title}`,
+    default: "Onurhan Demir",
+    template: "%s | Onurhan Demir",
   },
-  description,
+  description: "Front-end Engineer",
   openGraph: {
-    title,
-    description,
-    url,
-    images: [
-      {
-        url: image,
-        alt: title,
-      },
-    ],
-    siteName: title,
-    locale,
+    title: "Onurhan Demir",
+    description: "Front-end Engineer",
+    url: "https://onurhan.dev",
+    siteName: "Onurhan Demir",
+    locale: "en_US",
     type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title,
-    description,
-    site: "@onurhan1337",
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
-  icons: {
-    icon: "/avatar.png",
-    apple: "/avatar.png",
+  twitter: {
+    title: "Onurhan Demir",
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "K1pkJ72cY3DylswXke2MHJGxmjJ91WXwgozcCICvFrU",
+    // TODO: Add yandex verification key here
   },
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html
-      lang="en"
-      className={cn(
-        "bg-white text-zinc-900 dark:bg-[#111010] dark:text-zinc-100",
-        geist.sans.variable,
-        geist.mono.variable
-      )}
-    >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`max-w-2xl m-auto antialiased font-sans bg-white dark:bg-[#111010]`}
+        className={`${inter.className} bg-zinc-50 dark:bg-zinc-950 overflow-y-scroll`}
       >
-        <NextAuthSessionProvider>
-          <main className="p-6 pt-3 md:pt-6">
-            <Header />
-            {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="theme"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className=" antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row  mt-2 sm:mt-8 lg:mx-auto">
+            <section className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+              <Header />
+
+              {children}
+            </section>
           </main>
-        </NextAuthSessionProvider>
+        </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

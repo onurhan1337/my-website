@@ -2,27 +2,25 @@
 
 <a href="https://www.buymeacoffee.com/onurhan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=onurhan&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" /></a>
 
-- **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Upstash Redis](https://upstash.com/) & [Prisma](https://www.prisma.io/) & [PlanetScale](https://planetscale.com/)
-- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
-- **Post and Snippet**: [Contentlayer](https://www.contentlayer.dev/)
-- **Deployment**: [Vercel](https://vercel.com)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
+- **Icons**: [Lucide React](https://lucide.dev/icons/)
 - **Like**: [Upstash Claps](https://github.com/upstash/claps)
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Deployment**: [Vercel](https://vercel.com)
+- **Syntax Highlight**: [Sugar High](https://github.com/huozhi/sugar-high)
+- **Blog**: [Next MDX Remote](https://github.com/hashicorp/next-mdx-remote)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
 
 ## Overview
 
 - `pages/api/*` - [API Routes](https://nextjs.org/docs/api-routes/introduction), claps.
-- `app/post/*` - Static pre-rendered blog pages using Contentlayer.
-- `app/snippet/*` - Static pre-rendered code snippets using Contentlayer.
-- `app/*` - All other static pages.
+- `app/blog/*` - Static pre-rendered blog pages using Contentlayer.
+- `app/*` - All other pages.
 - `components/` - All components.
-- `components/ui` - Primitive components.
 - `public/*` - Static assets including images for blogs and other all images.
-- `data/` - Contains all posts and snippets.
+- `content/` - Contains all posts and snippets.
 - `lib/`- Contains metadata and util functions.
 - `types/`- Contains all types and interfaces.
-- `styles/*` - A small amount of global styles. I'm mostly using vanilla Tailwind CSS.
+- `styles/*` - Contains all global styles.
 
 ## Demo
 

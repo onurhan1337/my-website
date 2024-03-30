@@ -1,15 +1,15 @@
-import { allPosts } from "contentlayer/generated";
-import { MetadataRoute } from "next";
+import { getBlogPosts } from "app/db/blog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = allPosts.map((post) => ({
-    url: `https://onurhan.dev/post/${post.slug}`,
+export default async function sitemap() {
+  let blogs = getBlogPosts().map((blog) => ({
+    url: `https://leerob.io/blog/${blog.slug}`,
+    lastModified: blog.metadata.publishedAt,
   }));
 
-  const routes = ["", "/post", "/snippet", "/about"].map((route) => ({
+  let routes = ["", "/blog", "/about"].map((route) => ({
     url: `https://onurhan.dev${route}`,
     lastModified: new Date().toISOString().split("T")[0],
   }));
 
-  return [...routes, ...posts];
+  return [...routes, ...blogs];
 }

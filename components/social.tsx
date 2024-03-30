@@ -1,11 +1,10 @@
-import Link from "next/link";
-
-import IconArrowRightUp from "./icons/arrow-right-up";
-import IconYoutube from "./icons/youtube";
-import IconGithub from "./icons/github";
-
 import { SocialButtonProps } from "@/types";
-import IconCv from "./icons/cv";
+import IconArrowRightUp from "./shared/icons/arrow-right-up";
+import IconYoutube from "./shared/icons/youtube";
+import IconGithub from "./shared/icons/github";
+import IconCv from "./shared/icons/cv";
+
+import Link from "next/link";
 
 function SocialButton({ href, children }: SocialButtonProps) {
   return (

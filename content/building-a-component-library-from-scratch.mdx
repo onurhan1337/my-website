@@ -1,0 +1,64 @@
+---
+title: "Building a Component Library from Scratch"
+publishedAt: "2023-06-13"
+summary: "Creating a Robust Component Library from Scratch: Simplify Development and Boost Productivity"
+---
+
+Before you start developing a component library, you should ask yourself the following question:
+
+**Why should I develop a component library?**
+There are several reasons for this. The main one is consistency. When you are going to use it in multiple projects, consistency in design and behavior across projects is very important, and this saves time and energy by eliminating the need to create similar structures over and over again.
+
+In addition, it will make your project very successful in terms of testability. It can also be part of something bigger than you can imagine, an open source project. It can allow you to build a large component library across a large number of projects.
+
+Below are projects that I think are inspiring and successful. Be sure to take a look at each one and get inspired.
+
+<LinkCardList
+  cards={[
+    {
+      title: "shadcn/ui",
+      link: "https://ui.shadcn.com/",
+    },
+    {
+      title: "material/ui",
+      link: "https://mui.com/material-ui/getting-started/overview/",
+    },
+    {
+      title: "antdesign",
+      link: "https://ant.design/",
+    },
+    {
+      title: "adobecl",
+      link: "https://www.aemcomponents.dev/content/core-components-examples/library.html",
+    },
+  ]}
+/>
+
+In my chat with [Shadcn](https://twitter.com/shadcn) he gave me a very valuable advice and I would like to pass it on to you.
+
+> I did try building from scratch but it's a lot of work. I've learned a lot of myself by building on top of proven libraries. And once you've implemented one or two components you start to get a feel on how the library is structured and this helps with understanding how you can extend it and build your own custom components.
+
+I absolutely agree with him because, as I mentioned at the beginning, we don't need to reinvent anything. Building on proven libraries would be a good choice.
+
+The examples I share below include packages that can be used when creating a component library.
+
+- [radix-ui](https://www.radix-ui.com/docs/primitives/overview/getting-started): A project I found very successful, in addition shadcn/ui uses components from radix's project.
+- [headless-ui](https://headlessui.com/): Although its content seems limited compared to radix, it's a good resource for creating successful primitve components with soft animations.
+- [adobe-react-aria](https://react-spectrum.adobe.com/react-aria/index.html): A very good solution for the concept of accessibility, which was only realized later as a need and importance when developing component libraries.
+
+**Select tools and framework**
+In addition to the packages I shared above, we come to the tech stack selection where you will develop the components.
+
+- React
+- Typescript - optional but recommended
+- Storybook - a great tool for previewing and documenting components
+- Vitest - a successful framework for unit testing
+
+**Tips**
+
+- Take care to use Typescript
+- Don't forget to create your readme file or docs website and support it with detailed content
+- Study the Storybook document in detail and make sure to use it, I am sure it will be very useful
+- You can use [Turborepo](https://turbo.build/?ref=onurhan.dev) to make monorepo
+
+Now you have the basics and resources. I'm going to develop my own component library piece by piece by joining the #buildinpublic movement and publish it both on [my twitter account](https://twitter.com/onurhan1337) and on my blog. Have a healthy day.
