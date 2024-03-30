@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@upstash/claps/style.css";
+
 ::selection {
   color: #047857;
   background-color: #34d399;

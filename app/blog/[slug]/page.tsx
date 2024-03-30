@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getBlogPosts } from "@/app/db/blog";
 import { CustomMDX } from "@/components/mdx";
 import { formatDate } from "@/lib/utils";
+import Claps from "@/components/claps";
 
 export async function generateMetadata({
   params,
@@ -92,6 +93,7 @@ export default function BlogDetailPage({ params }) {
       <article className="prose prose-quoteless prose-neutral dark:prose-invert text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
+      <Claps />
     </section>
   );
 }
