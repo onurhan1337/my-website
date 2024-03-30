@@ -7,7 +7,7 @@
 - [ ] Add tech stack slider to projects page
 - [ ] Create the project card and list components
 - [ ] Create dynamic opengraph image for blogs
-- [ ] Update about section paragraphs.
-- [ ] (Optional) Update selection in CSS
+- [x] Update about section paragraphs.
+- [x] (Optional) Update selection in CSS
 - [ ] Add Upstash claps
 - [ ] (Optional) Add comment feature with supabase storage and Clerk Auth
