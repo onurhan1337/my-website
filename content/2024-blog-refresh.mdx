@@ -1,0 +1,37 @@
+---
+title: "2024 Blog Refresh"
+publishedAt: "2024-03-30"
+summary: "New design, new features, new content."
+---
+
+I updated my blog this weekend and wanted to share some thoughts along the way:
+
+- [Performance](#performance)
+- [Markdown Rendering](#markdown-rendering)
+- [Outdated dependencies](#outdated-dependencies)
+
+## Performance
+
+Actually my old blog was pretty fast, but I wanted to make sure that the new one was even faster. First, I deleted all the files and started from scratch. Then I made sure all dependencies were up to date.
+
+Some components were created but not used, in the new blog I've carefully created components and used them. This way I've reduced the size of the project.
+
+## Markdown Rendering
+
+I've been using `contentlayer` to render markdown files. It's a great tool for rendering markdown files. I've created a script that fetches all markdown files and renders them. But eventually they shared a new issue about [State of the Contentlayer](https://github.com/contentlayerdev/contentlayer/issues/429). They had no sustainable financial backing support and had to shut down.
+
+After that I decided to look up how to do it manually how can I do it. I started looking for rendering examples on render markdown itself and found a great example on Lee Robinson's blog [render markdown](https://leerob.io). He created a file to convert markdown content to html using with `next-mdx-remote`. I used his example and created a file to render markdown content.
+
+It feels good because after years I don't have to think about whether the project I used in my blog is outdated or not.
+
+## Outdated dependencies
+
+Web is changing so fast. I haven't updated for a few months and I've seen that there are a lot of outdated dependencies. I've tried to update all dependencies and get a lot of errors. `--legacy-peer-deps` is fixed my problem for a short time. I was moved my project `pages` and `app` router and back then a lot of project was broken. They updated their dependencies so quickly to support `app` router.
+
+I didn't have time to fix all of them all. I've decided to delete all of them all and start from scratch. I've created a new project and moved all of my blogs to the new project.
+
+The dependency problem was not just outdated dependencies. My website is really my playground. I've tried a lot of things on my website. So there are a lot of unused dependencies. I deleted them all and started adding them one by one.
+
+## Conclusion
+
+I've learned a lot along the way. New years new things. If you have any feedback please let me know. I'm always open to feedback.
