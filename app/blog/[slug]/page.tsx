@@ -19,11 +19,8 @@ export async function generateMetadata({
     title,
     publishedAt: publishedTime,
     summary: description,
-    image,
   } = blog.metadata;
-  let ogImage = image
-    ? `https://onurhan.dev${image}`
-    : `https://onurhan.dev/og?title=${title}`;
+  let ogImage = `https://onurhan.dev/logo.svg`;
 
   return {
     title,
@@ -41,7 +38,7 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "player",
       title,
       description,
       images: [ogImage],
