@@ -24,7 +24,13 @@ export const Header = () => {
       >
         <div className="flex flex-row items-center">
           <Link href="/">
-            <Image src="/logo.svg" alt="Logo" width={40} height={40} />
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              width={40}
+              height={40}
+              priority={true}
+            />
             <span className="sr-only">Onurhan Demir</span>
           </Link>
 
