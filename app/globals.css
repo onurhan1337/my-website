@@ -204,3 +204,28 @@ table {
 .title {
   text-wrap: balance;
 }
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--foreground);
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--foreground);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--foreground);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: var(--background);
+}

@@ -52,7 +52,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-zinc-50 dark:bg-zinc-950`}>
+      <body
+        className={`${inter.className} bg-zinc-50 dark:bg-zinc-950 overflow-y-scroll`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="theme"

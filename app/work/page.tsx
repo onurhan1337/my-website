@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 export default function Work() {
   return (
     <Container size="large">
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">my work</h1>
       <div className="prose prose-neutral dark:prose-invert text-justify">
         <p>
           On a mission to create user interfaces that engage users and elevate
