@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     siteName: "Onurhan Demir",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "https://onurhan.dev/logo.svg",
+        width: 1200,
+        height: 630,
+        alt: "Onurhan Demir",
+      },
+    ],
   },
   robots: {
     index: true,
