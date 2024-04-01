@@ -36,7 +36,20 @@ function readMDXFile(filePath) {
 }
 
 function getReadingTime(content) {
-  return Math.ceil(content.split(" ").length / 200);
+  const wordsPerMinute = 200; // Average reading speed
+  const imageReadingTime = 12; // Estimated reading time for an image
+  const punctuationReadingTime = 0.05; // Estimated reading time for punctuation
+
+  const wordCount = content.split(" ").length;
+  const imageCount = (content.match(/<img /g) || []).length;
+  const punctuationCount = (content.match(/[.,:;]/g) || []).length;
+
+  const readingTime =
+    wordCount / wordsPerMinute +
+    imageCount * imageReadingTime +
+    punctuationCount * punctuationReadingTime;
+
+  return Math.ceil(readingTime);
 }
 
 function getMDXData(dir) {
