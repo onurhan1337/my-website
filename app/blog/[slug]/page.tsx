@@ -80,10 +80,14 @@ export default function BlogDetailPage({ params }) {
       <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
         {blog.metadata.title}
       </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
+      <div className="flex justify-start items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 text-justify">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
             {formatDate(blog.metadata.publishedAt)}
+          </p>
+          <span className="mx-2 text-neutral-400">—</span>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            {blog.readingTime} min read
           </p>
         </Suspense>
       </div>
