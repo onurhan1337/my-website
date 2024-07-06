@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import Container from "@/components/shared/container";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Work() {
   return (
     <Container size="large">
-      <div className="prose prose-neutral dark:prose-invert text-justify">
+      <div className="prose prose-neutral dark:prose-invert">
         <p>
           On a mission to create user interfaces that engage users and elevate
           brands. Here&apos;s a summary of my work so far.
