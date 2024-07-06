@@ -3,11 +3,13 @@ import { ReactNode } from "react";
 type ContainerProps = {
   children: ReactNode;
   size?: "small" | "medium" | "large";
+  className?: string;
 };
 
 export default function Container({
   children,
   size = "large",
+  className,
 }: ContainerProps) {
   let width;
   switch (size) {
@@ -24,6 +26,8 @@ export default function Container({
   }
 
   return (
-    <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${width}`}>{children}</div>
+    <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${width} ${className}`}>
+      {children}
+    </div>
   );
 }
