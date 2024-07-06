@@ -229,3 +229,9 @@ table {
 ::-webkit-scrollbar-corner {
   background-color: var(--background);
 }
+
+.container>* {
+  animation: enter 0.6s ease both;
+  animation-delay: calc(var(--delay) * var(--stagger));
+  --delay: 120ms;
+}
