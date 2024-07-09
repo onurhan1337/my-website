@@ -1,0 +1,196 @@
+---
+title: "Automate the tasks"
+publishedAt: "2024-07-10"
+summary: "Automate the tasks using Vercel Cron Jobs."
+---
+
+Cron Jobs are commands that run automatically at specific time intervals (e.g. daily, weekly, hourly).
+
+The Cron job feature can be used for operations performed at specific intervals such as data synchronization, email sending, backup operations, and more.
+
+Vercel, on the other hand, hosts the Cron Jobs feature on its platform and offers space to manage and run them.
+
+### How to Use
+
+Vercel has prepared a comprehensive [document](https://vercel.com/docs/cron-jobs/manage-cron-jobs) on this topic. You can get more detailed information about how to create and manage it.
+
+In this article, I will talk step by step about how I use Cron Jobs in my [Lotus](https://github.com/onurhan1337/lotus) project.
+
+### Configuration
+
+First, I create a **vercel.json** file in the main directory of the project. In this file, we will specify the relevant API route path information and frequency.
+
+The Lotus project contains challenges and each of them has end dates. I set the frequency for each new day so that the challenge status information is updated when the end date arrives.
+
+```json
+{
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
+```
+
+The values next to _Schedule_ may seem meaningless, but they are used to specify the frequency. The value in the code fragment above means once every 24 hours. Below you can view other examples shared in the document.
+
+<img
+  src="/images/vercel_cron_jobs/cron-expressions.png"
+  alt="Cron Expressions"
+  className="border border-zinc-200 rounded-xl p-2"
+  width={"100%"}
+  height={"auto"}
+  loading="lazy"
+/>
+
+Also, if the interval you want to set is not listed, you can easily find out the corresponding time interval by accessing the relevant document page from the [link](https://vercel.com/docs/cron-jobs) here and using the Cron job validator feature.
+
+<img
+  src="/images/vercel_cron_jobs/cron-job-validatior.png"
+  alt="Cron Job Validator"
+  className="border border-zinc-200 rounded-xl p-2"
+  width={"100%"}
+  height={"auto"}
+  loading="lazy"
+/>
+
+### Just use it
+
+After the configuration phase, all we need to do is to create a file in the API route we specified in the **vercel.json** file and then write the process file we want into it.
+
+In the Vercel document, examples are [given](https://vercel.com/docs/cron-jobs/quickstart) for this using the World Time API, Serverless and Edge functions are supported.
+
+```tsx
+// app/api/cron/route.ts
+export async function GET() {
+  const result = await fetch(
+    "http://worldtimeapi.org/api/timezone/America/Chicago",
+    {
+      cache: "no-store",
+    }
+  );
+  const data = await result.json();
+
+  return Response.json({ datetime: data.datetime });
+}
+```
+
+### Securing the Cron Jobs
+
+You can secure cron jobs by assigning the **CRON_SECRET** environment key. Vercel recommends using a random password of 16 characters for this.
+
+Then this defined key is automatically sent with the header as **Authorization** information when a Vercel cron job is called.
+
+```tsx
+import type { NextRequest } from "next/server";
+
+export function GET(request: NextRequest) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
+
+  return Response.json({ success: true });
+}
+```
+
+### Limitations
+
+You don't need a Pro plan to use the Cron Jobs feature, but if you want to use it more extensively, you should take a look at the [limitations](https://vercel.com/docs/cron-jobs/usage-and-pricing).
+
+<img
+  src="/images/vercel_cron_jobs/cron-job-limitations.png"
+  alt="Cron Job Limitations"
+  className="border border-zinc-200 rounded-xl p-2"
+  width={"100%"}
+  height={"auto"}
+  loading="lazy"
+/>
+
+### Deploy
+
+You can either use it via Vercel CLI with the command below or by committing the changes to GitHub and then redeploying.
+
+```bash
+$ vercel deploy --prod
+```
+
+### Cron Jobs in Lotus
+
+Cron Jobs has many options such as dynamic routes and secure requests, but my needs in this regard were more limited. So I set it to trigger once every 24 hours, as shown in the **vercel.json** file I shared above.
+
+Then I created an API route. First, I got the **currentDate** information and used Prisma's LTE feature and currentDate information to find the challenges that are active and whose deadline is before or equal to today.
+
+```tsx
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+    try {
+        const currentDate = new Date();
+
+        const expiredChallenges = await prisma.challenge.findMany({
+        where: {
+            endDate: {
+            lte: currentDate,
+            },
+            isActive: "ACTIVE",
+        },
+        });
+
+        if (expiredChallenges.length === 0) {
+        return NextResponse.json({
+            message: "No expired challenges found",
+        });
+        }
+
+        return NextResponse.json({
+        message: "Expired challenges updated",
+        });
+
+    catch (error: any) {
+        return NextResponse.json({
+        message: "Error updating challenges.",
+        error: error.message,
+        });
+        }
+    }
+}
+```
+
+Since I only needed the ID information, I defined an array and extracted the **expiredChallenges**.
+
+Then I updated the **isActive** property of each one to **COMPLETED** using Prisma's updateMany property.
+
+```ts
+const expiredChallengeIds = expiredChallenges.map((challenge) => challenge.id);
+
+await prisma.challenge.updateMany({
+  where: {
+    id: {
+      in: expiredChallengeIds,
+    },
+  },
+  data: {
+    isActive: "COMPLETED",
+  },
+});
+```
+
+### Manage Cron Jobs
+
+You can come to the settings page of the project via the Vercel dashboard, click on Cron Jobs and then view it. You can review the logs or run manually to test them.
+
+<img
+  src="/images/vercel_cron_jobs/cron-job-settings.png"
+  alt="Cron Job Settings at Vercel Dashboard"
+  className="border border-zinc-200 rounded-xl p-2"
+  width={"100%"}
+  height={"auto"}
+  loading="lazy"
+/>
+
+Thank you for reading my article. Follow me on [X](https://x.com/onurhan1337).

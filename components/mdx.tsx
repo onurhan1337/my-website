@@ -1,9 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { highlight } from "sugar-high";
-import React from "react";
 import { ArrowUpRight } from "lucide-react";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { highlight } from "sugar-high";
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -187,7 +187,7 @@ let components = {
   h4: createHeading(4),
   h5: createHeading(5),
   h6: createHeading(6),
-  Image: RoundedImage,
+  RoundedImage,
   a: CustomLink,
   Callout,
   ProsCard,
