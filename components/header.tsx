@@ -39,7 +39,7 @@ export const Header = () => {
               <span className="text-medium inline-block font-medium">
                 Onurhan Demir
               </span>
-              <span className="opacity-60">frontend engineer</span>
+              <span className="opacity-60">software developer</span>
             </div>
           </div>
 

@@ -1,8 +1,8 @@
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Header } from "@/components/header";
 import { ThemeProvider } from "./theme-provider";
@@ -15,10 +15,10 @@ export const metadata: Metadata = {
     default: "Onurhan Demir",
     template: "%s | Onurhan Demir",
   },
-  description: "Front-end Engineer",
+  description: "Software Developer | Onurhan Demir",
   openGraph: {
     title: "Onurhan Demir",
-    description: "Front-end Engineer",
+    description: "Software Developer | Onurhan Demir",
     url: "https://onurhan.dev",
     siteName: "Onurhan Demir",
     locale: "en_US",

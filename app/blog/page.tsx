@@ -1,14 +1,14 @@
-import { Fragment } from "react";
 import type { Metadata } from "next";
+import { Fragment } from "react";
 
-import { getBlogPosts } from "../db/blog";
+import { BlogCard } from "@/components/blog-card";
 import Container from "@/components/shared/container";
 import Separator from "@/components/shared/separator";
-import { BlogCard } from "@/components/blog-card";
+import { getBlogPosts } from "../db/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Read my thoughts on frontend development, design, and more.",
+  description: "Read my thoughts on software development, design, and more.",
 };
 
 export default function Blog() {
