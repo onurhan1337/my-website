@@ -187,10 +187,13 @@ input[type="email"] {
 }
 
 table {
-  display: block;
-  max-width: fit-content;
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+}
+
+.table-wrapper {
   overflow-x: auto;
-  white-space: nowrap;
 }
 
 .prose .callout>p {

@@ -9,23 +9,45 @@ import { ExpandableCode } from "./expandable-code";
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
-    <th key={index}>{header}</th>
+    <th
+      key={index}
+      className="border-b border-neutral-200 dark:border-neutral-800
+        bg-secondary dark:bg-secondary/50
+        px-4 py-2 text-left
+        text-sm font-semibold text-secondary-foreground dark:text-secondary-foreground
+        first:pl-6 last:pr-6 whitespace-nowrap"
+    >
+      {header}
+    </th>
   ));
+
   let rows = data.rows.map((row, index) => (
-    <tr key={index}>
+    <tr
+      key={index}
+      className="group transition-colors hover:bg-muted/50 dark:hover:bg-muted/50 text-start tracking-wide"
+    >
       {row.map((cell, cellIndex) => (
-        <td key={cellIndex}>{cell}</td>
+        <td
+          key={cellIndex}
+          className="border-b border-neutral-200 dark:border-neutral-800
+            px-4 py-2 text-xs text-muted-foreground
+            first:pl-6 last:pr-6"
+        >
+          {cell}
+        </td>
       ))}
     </tr>
   ));
 
   return (
-    <table>
-      <thead>
-        <tr>{headers}</tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+    <div className="not-prose relative my-4 overflow-hidden rounded-lg border border-border bg-card overflow-x-auto">
+      <table className="w-full border-collapse m-0">
+        <thead>
+          <tr>{headers}</tr>
+        </thead>
+        <tbody className="divide-y divide-border">{rows}</tbody>
+      </table>
+    </div>
   );
 }
 
@@ -209,23 +231,22 @@ function createHeading(level) {
 }
 
 const components = {
-  Image: RoundedImage,
+  h1: createHeading(1),
+  h2: createHeading(2),
+  h3: createHeading(3),
+  h4: createHeading(4),
+  h5: createHeading(5),
+  h6: createHeading(6),
   a: CustomLink,
+  Image: RoundedImage,
   Callout,
-  LinkCard,
-  LinkCardList,
-  Table,
+  ProsCard,
+  ConsCard,
   code: Code,
+  Table,
+  LinkCardList,
 };
 
-export function CustomMDX(props) {
-  return (
-    <MDXRemote
-      {...props}
-      components={{
-        ...components,
-        ...(props.components || {}),
-      }}
-    />
-  );
+export function CustomMDX({ source }: { source: string }) {
+  return <MDXRemote source={source} components={components} />;
 }
