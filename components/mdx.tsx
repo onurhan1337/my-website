@@ -208,29 +208,24 @@ function createHeading(level) {
   return Component;
 }
 
-let components = {
-  h1: createHeading(1),
-  h2: createHeading(2),
-  h3: createHeading(3),
-  h4: createHeading(4),
-  h5: createHeading(5),
-  h6: createHeading(6),
-  RoundedImage,
+const components = {
+  Image: RoundedImage,
   a: CustomLink,
   Callout,
-  ProsCard,
-  ConsCard,
-  code: Code,
-  Table,
-  LinkCardList,
   LinkCard,
+  LinkCardList,
+  Table,
+  code: Code,
 };
 
 export function CustomMDX(props) {
   return (
     <MDXRemote
       {...props}
-      components={{ ...components, ...(props.components || {}) }}
+      components={{
+        ...components,
+        ...(props.components || {}),
+      }}
     />
   );
 }
