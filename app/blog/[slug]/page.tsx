@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { getBlogPosts } from "@/app/db/blog";
-import { CustomMDX } from "@/components/mdx";
-import { formatDate } from "@/lib/utils";
 import Claps from "@/components/claps";
+import { CustomMDX } from "@/components/mdx";
+import { QuickNav } from "@/components/quick-nav";
+import { extractHeadings, formatDate } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
@@ -48,6 +49,7 @@ export async function generateMetadata({
 
 export default function BlogDetailPage({ params }) {
   const blog = getBlogPosts().find((blog) => blog.slug === params.slug);
+  const headings = blog ? extractHeadings(blog.content) : [];
 
   if (!blog) {
     notFound();
@@ -94,7 +96,14 @@ export default function BlogDetailPage({ params }) {
       <article className="prose prose-quoteless prose-neutral dark:prose-invert text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
-      <Claps />
+
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <div className="flex items-center gap-4 bg-background/80 backdrop-blur-sm border rounded-full p-2 shadow-lg">
+          <Claps key={blog.slug} />
+          <div className="w-px h-6 bg-border" />
+          <QuickNav headings={headings} />
+        </div>
+      </div>
     </section>
   );
 }
