@@ -2,8 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface QuickNavProps {
   headings: { title: string; id: string }[];
@@ -11,7 +10,18 @@ interface QuickNavProps {
 
 export function QuickNav({ headings }: QuickNavProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     // Handle initial hash if present
@@ -48,7 +58,7 @@ export function QuickNav({ headings }: QuickNavProps) {
   );
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
