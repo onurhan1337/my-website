@@ -2,6 +2,6 @@
 
 import Claps from "@upstash/claps";
 
-export default function ClapsButton() {
-  return <Claps fixed="center" shareButton={false} />;
+export default function ClapsButton({ key }: { key: string }) {
+  return <Claps shareButton={false} key={key} />;
 }
