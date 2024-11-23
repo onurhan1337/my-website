@@ -128,17 +128,13 @@
 }
 
 .prose pre {
-  @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900;
+  @apply relative overflow-x-auto rounded-lg bg-zinc-50 dark:bg-neutral-950;
+  margin: 0;
 }
 
-.prose code {
-  @apply px-1 py-0.5 rounded-lg;
-}
-
-.prose pre code {
-  @apply p-0;
-  border: initial;
-  line-height: 1.5;
+/* Target only the outermost pre tag */
+.prose>pre {
+  @apply bg-zinc-200/40 dark:bg-neutral-900;
 }
 
 .prose code span {

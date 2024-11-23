@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { highlight } from "sugar-high";
+import { CopyCode } from "./copy-code";
+import { ExpandableCode } from "./expandable-code";
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -145,8 +147,34 @@ function LinkCard({ title, link }) {
 }
 
 function Code({ children, ...props }) {
+  if (typeof children === "string" && !children.includes("\n")) {
+    return <code {...props}>{children}</code>;
+  }
+
   let codeHTML = highlight(children);
-  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+  const isLongCode = children.split("\n").length > 15;
+
+  const codeBlock = (
+    <pre className="!border-none">
+      <code dangerouslySetInnerHTML={{ __html: codeHTML }} />
+    </pre>
+  );
+
+  const wrappedCode = (
+    <div className="bg-zinc-50 dark:bg-neutral-950 rounded-lg">
+      <CopyCode code={children} className="p-4">
+        {codeBlock}
+      </CopyCode>
+    </div>
+  );
+
+  if (isLongCode) {
+    return (
+      <ExpandableCode className="prose-pre:my-0">{wrappedCode}</ExpandableCode>
+    );
+  }
+
+  return wrappedCode;
 }
 
 function slugify(str) {
