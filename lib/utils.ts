@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { unstable_noStore } from "next/cache";
 import { twMerge } from "tailwind-merge";
 
@@ -37,4 +37,26 @@ export function formatDate(date: string) {
   });
 
   return `${fullDate} (${formattedDate})`;
+}
+
+export function extractHeadings(content: string) {
+  interface Heading {
+    title: string;
+    id: string;
+  }
+  const headings: Heading[] = [];
+  const headingRegex = /^#{2,3}\s+(.+)$/gm;
+  let match;
+
+  while ((match = headingRegex.exec(content)) !== null) {
+    headings.push({
+      title: match[1],
+      id: match[1]
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-"),
+    });
+  }
+
+  return headings;
 }
