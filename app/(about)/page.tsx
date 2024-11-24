@@ -1,5 +1,23 @@
 import Container from "@/components/shared/container";
 import Social from "@/components/social";
+import Script from "next/script";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Onurhan Demir",
+  jobTitle: "Software Developer",
+  worksFor: {
+    "@type": "Organization",
+    name: "Insider",
+  },
+  url: "https://onurhan.dev",
+  sameAs: [
+    "https://github.com/onurhan1337",
+    "https://youtube.com/@onurhandev",
+    "https://read.cv/onurhan",
+  ],
+};
 
 export default function About() {
   const paragraphs = [
@@ -29,7 +47,7 @@ export default function About() {
       text-zinc-800 dark:text-zinc-200 container animate-enter"
     >
       <p className="my-5 text-zinc-800 dark:text-zinc-200">
-        Hi, I&apos;m Onurhan Demir.
+        Hi, I&apos;m Onurhan.
       </p>
       {paragraphs.map((paragraph, index) => (
         <div
@@ -47,6 +65,11 @@ export default function About() {
         </div>
       ))}
       <Social />
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
     </Container>
   );
 }

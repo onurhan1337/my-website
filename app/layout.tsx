@@ -12,13 +12,15 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://onurhan.dev"),
   title: {
-    default: "Onurhan Demir",
+    default: "Onurhan Demir - Software Developer",
     template: "%s | Onurhan Demir",
   },
-  description: "Software Developer | Onurhan Demir",
+  description:
+    "Onurhan Demir - Software Developer at Insider, focused on building comprehensive applications and micro products.",
   openGraph: {
-    title: "Onurhan Demir",
-    description: "Software Developer | Onurhan Demir",
+    title: "Onurhan Demir - Software Developer",
+    description:
+      "Software Developer at Insider, focused on building comprehensive applications and micro products.",
     url: "https://onurhan.dev",
     siteName: "Onurhan Demir",
     locale: "en_US",
