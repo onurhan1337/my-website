@@ -20,12 +20,14 @@ export async function generateMetadata({
     title,
     publishedAt: publishedTime,
     summary: description,
+    keywords,
   } = blog.metadata;
   let ogImage = `https://onurhan.dev/logo.svg`;
 
   return {
     title,
     description,
+    keywords,
     openGraph: {
       title,
       description,
