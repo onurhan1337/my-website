@@ -117,7 +117,7 @@ export default async function BlogDetailPage({ params }: Props) {
       </article>
 
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-        <div className="flex items-center gap-4 bg-background/80 backdrop-blur-sm border rounded-full p-2 shadow-lg">
+        <div className="relative flex items-center gap-4 bg-background/80 backdrop-blur-sm border rounded-full p-2 shadow-lg">
           <Claps key={blog.slug} />
           <div className="w-px h-6 bg-border" />
           <QuickNav headings={headings} />
