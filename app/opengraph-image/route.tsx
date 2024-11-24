@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
@@ -37,7 +36,7 @@ export async function GET(req: NextRequest) {
               gap: "8px",
             }}
           >
-            <Image
+            <img
               src={new URL(
                 "/logo.svg",
                 process.env.NEXT_PUBLIC_APP_URL
