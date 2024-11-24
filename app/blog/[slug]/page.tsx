@@ -55,9 +55,11 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "player",
+      card: "summary_large_image",
       title,
       description,
+      site: "@onurhan1337",
+      creator: "@onurhan1337",
       images: [ogImage],
     },
   };

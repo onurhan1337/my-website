@@ -50,6 +50,8 @@ export const metadata: Metadata = {
   twitter: {
     title: "Onurhan Demir",
     card: "summary_large_image",
+    site: "@onurhan1337",
+    creator: "@onurhan1337",
   },
   verification: {
     google: "K1pkJ72cY3DylswXke2MHJGxmjJ91WXwgozcCICvFrU",
