@@ -39,9 +39,9 @@ export function QuickNav({ headings }: QuickNavProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute bottom-[calc(100%_+_8px)] left-1/2 -translate-x-1/2 w-64 bg-background border border-border backdrop-blur-sm rounded-lg"
+            className="absolute bottom-14 right-0 w-64 p-2 border bg-background/90 border-border rounded-lg shadow-lg"
           >
-            <nav className="flex flex-col space-y-1 p-2">
+            <nav className="flex flex-col space-y-1 backdrop-blur-sm">
               {headings.map((heading, i) => (
                 <motion.a
                   key={heading.id}
