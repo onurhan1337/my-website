@@ -10,7 +10,9 @@ import { ThemeProvider } from "./theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://onurhan.dev"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
+  ),
   title: {
     default: "Onurhan Demir - Software Developer",
     template: "%s | Onurhan Demir",

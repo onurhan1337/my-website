@@ -8,10 +8,16 @@ import { CustomMDX } from "@/components/mdx";
 import { QuickNav } from "@/components/quick-nav";
 import { extractHeadings, formatDate } from "@/lib/utils";
 
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata({
   params,
-}): Promise<Metadata | undefined> {
-  let blog = getBlogPosts().find((blog) => blog.slug === params.slug);
+}: Props): Promise<Metadata | undefined> {
+  const { slug } = await params;
+  const blog = getBlogPosts().find((blog) => blog.slug === slug);
+
   if (!blog) {
     return;
   }
@@ -22,7 +28,12 @@ export async function generateMetadata({
     summary: description,
     keywords,
   } = blog.metadata;
-  let ogImage = `https://onurhan.dev/logo.svg`;
+
+  let ogImage =
+    new URL(
+      "/opengraph-image",
+      process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
+    ).toString() + `?title=${encodeURIComponent(title)}`;
 
   return {
     title,
@@ -37,6 +48,9 @@ export async function generateMetadata({
       images: [
         {
           url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
         },
       ],
     },
@@ -49,8 +63,9 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogDetailPage({ params }) {
-  const blog = getBlogPosts().find((blog) => blog.slug === params.slug);
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const blog = getBlogPosts().find((blog) => blog.slug === slug);
   const headings = blog ? extractHeadings(blog.content) : [];
 
   if (!blog) {
