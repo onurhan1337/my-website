@@ -183,7 +183,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 try:
-    model = AutoModel.from_pretrained("gpt2", output_attentions=True)
+    model = AutoModel.from_pretrained("gpt2", output_attentions=True, attn_implementation="eager")
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
     text = "The cat sat on the comfortable mat"
@@ -205,11 +205,15 @@ try:
 
     plt.title("Multi-Head Attention Heatmap")
     plt.tight_layout()
+
+    plt.show()
+
     plt.savefig("attention_heatmap.png")
     plt.close()
 
 except Exception as e:
     print(f"Attention visualization error: {e}")
+
 ```
 
 ## 4. Model Layers: Refining Understanding
@@ -267,11 +271,14 @@ try:
     prompt = "The future of artificial intelligence"
     inputs = tokenizer(prompt, return_tensors="pt")
 
+    pad_token_id = tokenizer.eos_token_id
+
     outputs_greedy = model.generate(
         inputs.input_ids,
         max_length=50,
         num_return_sequences=1,
-        do_sample=False
+        do_sample=False,
+        pad_token_id=pad_token_id
     )
 
     outputs_diverse = model.generate(
@@ -281,11 +288,14 @@ try:
         do_sample=True,
         temperature=0.7,
         top_k=50,
-        top_p=0.95
+        top_p=0.95,
+        pad_token_id=pad_token_id
     )
 
     print("Greedy Search:", tokenizer.decode(outputs_greedy[0], skip_special_tokens=True))
-    print("Diverse Sampling:", tokenizer.decode(outputs_diverse[0], skip_special_tokens=True))
+    for i, output in enumerate(outputs_diverse):
+        print(f"Diverse Sampling {i + 1}:", tokenizer.decode(output, skip_special_tokens=True))
+
 except Exception as e:
     print(f"Generation error: {e}")
 ```
