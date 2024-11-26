@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
-import { Fragment } from "react";
-
-import { BlogCard } from "@/components/blog-card";
+import { BlogList } from "@/components/blog-list";
+import Pagination from "@/components/pagination";
 import Container from "@/components/shared/container";
-import Separator from "@/components/shared/separator";
+import type { Metadata } from "next";
 import { getBlogPosts } from "../db/blog";
 
 export const metadata: Metadata = {
@@ -11,26 +9,29 @@ export const metadata: Metadata = {
   description: "Read my thoughts on software development, design, and more.",
 };
 
-export default function Blog() {
+export default function Blog({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   const allBlogs = getBlogPosts();
+  const postsPerPage = 5;
+  const currentPage = Number(searchParams.page) || 1;
+  const totalPages = Math.ceil(allBlogs.length / postsPerPage);
+
+  const paginatedBlogs = allBlogs
+    .sort((a, b) => {
+      if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
+        return -1;
+      }
+      return 1;
+    })
+    .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
   return (
     <Container size="large">
-      {allBlogs
-        .sort((a, b) => {
-          if (
-            new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)
-          ) {
-            return -1;
-          }
-          return 1;
-        })
-        .map((blog, index, array) => (
-          <Fragment key={blog.slug}>
-            <BlogCard blog={blog} />
-            {index !== array.length - 1 && <Separator />}
-          </Fragment>
-        ))}
+      <BlogList blogs={paginatedBlogs} currentPage={currentPage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </Container>
   );
 }
