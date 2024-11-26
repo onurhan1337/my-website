@@ -66,37 +66,107 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+
+# Ensure we can print debugging information
+import sys
+import traceback
 
 try:
+    # Redirect output to capture any potential hidden errors
+    old_stdout = sys.stdout
+    sys.stdout = open('debug_output.txt', 'w')
+
+    # Add padding token
     model = AutoModel.from_pretrained("gpt2")
     tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    tokenizer.pad_token = tokenizer.eos_token  # Use end-of-sequence token as padding
 
-    # Sample words for embedding analysis
-    words = ["king", "queen", "man", "woman", "royal", "noble"]
+    # Expanded list of words to provide more samples
+    words = [
+        "king", "queen", "prince", "princess",
+        "man", "woman", "boy", "girl",
+        "royal", "noble", "crown", "throne",
+        "leader", "ruler", "monarch", "sovereign"
+    ]
 
-    inputs = tokenizer(words, return_tensors="pt", padding=True)
+    # Tokenize and pad inputs
+    inputs = tokenizer(words, return_tensors="pt", padding=True, truncation=True)
+
     with torch.no_grad():
+        # Get token embeddings
         outputs = model(**inputs)
-        word_embeddings = outputs.last_hidden_state.mean(dim=1)
 
-    tsne = TSNE(n_components=2, random_state=42)
-    embeddings_2d = tsne.fit_transform(word_embeddings)
+        # Average token embeddings for each word
+        word_embeddings = []
+        for i in range(len(words)):
+            # Get the actual tokens for the word (excluding padding)
+            word_tokens = inputs.input_ids[i]
+            word_tokens = word_tokens[word_tokens != tokenizer.pad_token_id]
 
-    plt.figure(figsize=(10, 8))
-    plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1])
+            # Average embeddings for this word's tokens
+            word_embedding = outputs.last_hidden_state[i, :len(word_tokens), :].mean(dim=0)
+            word_embeddings.append(word_embedding)
+
+        # Convert to numpy array
+        word_embeddings = torch.stack(word_embeddings).numpy()
+
+    # Standardize the embeddings (important for t-SNE)
+    scaler = StandardScaler()
+    word_embeddings_scaled = scaler.fit_transform(word_embeddings)
+
+    # Reduce dimensionality with t-SNE
+    # Adjust perplexity to be less than number of samples
+    tsne = TSNE(
+        n_components=2,
+        random_state=42,
+        perplexity=min(5, len(words)-1)  # Ensure perplexity is valid
+    )
+    embeddings_2d = tsne.fit_transform(word_embeddings_scaled)
+
+    # Restore stdout
+    sys.stdout.close()
+    sys.stdout = old_stdout
+
+    # Visualization
+    plt.figure(figsize=(12, 10))
+    plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], alpha=0.7)
 
     for i, word in enumerate(words):
-        plt.annotate(word, (embeddings_2d[i, 0], embeddings_2d[i, 1]))
+        plt.annotate(
+            word,
+            (embeddings_2d[i, 0], embeddings_2d[i, 1]),
+            xytext=(5, 5),
+            textcoords='offset points',
+            fontsize=9,
+            alpha=0.7
+        )
 
     plt.title("Word Embeddings Visualization")
     plt.xlabel("t-SNE Dimension 1")
     plt.ylabel("t-SNE Dimension 2")
     plt.tight_layout()
-    plt.savefig("word_embeddings.png")
-    plt.close()
+    plt.grid(True, linestyle='--', linewidth=0.5)
+
+    # Save the plot and show it
+    plt.savefig("word_embeddings.png", dpi=300)
+    plt.show()  # Add this to force display
 
 except Exception as e:
-    print(f"Embedding visualization error: {e}")
+    # Restore stdout and print full error
+    sys.stdout = old_stdout
+    print(f"Unexpected error: {e}")
+    traceback.print_exc()
+
+# Check if debug file exists and print its contents
+try:
+    with open('debug_output.txt', 'r') as f:
+        debug_content = f.read()
+        if debug_content:
+            print("Debug Output:")
+            print(debug_content)
+except FileNotFoundError:
+    pass
 ```
 
 <Table
