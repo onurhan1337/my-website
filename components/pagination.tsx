@@ -1,57 +1,91 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import type { Blog } from "@/types/blog";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { BlogList } from "./blog-list";
 import { Button } from "./ui/button";
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
+  allBlogs: Blog[];
+  postsPerPage?: number;
 }
 
 export default function Pagination({
-  currentPage,
-  totalPages,
+  allBlogs,
+  postsPerPage = 5,
 }: PaginationProps) {
   const router = useRouter();
-  const isFirstPage = currentPage === 1;
-  const isLastPage = currentPage === totalPages;
+  const searchParams = useSearchParams() ?? new URLSearchParams();
+
+  const { currentPage, totalPages, paginatedBlogs } = useMemo(() => {
+    const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
+    const totalPages = Math.max(1, Math.ceil(allBlogs.length / postsPerPage));
+
+    const paginatedBlogs = [...allBlogs]
+      .sort(
+        (a, b) =>
+          new Date(b.metadata.publishedAt).getTime() -
+          new Date(a.metadata.publishedAt).getTime()
+      )
+      .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
+
+    return { currentPage, totalPages, paginatedBlogs };
+  }, [allBlogs, searchParams, postsPerPage]);
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
-    if (page === 1) {
-      router.push("/blog");
-    } else {
-      router.push(`/blog?page=${page}`);
-    }
+    const path = page === 1 ? "/blog" : `/blog?page=${page}`;
+    router.push(path);
   };
 
   return (
-    <div className="flex justify-center gap-4 mt-8">
-      <Button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={isFirstPage}
-        variant="outline"
-        className={cn(
-          "tracking-tight shadow-none",
-          isFirstPage && "opacity-50"
-        )}
+    <>
+      <BlogList blogs={paginatedBlogs} currentPage={currentPage} />
+      <nav
+        aria-label="Blog pagination"
+        className="flex justify-center gap-4 mt-8"
       >
-        Previous
-      </Button>
+        <PaginationButton
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </PaginationButton>
 
-      <span className="flex items-center tracking-tight text-sm text-muted-foreground">
-        Page {currentPage} of {totalPages}
-      </span>
+        <span className="flex items-center tracking-tight text-sm text-muted-foreground">
+          Page {currentPage} of {totalPages}
+        </span>
 
-      <Button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={isLastPage}
-        variant="outline"
-        className={cn("tracking-tight shadow-none", isLastPage && "opacity-50")}
-      >
-        Next
-      </Button>
-    </div>
+        <PaginationButton
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </PaginationButton>
+      </nav>
+    </>
+  );
+}
+
+function PaginationButton({
+  children,
+  disabled,
+  onClick,
+}: {
+  children: React.ReactNode;
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      variant="outline"
+      className={cn("tracking-tight shadow-none", disabled && "opacity-50")}
+    >
+      {children}
+    </Button>
   );
 }
