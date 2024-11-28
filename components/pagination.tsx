@@ -17,9 +17,10 @@ export default function Pagination({
   postsPerPage = 5,
 }: PaginationProps) {
   const router = useRouter();
-  const searchParams = useSearchParams() ?? new URLSearchParams();
+  const searchParamsHook = useSearchParams();
 
   const { currentPage, totalPages, paginatedBlogs } = useMemo(() => {
+    const searchParams = searchParamsHook ?? new URLSearchParams();
     const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
     const totalPages = Math.max(1, Math.ceil(allBlogs.length / postsPerPage));
 
@@ -32,7 +33,7 @@ export default function Pagination({
       .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
     return { currentPage, totalPages, paginatedBlogs };
-  }, [allBlogs, searchParams, postsPerPage]);
+  }, [allBlogs, searchParamsHook, postsPerPage]);
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
