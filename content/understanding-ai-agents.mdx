@@ -94,7 +94,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-search_tool = DuckDuckGoSearchRun()
+duckduckgo_search = DuckDuckGoSearchRun()
 api_key = os.getenv("GROQ_API_KEY")
 user_query = "Onurhan Demir work title and last company name"
 
@@ -110,7 +110,7 @@ The search tool allows the agent to query DuckDuckGo for web-based results.
 @tool('DuckDuckGoSearch')
 def search_tool(search_query: str):
     """Search the web for information on a given topic"""
-    return DuckDuckGoSearchRun().run(search_query)
+    return duckduckgo_search.run(search_query)
 ```
 
 **3. Initialize the Language Model (LLM)**
@@ -135,7 +135,7 @@ search_agent = Agent(
     role='Expert Researcher and Analyst',
     goal='Provide insightful summaries and generate related research topics using English sources.',
     backstory='A senior researcher proficient in detailed technical analysis.',
-    tools=[search_tool],
+    tools=[perform_web_search],
     llm=llm,
     verbose=True,
 )
@@ -146,7 +146,6 @@ search_agent = Agent(
 A task describes what the agent needs to accomplish, including the expected output.
 
 ```python
-user_query = "Onurhan Demir work title and last company name"
 search_task = Task(
     description=f'Search and summarize information about "{user_query}".',
     agent=search_agent,
@@ -169,6 +168,12 @@ crew = Crew(
 output = crew.kickoff()
 print(output)
 ```
+
+<Callout>
+  This example shows a simple way to exposition what AI agents can do. I want to
+  explain the concept clearly and show how easy it is to use these powerful
+  technologies.
+</Callout>
 
 If you want to see the full code, you can find it [here](https://gist.github.com/onurhan1337/cf8a706059362bec100aecf8685a6eef).
 
