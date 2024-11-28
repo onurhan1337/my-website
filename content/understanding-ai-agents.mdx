@@ -1,0 +1,240 @@
+---
+title: "AI Agents: How to Build Goal-Oriented Problem Solvers"
+publishedAt: "2024-11-28"
+keywords: "AI agents, goal-oriented AI, CrewAI, Python AI agent tutorial, AI automation, LangChain, DuckDuckGo search, AI agent tutorial with Python"
+summary: "This hands-on guide dives into AI agents and demonstrates building a goal-oriented agent to automate tasks."
+---
+
+Imagine software that thinks, learns, and solves problems like a human. AI agents are making this possible by redefining automation.
+
+## What Are AI Agents?
+
+AI agents are **autonomous software systems** that simulate human decision-making to solve tasks efficiently and intelligently. Unlike traditional programs, AI agents:
+
+- **Perceive** the environment through sensors or tools.
+- **Plan** and **Decide** by analyzing data and selecting optimal actions.
+- **Learn** and **Adapt** from new information and experiences.
+- **Act** autonomously with minimal human input.
+
+## Core Characteristics of AI Agents
+
+AI agents stand out due to the following traits:
+
+- **Autonomy**: Operates without needing frequent instructions.
+- **Goal-Oriented**: Focused on accomplishing well-defined objectives.
+- **Adaptability**: Improves performance through iterative learning.
+- **Proactivity and Reactivity**: Anticipates tasks while responding to real-time changes.
+
+## Why Do We Need An AI Agent?
+
+Modern challenges require intelligent, scalable solutions that traditional software cannot provide. AI agents address these needs by:
+
+- **Automating Routine and Complex Tasks**: Saves time and resources.
+- **Managing Large-Scale Data**: Processes data faster than humans can.
+- **Customizing User Experiences**: Delivers highly personalized outputs.
+- **Improving Decision Accuracy**: Reduces errors by analyzing patterns.
+
+## Applications of AI Agents
+
+<Table
+  data={{
+    headers: ["Domain", "Applications", "Benefits"],
+    rows: [
+      [
+        "Business Intelligence",
+        "Market research, Competitive analysis, Predictive financial modeling",
+        "Data-driven decisions, Market insights, Risk management",
+      ],
+      [
+        "Customer Service",
+        "24/7 intelligent chatbots, Personalized support, Automated problem resolution",
+        "Improved response times, Cost reduction, Enhanced customer satisfaction",
+      ],
+      [
+        "Healthcare",
+        "Medical diagnosis assistance, Patient monitoring, Treatment recommendation systems",
+        "Better patient outcomes, Reduced errors, Efficient care delivery",
+      ],
+      [
+        "Research and Academia",
+        "Literature review, Data analysis, Hypothesis generation",
+        "Accelerated research, Comprehensive analysis, Novel insights",
+      ],
+      [
+        "Personal Productivity",
+        "Task management, Information research, Personal scheduling",
+        "Time savings, Better organization, Optimized workflows",
+      ],
+    ],
+  }}
+/>
+
+## Building a Goal-Oriented AI Agent
+
+Let’s create a goal-oriented AI agent that retrieves and summarizes information from the web. This agent will:
+
+- **Search**: Use DuckDuckGo to find relevant results.
+- **Process**: Analyze and summarize the data with a language model.
+- **Deliver**: Present actionable insights to the user.
+
+I’ll use **CrewAI**, **LangChain**, and the **DuckDuckGo Search Tool** to achieve this.
+
+### Code Implementation
+
+Here’s a step-by-step implementation of the AI agent:
+
+**1. Import the required libraries**
+
+```python
+import os
+from crewai import Agent, Task, Crew, LLM, Process
+from crewai_tools import tool
+from langchain_community.tools import DuckDuckGoSearchRun
+from dotenv import load_dotenv
+
+load_dotenv()
+
+search_tool = DuckDuckGoSearchRun()
+api_key = os.getenv("GROQ_API_KEY")
+user_query = "Onurhan Demir work title and last company name"
+
+if not api_key:
+    raise ValueError("API key is missing.")
+```
+
+**2. Define the Search Tool**
+
+The search tool allows the agent to query DuckDuckGo for web-based results.
+
+```python
+@tool('DuckDuckGoSearch')
+def search_tool(search_query: str):
+    """Search the web for information on a given topic"""
+    return DuckDuckGoSearchRun().run(search_query)
+```
+
+**3. Initialize the Language Model (LLM)**
+
+The LLM interprets the search data and generates a summary.
+
+```python
+llm = LLM(
+    model="groq/llama-3.1-8b-instant",
+    api_key=api_key
+)
+```
+
+**4. Define the Agent**
+
+I use a Large Language Model (LLM) to generate human-like responses using extensive text data. In this project, the groq/llama-3.1-8b-instant model summarizes search results, improving our AI agent's accuracy.
+
+The agent coordinates tasks and tools to achieve its goal:
+
+```python
+search_agent = Agent(
+    role='Expert Researcher and Analyst',
+    goal='Provide insightful summaries and generate related research topics using English sources.',
+    backstory='A senior researcher proficient in detailed technical analysis.',
+    tools=[search_tool],
+    llm=llm,
+    verbose=True,
+)
+```
+
+**5. Set Up a Task**
+
+A task describes what the agent needs to accomplish, including the expected output.
+
+```python
+user_query = "Onurhan Demir work title and last company name"
+search_task = Task(
+    description=f'Search and summarize information about "{user_query}".',
+    agent=search_agent,
+    expected_output='A summary of the top 5 findings with actionable insights.'
+)
+```
+
+**6. Execute the Task**
+
+Finally, execute the agent with the Crew framework:
+
+```python
+crew = Crew(
+    agents=[search_agent],
+    tasks=[search_task],
+    process=Process.sequential,
+    verbose=True,
+)
+
+output = crew.kickoff()
+print(output)
+```
+
+If you want to see the full code, you can find it [here](https://gist.github.com/onurhan1337/cf8a706059362bec100aecf8685a6eef).
+
+### Code Breakdown
+
+<Table
+  data={{
+    headers: ["Component", "Purpose", "What It Does"],
+    rows: [
+      [
+        "Search Tool",
+        "Fetch information from DuckDuckGo",
+        "Queries the web for relevant data.",
+      ],
+      [
+        "LLM",
+        "Analyze and summarize results",
+        "Processes search data to create meaningful outputs.",
+      ],
+      [
+        "Agent",
+        "Define behavior, tools, and goals",
+        "Acts as the central decision-maker using tools and models.",
+      ],
+      [
+        "Task",
+        "Specify the job description and expectations",
+        "Guides the agent in producing structured outputs.",
+      ],
+      [
+        "Crew",
+        "Orchestrate agents and tasks",
+        "Manages execution and ensures all steps are completed in sequence.",
+      ],
+    ],
+  }}
+/>
+
+### Expected Output
+
+Using the earlier implementation, the AI agent can accomplish a task such as:
+
+```python
+user_query = "Onurhan Demir work title and last company name"
+```
+
+- **Search**: The agent queries DuckDuckGo for the most relevant results about _"Onurhan Demir work title and last company name"_.
+- **Summarize**: The LLM processes the top results to create a concise and actionable summary.
+- **Deliver**: Outputs the summary along with suggested research topics.
+
+```python
+**Summary**:
+1. Onurhan Demir is a Software Developer at Insider, specializing in SaaS products. Source: useinsider.com
+2. Recently transitioned to a Software Developer role with expertise in frontend technologies. Source: linkedin.com/in/onurhan-demir
+3. Notable contributor to open-source projects, focusing on automation tools. Source: github.com/onurhan1337
+
+**Research Topics**:
+- Career progression trends in SaaS engineering.
+- Emerging tools for frontend developers in 2024.
+- The impact of open-source contributions in automation.
+```
+
+### Conclusion
+
+Goal-oriented AI agents simplify complex workflows by automating tasks like information retrieval, analysis, and summarization.
+
+By understanding the architecture and processes behind these agents, you unlock their full potential to solve real-world problems effectively.
+
+<BuyMeACoffee username="onurhan" />
