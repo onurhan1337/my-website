@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Coffee } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import Link from "next/link";
@@ -230,6 +230,26 @@ function createHeading(level) {
   return Component;
 }
 
+interface BuyMeACoffeeProps {
+  username: string;
+}
+
+export function BuyMeACoffee({ username }: BuyMeACoffeeProps) {
+  return (
+    <div className="not-prose my-8 flex items-center justify-center">
+      <Link
+        href={`https://buymeacoffee.com/${username}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm text-neutral-900 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-50 dark:hover:bg-neutral-800"
+      >
+        <Coffee className="h-4 w-4" />
+        <span>support content</span>
+      </Link>
+    </div>
+  );
+}
+
 const components = {
   h1: createHeading(1),
   h2: createHeading(2),
@@ -245,6 +265,7 @@ const components = {
   code: Code,
   Table,
   LinkCardList,
+  BuyMeACoffee,
 };
 
 export function CustomMDX({ source }: { source: string }) {
