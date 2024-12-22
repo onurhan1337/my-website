@@ -45,7 +45,7 @@ export function extractHeadings(content: string) {
     id: string;
   }
   const headings: Heading[] = [];
-  const headingRegex = /^#{2,3}\s+(.+)$/gm;
+  const headingRegex = /^#{2}\s+(.+)$/gm;
   let match;
 
   while ((match = headingRegex.exec(content)) !== null) {
