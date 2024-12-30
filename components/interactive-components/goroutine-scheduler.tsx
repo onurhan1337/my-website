@@ -175,7 +175,7 @@ export const GoroutineScheduler = () => {
       <div className="mb-6">
         <h3 className="text-lg font-medium text-gray-900 mb-2">Go Scheduler Visualization</h3>
         <p className="text-sm text-gray-600">
-          This demonstrates Go's M:N scheduler model where M (OS Threads) and N (Goroutines) are scheduled through P (Processors).
+          This demonstrates Go&apos;s M:N scheduler model where M (OS Threads) and N (Goroutines) are scheduled through P (Processors).
           Each P has a local run queue and can steal work from other Ps when idle.
         </p>
       </div>

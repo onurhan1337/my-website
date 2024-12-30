@@ -114,7 +114,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: 'sequential' | 
     }
     return (
       <p className="text-sm text-gray-600 mb-6">
-        In Go's <strong>concurrent</strong> execution, multiple goroutines run independently and simultaneously. 
+        In Go&apos;s <strong>concurrent</strong> execution, multiple goroutines run independently and simultaneously. 
         This is like launching goroutines with <code className="px-1 py-0.5 bg-gray-100 rounded text-sm">go func()</code> without synchronization.
       </p>
     );
