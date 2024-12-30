@@ -6,6 +6,8 @@ import React from "react";
 import { highlight } from "sugar-high";
 import { CopyCode } from "./copy-code";
 import { ExpandableCode } from "./expandable-code";
+import { TaskSimulator, RaceConditionVisualizer, GoroutineScheduler, ChannelSimulator, UnbufferedChannelDemo } from './interactive-components';
+import { CodePlayground } from './interactive-components/code-playground';
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -268,6 +270,12 @@ const components = {
   Table,
   LinkCardList,
   BuyMeACoffee,
+  TaskSimulator,
+  RaceConditionVisualizer,
+  GoroutineScheduler,
+  ChannelSimulator,
+  UnbufferedChannelDemo,
+  CodePlayground,
 };
 
 export function CustomMDX({ source }: { source: string }) {
