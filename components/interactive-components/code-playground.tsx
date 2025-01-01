@@ -240,7 +240,7 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
             )}
           </motion.div>
 
-          <motion.div layout className="flex justify-between items-center mt-6">
+          <motion.div layout className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-center mt-6">
             <div className="flex space-x-3">
               <button
                 onClick={goToPrevStep}

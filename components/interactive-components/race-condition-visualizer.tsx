@@ -240,7 +240,7 @@ const SimulationControls = memo(({
   canGoPrev: boolean;
   canGoNext: boolean;
 }) => (
-  <motion.div layout className="flex justify-between items-center">
+  <motion.div layout className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-center">
     <div className="flex space-x-3">
       <button
         onClick={onPrev}
