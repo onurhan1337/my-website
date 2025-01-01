@@ -32,17 +32,15 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
   // Reset blocked state when buffer changes
   useEffect(() => {
     if (buffer.length === 0) {
-      setBlocked(prev => ({
-        ...prev,
+      setBlocked({
         sender: false,
         receiver: true
-      }));
+      });
     } else if (buffer.length >= bufferSize) {
-      setBlocked(prev => ({
-        ...prev,
+      setBlocked({
         sender: true,
         receiver: false
-      }));
+      });
     } else {
       setBlocked({
         sender: false,
@@ -69,15 +67,6 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
     setBuffer([...buffer, newValue]);
     setNextId(nextId + 1);
     showMessage(`Sent value: ${nextId}`);
-
-    // For buffer size 1, immediately block sender after sending
-    if (bufferSize === 1) {
-      setBlocked(prev => ({
-        ...prev,
-        sender: true,
-        receiver: false
-      }));
-    }
   };
 
   const receiveData = () => {
@@ -86,28 +75,20 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
     const [received, ...remaining] = buffer;
     setBuffer(remaining);
     showMessage(`Received value: ${received.content}`);
-
-    // For buffer size 1, immediately block receiver after receiving
-    if (bufferSize === 1) {
-      setBlocked(prev => ({
-        sender: false,
-        receiver: true
-      }));
-    }
   };
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-neutral-200">
-      <div className="flex flex-col items-center space-y-6">
+    <div className="p-6 bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800">
+      <div className="flex flex-col items-center">
         {/* Channel Visualization */}
-        <div className="relative w-full max-w-md">
+        <div className="relative w-full max-w-md mt-8 mb-6">
           {/* Buffer Size Indicator */}
-          <div className="absolute -top-6 right-0 text-sm text-neutral-500">
+          <div className="absolute -top-8 right-0 text-sm text-neutral-500 dark:text-neutral-400">
             Buffer Size: {bufferSize}
           </div>
 
           {/* Channel Container */}
-          <div className="relative h-24 bg-neutral-50 rounded-xl border-2 border-neutral-200 overflow-hidden">
+          <div className="relative h-24 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border-2 border-neutral-200 dark:border-neutral-700 overflow-hidden">
             {/* Buffer Slots */}
             <div className="absolute inset-0 flex items-center justify-center gap-4 p-4">
               {Array.from({ length: bufferSize }).map((_, index) => {
@@ -117,7 +98,9 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
                     key={index}
                     className={`
                       w-16 h-16 rounded-lg flex items-center justify-center
-                      ${value ? 'bg-blue-50 border-2 border-blue-200' : 'bg-neutral-100 border border-neutral-200'}
+                      ${value 
+                        ? 'bg-blue-50 dark:bg-blue-900/30 border-2 border-blue-200 dark:border-blue-800' 
+                        : 'bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'}
                     `}
                     initial={false}
                     animate={{
@@ -131,7 +114,7 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.5 }}
-                        className="text-lg font-medium text-blue-600"
+                        className="text-lg font-medium text-blue-600 dark:text-blue-400"
                       >
                         {value.content}
                       </motion.span>
@@ -148,9 +131,9 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-amber-50/50 flex items-center justify-center"
+                  className="absolute inset-0 bg-amber-50/50 dark:bg-amber-900/20 flex items-center justify-center"
                 >
-                  <span className="px-3 py-1.5 bg-amber-100 rounded-full text-sm font-medium text-amber-600 border border-amber-200">
+                  <span className="px-3 py-1.5 bg-amber-100 dark:bg-amber-900/50 rounded-full text-sm font-medium text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
                     {blocked.sender ? 'Sender Blocked' : 'Receiver Blocked'}
                   </span>
                 </motion.div>
@@ -160,19 +143,22 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
         </div>
 
         {/* Message Display */}
-        <div className="h-8">
-          <AnimatePresence mode="wait">
-            {message && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="text-sm text-neutral-600 bg-neutral-50 px-3 py-1.5 rounded-lg border border-neutral-200"
-              >
-                {message}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="h-12 w-full relative flex items-center justify-center mb-6">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <AnimatePresence mode="wait">
+              {message && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm text-neutral-600 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700"
+                >
+                  {message}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Controls */}
@@ -183,8 +169,8 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
               ${blocked.sender || buffer.length >= bufferSize
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100'}
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed'
+                : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50'}
             `}
           >
             Send Value
@@ -195,8 +181,8 @@ export const ChannelSimulator = ({ bufferSize = 1 }: { bufferSize: number }) => 
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
               ${blocked.receiver || buffer.length === 0
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed'
+                : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50'}
             `}
           >
             Receive Value

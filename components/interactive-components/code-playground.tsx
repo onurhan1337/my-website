@@ -20,6 +20,10 @@ const diffStyles = `
     width: 2px;
     background: rgb(59, 130, 246);
   }
+
+  .dark .diff-highlight {
+    background: rgba(147, 197, 253, 0.1);
+  }
 `;
 
 interface CodeStep {
@@ -112,24 +116,24 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
   return (
     <LayoutGroup>
       <style dangerouslySetInnerHTML={{ __html: diffStyles }} />
-      <motion.div layout className="my-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200/50">
-        <motion.div layout className="border-b border-gray-200 bg-white/50 p-4">
+      <motion.div layout className="my-8 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900 rounded-xl overflow-hidden shadow-lg border border-neutral-200/50 dark:border-neutral-800">
+        <motion.div layout className="border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-4">
           <div className="flex justify-between items-center">
             <div className="flex space-x-2">
               <div className="w-3 h-3 rounded-full bg-red-400" />
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
             </div>
-            <div className="text-sm font-medium text-gray-500">
+            <div className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
               {steps[currentStep].title || `Step ${currentStep + 1}/${steps.length}`}
             </div>
           </div>
         </motion.div>
 
         <motion.div layout className="p-6">
-          <div className="mb-4 relative h-1 bg-gray-200 rounded-full overflow-hidden">
+          <div className="mb-4 relative h-1 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
             <motion.div
-              className="absolute left-0 top-0 h-full bg-blue-500"
+              className="absolute left-0 top-0 h-full bg-blue-500 dark:bg-blue-400"
               initial={{ width: 0 }}
               animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -151,7 +155,7 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
                   opacity: { duration: 0.15 },
                   layout: { duration: 0.3 }
                 }}
-                className="bg-white rounded-lg shadow-sm overflow-hidden w-full"
+                className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm overflow-hidden w-full"
               >
                 <pre className="p-4 overflow-x-auto">
                   <code
@@ -177,9 +181,9 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
                   opacity: { duration: 0.15 },
                   layout: { duration: 0.3 }
                 }}
-                className="bg-blue-50 p-4 rounded-lg w-full"
+                className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg w-full"
               >
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-blue-700 dark:text-blue-400">
                   {steps[currentStep].explanation}
                 </p>
               </motion.div>
@@ -200,10 +204,10 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
                     opacity: { duration: 0.15 },
                     layout: { duration: 0.3 }
                   }}
-                  className="bg-gray-100 p-4 rounded-lg w-full"
+                  className="bg-neutral-100 dark:bg-neutral-800 p-4 rounded-lg w-full"
                 >
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Current State:</h4>
-                  <pre className="text-xs text-gray-600">
+                  <h4 className="text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-2">Current State:</h4>
+                  <pre className="text-xs text-neutral-600 dark:text-neutral-400">
                     {JSON.stringify(steps[currentStep].state, null, 2)}
                   </pre>
                 </motion.div>
@@ -216,14 +220,14 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
               <button
                 onClick={goToPrevStep}
                 disabled={currentStep === 0 || isPlaying}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
+                className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-neutral-800 disabled:hover:shadow-none"
               >
                 ← Previous
               </button>
               <button
                 onClick={goToNextStep}
                 disabled={currentStep === steps.length - 1 || isPlaying}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300 hover:bg-gray-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
+                className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-neutral-800 disabled:hover:shadow-none"
               >
                 Next →
               </button>
@@ -231,7 +235,7 @@ export const CodePlayground: React.FC<CodePlaygroundProps> = ({
             <button
               onClick={playAnimation}
               disabled={isPlaying}
-              className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none"
+              className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none"
             >
               {isPlaying ? 'Playing...' : 'Play Animation'}
             </button>
