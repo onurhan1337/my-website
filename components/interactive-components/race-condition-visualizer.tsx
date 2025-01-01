@@ -4,37 +4,33 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
-// Error Boundary Component
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false };
+// Modern Error Boundary using hooks
+const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Error in Race Condition Visualizer:', event.error);
+      setHasError(true);
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return (
+      <div className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
+        <h3 className="text-lg font-medium mb-2">Something went wrong</h3>
+        <p className="text-sm">Please try refreshing the page.</p>
+      </div>
+    );
   }
 
-  static getDerivedStateFromError(_: Error) {
-    return { hasError: true };
-  }
+  return children;
+};
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error in Race Condition Visualizer:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
-          <h3 className="text-lg font-medium mb-2">Something went wrong</h3>
-          <p className="text-sm">Please try refreshing the page.</p>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+ErrorBoundary.displayName = 'ErrorBoundary';
 
 interface Goroutine {
   id: string;
@@ -274,6 +270,8 @@ const SimulationControls = memo(({
   </motion.div>
 ));
 
+SimulationControls.displayName = 'SimulationControls';
+
 // Add a new StepProgress component
 const StepProgress = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => (
   <div className="relative w-full max-w-xl mx-auto mb-4">
@@ -384,6 +382,7 @@ export const RaceConditionVisualizer = () => {
         initializeGoroutines();
         setCurrentStep(null);
         setActiveConnections({});
+        setHistory([]);
         break;
       case 1:
         // First goroutine reads
@@ -410,6 +409,10 @@ export const RaceConditionVisualizer = () => {
         setGoroutines(prev => prev.map(g => 
           g.id === 'g2' ? { ...g, status: 'reading', value: sharedState } : g
         ));
+        setHistory([{ 
+          value: sharedState,
+          description: "Initial value read by Goroutine 1"
+        }]);
         break;
       case 3:
         // First goroutine writes
@@ -423,10 +426,16 @@ export const RaceConditionVisualizer = () => {
         setGoroutines(prev => prev.map(g => 
           g.id === 'g1' ? { ...g, status: 'writing', value: g.value + 1 } : g
         ));
-        setHistory(prev => [...prev, { 
-          value: expectedAfterIncrement,
-          description: "Value after Goroutine 1 increments (0 → 1)"
-        }]);
+        setHistory([
+          { 
+            value: sharedState,
+            description: "Initial value read by Goroutine 1"
+          },
+          { 
+            value: expectedAfterIncrement,
+            description: "Value after Goroutine 1 increments (0 → 1)"
+          }
+        ]);
         break;
       case 4:
         // Second goroutine writes
@@ -439,10 +448,20 @@ export const RaceConditionVisualizer = () => {
         setGoroutines(prev => prev.map(g => 
           g.id === 'g2' ? { ...g, status: 'writing', value: g.value - 1 } : g
         ));
-        setHistory(prev => [...prev, { 
-          value: sharedState - 1,
-          description: "Final value after Goroutine 2 decrements its stale copy (0 → -1)"
-        }]);
+        setHistory([
+          { 
+            value: sharedState,
+            description: "Initial value read by Goroutine 1"
+          },
+          { 
+            value: sharedState + 1,
+            description: "Value after Goroutine 1 increments (0 → 1)"
+          },
+          { 
+            value: sharedState - 1,
+            description: "Final value after Goroutine 2 decrements its stale copy (0 → -1)"
+          }
+        ]);
         break;
       case 5:
         // Final state
@@ -461,12 +480,18 @@ export const RaceConditionVisualizer = () => {
   // Handle manual navigation
   const goToPrevStep = useCallback(() => {
     if (stepIndex > 0) {
+      // Reset connections and current step before applying new step
+      setActiveConnections({});
+      setCurrentStep(null);
       applyStep(stepIndex - 1);
     }
   }, [stepIndex, applyStep]);
 
   const goToNextStep = useCallback(() => {
     if (stepIndex < totalSteps) {
+      // Reset connections and current step before applying new step
+      setActiveConnections({});
+      setCurrentStep(null);
       applyStep(stepIndex + 1);
     }
   }, [stepIndex, totalSteps, applyStep]);
@@ -476,8 +501,19 @@ export const RaceConditionVisualizer = () => {
     if (autoPlaying) return;
     
     setAutoPlaying(true);
+    // Reset all state before starting animation
     setStepIndex(0);
-    applyStep(0);
+    setHistory([]);
+    setCurrentStep(null);
+    setActiveConnections({});
+    setGoroutines([
+      { id: 'g1', value: 0, status: 'idle', operation: 'increment' },
+      { id: 'g2', value: 0, status: 'idle', operation: 'decrement' }
+    ]);
+    setSharedState(0);
+    
+    // Wait a tick for state to reset
+    await new Promise(r => setTimeout(r, 0));
     
     for (let i = 1; i <= totalSteps; i++) {
       await new Promise(r => setTimeout(r, STEP_DELAY));
