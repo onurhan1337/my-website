@@ -1,7 +1,40 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { memo } from 'react';
+
+// Error Boundary Component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(_: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error in Race Condition Visualizer:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
+          <h3 className="text-lg font-medium mb-2">Something went wrong</h3>
+          <p className="text-sm">Please try refreshing the page.</p>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 interface Goroutine {
   id: string;
@@ -16,20 +49,37 @@ interface Step {
   actualValue?: number;
 }
 
-const Arrow = ({ start, end, color, animate }: { 
+// Extracted and memoized components for better performance
+const MemoryGlow = memo(() => (
+  <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-500/10 dark:from-blue-400/10 dark:to-blue-400/10 blur-xl" />
+    <div className="absolute inset-0 bg-gradient-to-t from-white/50 dark:from-neutral-900/50 to-white/0 dark:to-neutral-900/0 blur-sm" />
+  </div>
+));
+MemoryGlow.displayName = 'MemoryGlow';
+
+const GoroutineGlow = memo(({ color }: { color: string }) => (
+  <div className="absolute inset-0 -z-10">
+    <div className={`absolute inset-0 ${color} blur-xl opacity-10`} />
+    <div className="absolute inset-0 bg-gradient-to-t from-white/50 dark:from-neutral-900/50 to-white/0 dark:to-neutral-900/0 blur-sm" />
+  </div>
+));
+GoroutineGlow.displayName = 'GoroutineGlow';
+
+const Arrow = memo(({ start, end, color, animate }: { 
   start: { x: number; y: number }; 
   end: { x: number; y: number };
   color: string;
   animate: boolean;
 }) => {
   const pathRef = useRef<SVGPathElement>(null);
-  const d = `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  const d = useMemo(() => `M ${start.x} ${start.y} L ${end.x} ${end.y}`, [start.x, start.y, end.x, end.y]);
 
   return (
     <motion.path
       ref={pathRef}
       d={d}
-      stroke="black"
+      stroke={color}
       strokeWidth="2"
       fill="none"
       initial={animate ? { pathLength: 0, opacity: 0 } : { pathLength: 1, opacity: 1 }}
@@ -39,28 +89,264 @@ const Arrow = ({ start, end, color, animate }: {
         pathLength: { duration: 0.5, ease: "easeInOut" },
         opacity: { duration: 0.3, ease: "easeInOut" }
       }}
-      markerEnd="url(#arrow-black)"
+      markerEnd={`url(#arrow-${color})`}
     />
   );
+});
+Arrow.displayName = 'Arrow';
+
+// Reduce the step delay from 4s to 2s for better UX
+const STEP_DELAY = 2000;
+
+// Animation variants for better orchestration
+const fadeInUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0 }
 };
 
-const STEP_DELAY = 4000; // 4 seconds per step for clarity
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
+};
 
-// Add a new component for the memory card glow effect
-const MemoryGlow = () => (
-  <div className="absolute inset-0 -z-10">
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-500/10 dark:from-blue-400/10 dark:to-blue-400/10 blur-xl" />
-    <div className="absolute inset-0 bg-gradient-to-t from-white/50 dark:from-neutral-900/50 to-white/0 dark:to-neutral-900/0 blur-sm" />
-  </div>
-);
+const scaleIn = {
+  hidden: { scale: 0.9, opacity: 0 },
+  visible: { scale: 1, opacity: 1 }
+};
 
-// Add a new component for the goroutine card glow effect
-const GoroutineGlow = ({ color }: { color: string }) => (
-  <div className="absolute inset-0 -z-10">
-    <div className={`absolute inset-0 ${color} blur-xl opacity-10`} />
-    <div className="absolute inset-0 bg-gradient-to-t from-white/50 dark:from-neutral-900/50 to-white/0 dark:to-neutral-900/0 blur-sm" />
+// Update StepDescription component with optimized animations
+const StepDescription = memo(({ step }: { step: Step | null }) => {
+  if (!step) return null;
+
+  return (
+    <motion.div
+      key={step.description}
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="w-full max-w-xl mx-auto bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl border border-blue-100/50 dark:border-blue-800/50"
+    >
+      <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">{step.description}</p>
+      {step.expectedValue !== undefined && (
+        <motion.div 
+          variants={fadeIn}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.2, delay: 0.1 }}
+          className="mt-2 flex items-center space-x-4 text-xs"
+        >
+          <span className="text-blue-600 dark:text-blue-400 font-medium">Expected: {step.expectedValue}</span>
+          {step.actualValue !== undefined && step.actualValue !== step.expectedValue && (
+            <span className="text-red-600 dark:text-red-400 font-medium">Actual: {step.actualValue}</span>
+          )}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+});
+StepDescription.displayName = 'StepDescription';
+
+// Update GoroutineCard with fixed width and better reset handling
+const GoroutineCard = memo(({ goroutine, index }: { goroutine: Goroutine; index: number }) => {
+  const statusColor = useMemo(() => {
+    switch (goroutine.status) {
+      case 'reading':
+        return 'bg-amber-500';
+      case 'writing':
+        return 'bg-emerald-500';
+      default:
+        return 'bg-neutral-500';
+    }
+  }, [goroutine.status]);
+
+  const ringClasses = useMemo(() => {
+    switch (goroutine.status) {
+      case 'reading':
+        return 'ring-2 ring-amber-200 dark:ring-amber-500 ring-offset-2 dark:ring-offset-neutral-900';
+      case 'writing':
+        return 'ring-2 ring-emerald-200 dark:ring-emerald-500 ring-offset-2 dark:ring-offset-neutral-900';
+      default:
+        return '';
+    }
+  }, [goroutine.status]);
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.2 }}
+      className={`
+        relative overflow-hidden p-3 rounded-xl backdrop-blur-sm w-full
+        bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800
+        ${ringClasses}
+      `}
+    >
+      <motion.div
+        layout
+        transition={{ duration: 0.2 }}
+      >
+        <GoroutineGlow color={statusColor} />
+        <div className="relative">
+          <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 mb-2">Goroutine {index + 1}</h3>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Operation:</span>
+              <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                {goroutine.operation === 'increment' ? '+1' : '-1'}
+              </span>
+            </div>
+            <motion.div
+              initial={false}
+              animate={{ height: goroutine.status !== 'idle' ? 'auto' : 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              {goroutine.status !== 'idle' && (
+                <motion.div
+                  variants={fadeIn}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800"
+                >
+                  <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Value:</span>
+                  <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                    {goroutine.value}
+                  </span>
+                </motion.div>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+});
+GoroutineCard.displayName = 'GoroutineCard';
+
+// Update SimulationControls to include prev/next buttons
+const SimulationControls = memo(({ 
+  isRunning, 
+  onSimulate,
+  onPrev,
+  onNext,
+  canGoPrev,
+  canGoNext 
+}: { 
+  isRunning: boolean;
+  onSimulate: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  canGoPrev: boolean;
+  canGoNext: boolean;
+}) => (
+  <motion.div layout className="flex justify-between items-center">
+    <div className="flex space-x-3">
+      <button
+        onClick={onPrev}
+        disabled={!canGoPrev || isRunning}
+        className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-neutral-800 disabled:hover:shadow-none"
+      >
+        ← Previous
+      </button>
+      <button
+        onClick={onNext}
+        disabled={!canGoNext || isRunning}
+        className="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-800 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-neutral-800 disabled:hover:shadow-none"
+      >
+        Next →
+      </button>
+    </div>
+    <button
+      onClick={onSimulate}
+      disabled={isRunning}
+      className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg hover:from-blue-600 hover:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none"
+      aria-busy={isRunning}
+      role="button"
+      aria-label={isRunning ? 'Simulation in progress' : 'Start race condition simulation'}
+    >
+      {isRunning ? 'Simulating...' : 'Auto Play'}
+    </button>
+  </motion.div>
+));
+
+// Add a new StepProgress component
+const StepProgress = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => (
+  <div className="relative w-full max-w-xl mx-auto mb-4">
+    <div className="flex justify-between mb-2">
+      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Progress</span>
+      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+        Step {currentStep + 1} of {totalSteps}
+      </span>
+    </div>
+    <div className="h-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden">
+      <motion.div
+        className="h-full bg-blue-500 dark:bg-blue-400"
+        initial={{ width: 0 }}
+        animate={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
+        transition={{ duration: 0.3 }}
+      />
+    </div>
   </div>
-);
+));
+StepProgress.displayName = 'StepProgress';
+
+// Add a new ConnectionLine component
+const ConnectionLine = memo(({ active, type }: { active: boolean; type: 'read' | 'write' }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: active ? 1 : 0.2 }}
+    className={`absolute left-1/2 -translate-x-1/2 h-16 w-0.5 ${
+      type === 'read' 
+        ? 'bg-amber-400 dark:bg-amber-500' 
+        : 'bg-emerald-400 dark:bg-emerald-500'
+    }`}
+  >
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: active ? '100%' : '0%' }}
+      className={`w-full ${
+        type === 'read'
+          ? 'bg-amber-400 dark:bg-amber-500'
+          : 'bg-emerald-400 dark:bg-emerald-500'
+      }`}
+      transition={{ duration: 0.3 }}
+    />
+  </motion.div>
+));
+ConnectionLine.displayName = 'ConnectionLine';
+
+// Add a new ExplanationPanel component
+const ExplanationPanel = memo(() => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="w-full max-w-xl mx-auto bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-neutral-200/50 dark:border-neutral-800 p-4 mb-6"
+  >
+    <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+      What is a Race Condition?
+    </h3>
+    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+      A race condition occurs when multiple goroutines access shared memory simultaneously. 
+      In this visualization:
+    </p>
+    <ul className="mt-2 space-y-1">
+      <li className="text-xs text-neutral-600 dark:text-neutral-400 flex items-center">
+        <span className="w-2 h-2 rounded-full bg-amber-400 mr-2" />
+        Yellow indicates a read operation
+      </li>
+      <li className="text-xs text-neutral-600 dark:text-neutral-400 flex items-center">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2" />
+        Green indicates a write operation
+      </li>
+    </ul>
+  </motion.div>
+));
+ExplanationPanel.displayName = 'ExplanationPanel';
 
 export const RaceConditionVisualizer = () => {
   const [sharedState, setSharedState] = useState(0);
@@ -74,325 +360,316 @@ export const RaceConditionVisualizer = () => {
     g1Write?: boolean;
     g2Write?: boolean;
   }>({});
+  const [stepIndex, setStepIndex] = useState(0);
+  const [autoPlaying, setAutoPlaying] = useState(false);
+  const totalSteps = 5; // Total number of steps in the simulation
 
   // Initialize goroutines with idle state
-  useEffect(() => {
+  const initializeGoroutines = useCallback(() => {
     setGoroutines([
       { id: 'g1', value: 0, status: 'idle', operation: 'increment' },
       { id: 'g2', value: 0, status: 'idle', operation: 'decrement' }
     ]);
+    setSharedState(0);
+    setHistory([]);
+    setCurrentStep(null);
+    setActiveConnections({});
   }, []);
 
-  const simulateRace = async () => {
-    if (isRunning) return;
-    setIsRunning(true);
-    setHistory([]);
-    setActiveConnections({});
+  // Function to apply a specific step
+  const applyStep = useCallback((stepIndex: number) => {
+    switch (stepIndex) {
+      case 0:
+        // Initial state
+        initializeGoroutines();
+        setCurrentStep(null);
+        setActiveConnections({});
+        break;
+      case 1:
+        // First goroutine reads
+        setCurrentStep({
+          description: "Step 1: Goroutine 1 reads the shared value (0)",
+          expectedValue: sharedState,
+        });
+        setActiveConnections({ g1Read: true });
+        setGoroutines(prev => prev.map(g => 
+          g.id === 'g1' ? { ...g, status: 'reading', value: sharedState } : g
+        ));
+        setHistory([{ 
+          value: sharedState,
+          description: "Initial value read by Goroutine 1"
+        }]);
+        break;
+      case 2:
+        // Second goroutine reads
+        setCurrentStep({
+          description: "Step 2: Goroutine 2 also reads the same shared value (0)",
+          expectedValue: sharedState,
+        });
+        setActiveConnections({ g2Read: true });
+        setGoroutines(prev => prev.map(g => 
+          g.id === 'g2' ? { ...g, status: 'reading', value: sharedState } : g
+        ));
+        break;
+      case 3:
+        // First goroutine writes
+        const expectedAfterIncrement = sharedState + 1;
+        setCurrentStep({
+          description: "Step 3: Goroutine 1 increments its copy (0 → 1) and writes back",
+          expectedValue: expectedAfterIncrement,
+          actualValue: expectedAfterIncrement,
+        });
+        setActiveConnections({ g1Write: true });
+        setGoroutines(prev => prev.map(g => 
+          g.id === 'g1' ? { ...g, status: 'writing', value: g.value + 1 } : g
+        ));
+        setHistory(prev => [...prev, { 
+          value: expectedAfterIncrement,
+          description: "Value after Goroutine 1 increments (0 → 1)"
+        }]);
+        break;
+      case 4:
+        // Second goroutine writes
+        setCurrentStep({
+          description: "Step 4: Goroutine 2 decrements its original value (0 → -1) and overwrites the previous increment!",
+          expectedValue: sharedState + 1 - 1,
+          actualValue: sharedState - 1,
+        });
+        setActiveConnections({ g2Write: true });
+        setGoroutines(prev => prev.map(g => 
+          g.id === 'g2' ? { ...g, status: 'writing', value: g.value - 1 } : g
+        ));
+        setHistory(prev => [...prev, { 
+          value: sharedState - 1,
+          description: "Final value after Goroutine 2 decrements its stale copy (0 → -1)"
+        }]);
+        break;
+      case 5:
+        // Final state
+        setCurrentStep({
+          description: "Race condition complete! The final value is -1 instead of 0 because Goroutine 2 was working with a stale value.",
+        });
+        setActiveConnections({});
+        setGoroutines(prev => prev.map(g => ({ ...g, status: 'idle' })));
+        break;
+      default:
+        break;
+    }
+    setStepIndex(stepIndex);
+  }, [sharedState, initializeGoroutines]);
+
+  // Handle manual navigation
+  const goToPrevStep = useCallback(() => {
+    if (stepIndex > 0) {
+      applyStep(stepIndex - 1);
+    }
+  }, [stepIndex, applyStep]);
+
+  const goToNextStep = useCallback(() => {
+    if (stepIndex < totalSteps) {
+      applyStep(stepIndex + 1);
+    }
+  }, [stepIndex, totalSteps, applyStep]);
+
+  // Modified simulateRace for auto-play
+  const simulateRace = useCallback(async () => {
+    if (autoPlaying) return;
     
-    // Update existing goroutines instead of creating new ones
-    setGoroutines(prev => prev.map(g => ({ ...g, value: sharedState, status: 'idle' })));
+    setAutoPlaying(true);
+    setStepIndex(0);
+    applyStep(0);
+    
+    for (let i = 1; i <= totalSteps; i++) {
+      await new Promise(r => setTimeout(r, STEP_DELAY));
+      applyStep(i);
+    }
+    
+    setAutoPlaying(false);
+  }, [autoPlaying, totalSteps, applyStep]);
 
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    // First goroutine reads
-    setCurrentStep({
-      description: "Step 1: Goroutine 1 reads the shared value (0)",
-      expectedValue: sharedState,
-    });
-    setActiveConnections({ g1Read: true });
-    setGoroutines(prev => prev.map(g => 
-      g.id === 'g1' ? { ...g, status: 'reading', value: sharedState } : g
-    ));
-    setHistory(h => [...h, { 
-      value: sharedState,
-      description: "Initial value read by Goroutine 1"
-    }]);
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    // Second goroutine reads
-    setCurrentStep({
-      description: "Step 2: Goroutine 2 also reads the same shared value (0)",
-      expectedValue: sharedState,
-    });
-    setActiveConnections({ g2Read: true });
-    setGoroutines(prev => prev.map(g => 
-      g.id === 'g2' ? { ...g, status: 'reading', value: sharedState } : g
-    ));
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    // First goroutine writes
-    const expectedAfterIncrement = sharedState + 1;
-    setCurrentStep({
-      description: "Step 3: Goroutine 1 increments its copy (0 → 1) and writes back",
-      expectedValue: expectedAfterIncrement,
-      actualValue: expectedAfterIncrement,
-    });
-    setActiveConnections({ g1Write: true });
-    setGoroutines(prev => prev.map(g => 
-      g.id === 'g1' ? { ...g, status: 'writing', value: g.value + 1 } : g
-    ));
-    setSharedState(prev => {
-      const newValue = prev + 1;
-      setHistory(h => [...h, { 
-        value: newValue,
-        description: "Value after Goroutine 1 increments (0 → 1)"
-      }]);
-      return newValue;
-    });
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    // Second goroutine writes
-    setCurrentStep({
-      description: "Step 4: Goroutine 2 decrements its original value (0 → -1) and overwrites the previous increment!",
-      expectedValue: expectedAfterIncrement - 1,
-      actualValue: sharedState - 1,
-    });
-    setActiveConnections({ g2Write: true });
-    setGoroutines(prev => prev.map(g => 
-      g.id === 'g2' ? { ...g, status: 'writing', value: g.value - 1 } : g
-    ));
-    setSharedState(prev => {
-      const newValue = sharedState - 1;
-      setHistory(h => [...h, { 
-        value: newValue,
-        description: "Final value after Goroutine 2 decrements its stale copy (0 → -1)"
-      }]);
-      return newValue;
-    });
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    setCurrentStep({
-      description: "Race condition complete! The final value is -1 instead of 0 because Goroutine 2 was working with a stale value.",
-    });
-    setActiveConnections({});
-    await new Promise(r => setTimeout(r, STEP_DELAY));
-
-    // Reset
-    setGoroutines([]);
-    setIsRunning(false);
-  };
+  useEffect(() => {
+    initializeGoroutines();
+  }, [initializeGoroutines]);
 
   return (
-    <motion.div layout className="my-8 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900 rounded-xl overflow-hidden shadow-lg border border-neutral-200/50 dark:border-neutral-800">
-      <motion.div layout className="border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-4">
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-2">
-            <div className="w-3 h-3 rounded-full bg-red-400" />
-            <div className="w-3 h-3 rounded-full bg-yellow-400" />
-            <div className="w-3 h-3 rounded-full bg-green-400" />
-          </div>
-          <div className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Race Condition Simulator</div>
-        </div>
-      </motion.div>
-
+    <ErrorBoundary>
       <motion.div 
-        layout 
-        className="p-4 space-y-4"
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        layout
+        transition={{ duration: 0.3 }}
+        className="my-8 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900 rounded-xl overflow-hidden shadow-lg border border-neutral-200/50 dark:border-neutral-800"
+        role="region"
+        aria-label="Race Condition Visualization"
       >
-        {/* Step Description */}
-        <AnimatePresence mode="wait">
-          {currentStep && (
-            <motion.div
-              key={currentStep.description}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="w-full max-w-xl mx-auto bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl border border-blue-100/50 dark:border-blue-800/50"
-            >
-              <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">{currentStep.description}</p>
-              {currentStep.expectedValue !== undefined && (
-                <div className="mt-2 flex items-center space-x-4 text-xs">
-                  <span className="text-blue-600 dark:text-blue-400 font-medium">Expected: {currentStep.expectedValue}</span>
-                  {currentStep.actualValue !== undefined && currentStep.actualValue !== currentStep.expectedValue && (
-                    <span className="text-red-600 dark:text-red-400 font-medium">Actual: {currentStep.actualValue}</span>
-                  )}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Main Visualization Area */}
         <motion.div 
-          layout
-          className="relative w-full max-w-2xl mx-auto"
-          style={{ minHeight: '300px' }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          layout 
+          className="border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 p-4"
         >
-          {/* Shared Memory at Top */}
-          <div className="flex justify-center mb-16">
-            <motion.div
-              key={`shared-${sharedState}`}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="relative w-full"
-            >
-              <motion.div
-                className="relative overflow-hidden p-4 rounded-2xl bg-white/90 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 flex flex-col items-center"
-                layout
-              >
-                <MemoryGlow />
-                <div className="relative w-full text-center">
-                  <span className="block text-sm font-medium text-neutral-400 dark:text-neutral-500 mb-2">Shared Memory</span>
-                  <motion.div 
-                    key={sharedState}
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="flex flex-col items-center"
-                  >
-                    <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 dark:from-blue-400 dark:to-blue-400 bg-clip-text text-transparent">
-                      {sharedState}
-                    </span>
-                    {isRunning && (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="mt-2 text-xs font-medium text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded-full bg-neutral-50 dark:bg-neutral-800"
-                      >
-                        0x1234
-                      </motion.span>
-                    )}
-                  </motion.div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Goroutines Side by Side with Connection Lines */}
-          <div className="grid grid-cols-2 gap-6 relative">
-            {/* Connection Lines */}
-            <div 
-              className="absolute left-1/2 -top-16 w-[2px] h-16 border-l-2 border-dashed border-neutral-400 dark:border-neutral-600 transform -translate-x-1/2 transition-opacity duration-300"
-              style={{
-                opacity: activeConnections.g1Read || activeConnections.g1Write ? 0.8 : 0.3
-              }}
-            />
-
-            {/* Reading/Writing Labels */}
-            <div className="absolute inset-x-0 -top-6 flex justify-center">
-              {activeConnections.g1Read && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800"
-                >
-                  Reading
-                </motion.div>
-              )}
-              {activeConnections.g1Write && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800"
-                >
-                  Writing
-                </motion.div>
-              )}
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 rounded-full bg-red-400" role="presentation" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400" role="presentation" />
+              <div className="w-3 h-3 rounded-full bg-green-400" role="presentation" />
             </div>
-
-            {/* Goroutine Cards */}
-            <motion.div
-              layout
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className={`
-                relative overflow-hidden p-3 rounded-xl backdrop-blur-sm
-                bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800
-                ${goroutines[0]?.status === 'reading' 
-                  ? 'ring-2 ring-amber-200 dark:ring-amber-500 ring-offset-2 dark:ring-offset-neutral-900' 
-                  : goroutines[0]?.status === 'writing'
-                    ? 'ring-2 ring-emerald-200 dark:ring-emerald-500 ring-offset-2 dark:ring-offset-neutral-900'
-                    : ''}
-              `}
+            <div 
+              className="text-sm font-medium text-neutral-500 dark:text-neutral-400"
+              role="heading"
+              aria-level={1}
             >
-              <motion.div
-                layout
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <GoroutineGlow 
-                  color={
-                    goroutines[0]?.status === 'reading'
-                      ? 'bg-amber-500'
-                      : goroutines[0]?.status === 'writing'
-                        ? 'bg-emerald-500'
-                        : 'bg-neutral-500'
-                  }
-                />
-                <div className="relative">
-                  <h3 className="text-sm font-semibold text-neutral-800 dark:text-neutral-200 mb-2">Goroutine 1</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Operation:</span>
-                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">+1</span>
-                    </div>
-                    <motion.div
-                      initial={false}
-                      animate={{ height: goroutines[0]?.status !== 'idle' ? 'auto' : 0 }}
-                      className="overflow-hidden"
-                    >
-                      {goroutines[0]?.status !== 'idle' && (
-                        <div className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800">
-                          <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Value:</span>
-                          <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                            {goroutines[0]?.value}
-                          </span>
-                        </div>
-                      )}
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Similar updates for the second goroutine card */}
-            {/* ... */}
+              Race Condition Simulator
+            </div>
           </div>
         </motion.div>
 
-        {/* History with Explanations */}
-        {history.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="w-full max-w-xl mx-auto bg-white/50 dark:bg-neutral-900/50 rounded-xl border border-neutral-200/50 dark:border-neutral-800 p-3"
+        <motion.div 
+          layout 
+          className="p-4 space-y-4"
+          transition={{ duration: 0.3 }}
+        >
+          {/* Add Explanation Panel */}
+          <ExplanationPanel />
+
+          {/* Add Step Progress */}
+          {isRunning && (
+            <StepProgress currentStep={stepIndex} totalSteps={totalSteps} />
+          )}
+
+          {/* Step Description */}
+          <div role="status" aria-live="polite">
+            <AnimatePresence mode="wait" initial={false}>
+              <StepDescription step={currentStep} />
+            </AnimatePresence>
+          </div>
+
+          {/* Main Visualization Area */}
+          <motion.div 
+            layout
+            variants={scaleIn}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.3 }}
+            className="relative w-full max-w-2xl mx-auto"
+            style={{ minHeight: '300px' }}
           >
-            <div className="text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-2 tracking-wider">Value History:</div>
-            <div className="space-y-2">
-              {history.map(({ value, description }, index) => (
+            {/* Shared Memory at Top */}
+            <div className="flex justify-center mb-16">
+              {/* Add Connection Lines */}
+              <div className="absolute inset-x-0 bottom-0 h-16">
+                <ConnectionLine 
+                  active={!!(activeConnections.g1Read || activeConnections.g2Read)}
+                  type="read" 
+                />
+                <ConnectionLine 
+                  active={!!(activeConnections.g1Write || activeConnections.g2Write)}
+                  type="write" 
+                />
+              </div>
+              
+              <motion.div
+                key={`shared-${sharedState}`}
+                variants={scaleIn}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.2 }}
+                className="relative w-full"
+              >
                 <motion.div
-                  key={`history-${index}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3"
+                  className="relative overflow-hidden p-4 rounded-2xl bg-white/90 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 flex flex-col items-center"
+                  layout
                 >
-                  <div className="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200/50 dark:border-neutral-700 flex items-center justify-center text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                    {value}
+                  <MemoryGlow />
+                  <div className="relative w-full text-center">
+                    <span className="block text-sm font-medium text-neutral-400 dark:text-neutral-500 mb-2">Shared Memory</span>
+                    <motion.div 
+                      key={sharedState}
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="flex flex-col items-center"
+                    >
+                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 dark:from-blue-400 dark:to-blue-400 bg-clip-text text-transparent">
+                        {sharedState}
+                      </span>
+                      {isRunning && (
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="mt-2 text-xs font-medium text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded-full bg-neutral-50 dark:bg-neutral-800"
+                        >
+                          0x1234
+                        </motion.span>
+                      )}
+                    </motion.div>
                   </div>
-                  <div className="text-xs text-neutral-600 dark:text-neutral-400 tracking-wider">{description}</div>
                 </motion.div>
-              ))}
+              </motion.div>
+            </div>
+
+            {/* Goroutines Grid */}
+            <div className="grid grid-cols-2 gap-6 relative min-h-[200px]">
+              <AnimatePresence mode="wait">
+                {goroutines.map((goroutine, index) => (
+                  <div key={goroutine.id} className="w-full">
+                    <GoroutineCard goroutine={goroutine} index={index} />
+                  </div>
+                ))}
+              </AnimatePresence>
             </div>
           </motion.div>
-        )}
 
-        {/* Control Button */}
-        <motion.button
-          onClick={simulateRace}
-          disabled={isRunning}
-          className={`
-            w-full max-w-sm mx-auto px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 block
-            ${isRunning
-              ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed'
-              : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50'}
-          `}
-        >
-          {isRunning ? 'Simulating...' : 'Simulate Race Condition'}
-        </motion.button>
+          {/* History with Explanations */}
+          <AnimatePresence>
+            {history.length > 0 && (
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.2 }}
+                className="w-full max-w-xl mx-auto bg-white/50 dark:bg-neutral-900/50 rounded-xl border border-neutral-200/50 dark:border-neutral-800 p-3"
+              >
+                <div className="text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-2 tracking-wider">
+                  Value History:
+                </div>
+                <div className="space-y-2">
+                  {history.map(({ value, description }, index) => (
+                    <motion.div
+                      key={`history-${index}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center space-x-3"
+                      role="listitem"
+                    >
+                      <div 
+                        className="w-6 h-6 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200/50 dark:border-neutral-700 flex items-center justify-center text-xs font-medium text-neutral-600 dark:text-neutral-400"
+                        aria-label={`Value: ${value}`}
+                      >
+                        {value}
+                      </div>
+                      <div 
+                        className="text-xs text-neutral-600 dark:text-neutral-400 tracking-wider"
+                        aria-label={description}
+                      >
+                        {description}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Control Button */}
+          <SimulationControls 
+            isRunning={autoPlaying}
+            onSimulate={simulateRace}
+            onPrev={goToPrevStep}
+            onNext={goToNextStep}
+            canGoPrev={stepIndex > 0}
+            canGoNext={stepIndex < totalSteps}
+          />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </ErrorBoundary>
   );
 };
 

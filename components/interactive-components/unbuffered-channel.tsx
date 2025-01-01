@@ -1,7 +1,77 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Extracted components for better performance
+const MessageDisplay = memo(({ message, isTimingOut }: { message: string | null; isTimingOut: boolean }) => {
+  if (!message) return null;
+  
+  return (
+    <motion.div
+      key={message}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ 
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1]
+      }}
+      className={`
+        text-sm px-3 py-1.5 rounded-lg border whitespace-nowrap
+        ${isTimingOut
+          ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-900/30 border-amber-200/50 dark:border-amber-800/50'
+          : 'text-neutral-600 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800 border-neutral-200/50 dark:border-neutral-700'}
+      `}
+    >
+      <span className="inline-flex items-center gap-2">
+        {isTimingOut && (
+          <motion.span
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="inline-block w-3 h-3 border-2 border-amber-300 dark:border-amber-500 border-t-amber-500 dark:border-t-amber-400 rounded-full"
+          />
+        )}
+        {message}
+      </span>
+    </motion.div>
+  );
+});
+
+MessageDisplay.displayName = 'MessageDisplay';
+
+const HistoryItem = memo(({ item, index }: { item: { value: number }; index: number }) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, x: -10, height: 0 }}
+    animate={{ 
+      opacity: 1, 
+      x: 0, 
+      height: 'auto',
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0, 0.2, 1],
+        delay: index * 0.1
+      }
+    }}
+    className="flex items-center space-x-2 overflow-hidden"
+  >
+    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800">
+      <span className="text-xs text-emerald-600 dark:text-emerald-400">✓</span>
+    </div>
+    <div className="flex items-center space-x-1.5">
+      <span className="text-sm text-neutral-600 dark:text-neutral-400">Value</span>
+      <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{item.value}</span>
+      <span className="text-sm text-neutral-600 dark:text-neutral-400">transferred</span>
+    </div>
+  </motion.div>
+));
+
+HistoryItem.displayName = 'HistoryItem';
 
 export const UnbufferedChannelDemo = () => {
   const [isBlocked, setIsBlocked] = useState(false);
@@ -12,6 +82,7 @@ export const UnbufferedChannelDemo = () => {
   const [history, setHistory] = useState<Array<{action: string; value: number}>>([]);
   const [isTimingOut, setIsTimingOut] = useState(false);
 
+  // Cleanup effect
   useEffect(() => {
     return () => {
       setMessage(null);
@@ -21,35 +92,29 @@ export const UnbufferedChannelDemo = () => {
 
   // Handle receive timeout
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    if (isReceiving && !isSending) {
-      setIsTimingOut(true);
-      timeoutId = setTimeout(() => {
-        setIsReceiving(false);
-        setIsBlocked(false);
-        setIsTimingOut(false);
-        setMessage(null);
-      }, 3000);
-    }
+    if (!isReceiving || isSending) return;
 
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
+    setIsTimingOut(true);
+    const timeoutId = setTimeout(() => {
+      setIsReceiving(false);
+      setIsBlocked(false);
+      setIsTimingOut(false);
+      setMessage(null);
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
   }, [isReceiving, isSending]);
 
-  const simulateSend = () => {
+  const simulateSend = useCallback(() => {
     if (!isBlocked) {
       setIsBlocked(true);
       setIsSending(true);
       setValue(prev => prev + 1);
       setMessage(`Waiting to send value ${value}...`);
     }
-  };
+  }, [isBlocked, value]);
 
-  const simulateReceive = () => {
+  const simulateReceive = useCallback(() => {
     if (isSending) {
       const currentValue = value;
       setIsSending(false);
@@ -70,7 +135,22 @@ export const UnbufferedChannelDemo = () => {
       setIsTimingOut(true);
       setMessage('Waiting for sender (will timeout)');
     }
-  };
+  }, [isSending, value]);
+
+  // Memoized class names
+  const senderClassName = `
+    w-32 h-32 rounded-xl flex items-center justify-center border-dashed
+    ${isSending 
+      ? 'bg-amber-50 dark:bg-amber-900/30 border-2 border-amber-200 dark:border-amber-800' 
+      : 'bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'}
+  `;
+
+  const receiverClassName = `
+    w-32 h-32 rounded-xl flex items-center justify-center border-dashed
+    ${isReceiving 
+      ? 'bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-200 dark:border-emerald-800' 
+      : 'bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'}
+  `;
 
   return (
     <div className="p-6 bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-800">
@@ -80,12 +160,7 @@ export const UnbufferedChannelDemo = () => {
           <motion.div 
             animate={{ x: isSending ? 20 : 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 10 }}
-            className={`
-              w-32 h-32 rounded-xl flex items-center justify-center border-dashed
-              ${isSending 
-                ? 'bg-amber-50 dark:bg-amber-900/30 border-2 border-amber-200 dark:border-amber-800' 
-                : 'bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'}
-            `}
+            className={senderClassName}
           >
             <div className="text-center">
               <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Sender</p>
@@ -132,12 +207,7 @@ export const UnbufferedChannelDemo = () => {
           <motion.div 
             animate={{ x: isReceiving && isSending ? -20 : 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 10 }}
-            className={`
-              w-32 h-32 rounded-xl flex items-center justify-center border-dashed
-              ${isReceiving 
-                ? 'bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-200 dark:border-emerald-800' 
-                : 'bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'}
-            `}
+            className={receiverClassName}
           >
             <div className="text-center">
               <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-1">Receiver</p>
@@ -157,39 +227,7 @@ export const UnbufferedChannelDemo = () => {
         {/* Message */}
         <div className="h-8 flex items-center justify-center">
           <AnimatePresence mode="wait">
-            {message && (
-              <motion.div
-                key={message}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ 
-                  duration: 0.3,
-                  ease: [0.4, 0, 0.2, 1]
-                }}
-                className={`
-                  text-sm px-3 py-1.5 rounded-lg border whitespace-nowrap
-                  ${isTimingOut
-                    ? 'text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-900/30 border-amber-200/50 dark:border-amber-800/50'
-                    : 'text-neutral-600 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-800 border-neutral-200/50 dark:border-neutral-700'}
-                `}
-              >
-                <span className="inline-flex items-center gap-2">
-                  {isTimingOut && (
-                    <motion.span
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                      className="inline-block w-3 h-3 border-2 border-amber-300 dark:border-amber-500 border-t-amber-500 dark:border-t-amber-400 rounded-full"
-                    />
-                  )}
-                  {message}
-                </span>
-              </motion.div>
-            )}
+            <MessageDisplay message={message} isTimingOut={isTimingOut} />
           </AnimatePresence>
         </div>
 
@@ -238,30 +276,7 @@ export const UnbufferedChannelDemo = () => {
             >
               <div className="space-y-2">
                 {history.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -10, height: 0 }}
-                    animate={{ 
-                      opacity: 1, 
-                      x: 0, 
-                      height: 'auto',
-                      transition: {
-                        duration: 0.2,
-                        ease: [0.4, 0, 0.2, 1],
-                        delay: index * 0.1
-                      }
-                    }}
-                    className="flex items-center space-x-2 overflow-hidden"
-                  >
-                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800">
-                      <span className="text-xs text-emerald-600 dark:text-emerald-400">✓</span>
-                    </div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-sm text-neutral-600 dark:text-neutral-400">Value</span>
-                      <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{item.value}</span>
-                      <span className="text-sm text-neutral-600 dark:text-neutral-400">transferred</span>
-                    </div>
-                  </motion.div>
+                  <HistoryItem key={index} item={item} index={index} />
                 ))}
               </div>
             </motion.div>

@@ -1,7 +1,11 @@
 'use client'
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const STEP_INTERVAL = 6000;
+const ANIMATION_DURATION = 2000;
+const RUNNING_STATE_DURATION = 5000;
 
 interface Goroutine {
   id: number;
@@ -17,161 +21,226 @@ const stepDescriptions = {
   4: 'G1 and G3 complete execution and return to global queue',
   5: 'P1 starts executing G2, P2 starts executing G4',
   6: 'G2 and G4 complete execution and return to global queue',
-};
+} as const;
+
+const createInitialGoroutines = (): Goroutine[] => 
+  Array.from({ length: 4 }, (_, i) => ({
+    id: i + 1,
+    status: 'ready',
+    location: 'global'
+  }));
+
+const Processor = React.memo(({ pid, getGoroutinesByLocation }: {
+  pid: number;
+  getGoroutinesByLocation: (location: Goroutine['location']) => Goroutine[];
+}) => {
+  const runningGoroutines = getGoroutinesByLocation(`running-p${pid}` as Goroutine['location']);
+  const localQueueGoroutines = getGoroutinesByLocation(`p${pid}` as Goroutine['location']);
+
+  return (
+    <div className="mb-4 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">P{pid}</span>
+          <span className="px-2 py-1 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-md">
+            M{pid}
+          </span>
+        </div>
+        <AnimatePresence mode="wait" initial={false}>
+          {runningGoroutines.map(g => (
+            <motion.div
+              key={g.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ 
+                duration: 1.5,
+                ease: [0.4, 0, 0.2, 1]
+              }}
+              className="px-3 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-md text-sm font-medium shadow-sm border border-emerald-200 dark:border-emerald-800"
+            >
+              Running G{g.id}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+      
+      <div className="flex gap-2 p-2 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg overflow-x-auto min-h-[3rem] items-center">
+        <AnimatePresence mode="wait" initial={false}>
+          {localQueueGoroutines.map(g => (
+            <motion.div
+              key={g.id}
+              initial={{ opacity: 0, scale: 0.4 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.4 }}
+              transition={{ 
+                duration: 1.5,
+                type: "spring",
+                stiffness: 50,
+                damping: 12,
+                mass: 1.5
+              }}
+              className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+            >
+              G{g.id}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+});
+
+Processor.displayName = 'Processor';
 
 export const GoroutineScheduler = () => {
-  const [goroutines, setGoroutines] = useState<Goroutine[]>([]);
+  const [goroutines, setGoroutines] = useState<Goroutine[]>(createInitialGoroutines);
   const [isRunning, setIsRunning] = useState(false);
   const [step, setStep] = useState(0);
-  const [currentDescription, setCurrentDescription] = useState('');
-  const [cycleCount, setCycleCount] = useState(0);
+  const [currentDescription, setCurrentDescription] = useState('Click Start to begin scheduling');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const animationTimeoutRef = useRef<NodeJS.Timeout>();
+  const stepTimeoutRef = useRef<NodeJS.Timeout>();
 
   const initializeState = useCallback(() => {
-    const initialGoroutines: Goroutine[] = Array.from(
-      { length: 4 },
-      (_, i) => ({
-        id: i + 1,
-        status: 'ready',
-        location: 'global'
-      })
-    );
-    setGoroutines(initialGoroutines);
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
+    if (stepTimeoutRef.current) {
+      clearTimeout(stepTimeoutRef.current);
+    }
+    setGoroutines(createInitialGoroutines());
     setStep(0);
-    setCycleCount(0);
     setCurrentDescription('Click Start to begin scheduling');
+    setIsTransitioning(false);
+    setIsRunning(false);
   }, []);
 
   const updateGoroutineState = useCallback((currentStep: number) => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    
     setGoroutines(prev => {
-      // Create a fresh copy of goroutines
       const updated = prev.map(g => ({...g}));
 
       switch(currentStep) {
-        case 1: // Move to P1
-          updated.forEach(g => {
-            if (g.id === 1 || g.id === 2) {
-              g.location = 'p1';
-              g.status = 'ready';
-            }
-          });
-          break;
+        case 1:
+          return updated.map(g => ({
+            ...g,
+            location: (g.id === 1 || g.id === 2) ? 'p1' : g.location,
+            status: (g.id === 1 || g.id === 2) ? 'ready' : g.status
+          }));
 
-        case 2: // Move to P2
-          updated.forEach(g => {
-            if (g.id === 3 || g.id === 4) {
-              g.location = 'p2';
-              g.status = 'ready';
-            }
-          });
-          break;
+        case 2:
+          return updated.map(g => ({
+            ...g,
+            location: (g.id === 3 || g.id === 4) ? 'p2' : g.location,
+            status: (g.id === 3 || g.id === 4) ? 'ready' : g.status
+          }));
 
-        case 3: // Start execution in P1 and P2
-          updated.forEach(g => {
-            if (g.id === 1) {
-              g.location = 'running-p1';
-              g.status = 'running';
-            }
-            if (g.id === 3) {
-              g.location = 'running-p2';
-              g.status = 'running';
-            }
-            if (g.id === 2) {
-              g.location = 'p1';
-              g.status = 'ready';
-            }
-            if (g.id === 4) {
-              g.location = 'p2';
-              g.status = 'ready';
-            }
-          });
-          break;
+        case 3:
+          return updated.map(g => ({
+            ...g,
+            location: g.id === 1 ? 'running-p1' : g.id === 3 ? 'running-p2' : g.location,
+            status: (g.id === 1 || g.id === 3) ? 'running' : g.status
+          }));
 
-        case 4: // Return first pair to global queue
-          updated.forEach(g => {
-            if (g.id === 1 || g.id === 3) {
-              g.location = 'global';
-              g.status = 'ready';
-            }
-            if (g.id === 2) {
-              g.location = 'p1';
-              g.status = 'ready';
-            }
-            if (g.id === 4) {
-              g.location = 'p2';
-              g.status = 'ready';
-            }
-          });
-          break;
+        case 4:
+          return updated.map(g => ({
+            ...g,
+            location: (g.id === 1 || g.id === 3) ? 'global' : g.location,
+            status: (g.id === 1 || g.id === 3) ? 'ready' : g.status
+          }));
 
-        case 5: // Start executing second pair
-          updated.forEach(g => {
-            if (g.id === 2) {
-              g.location = 'running-p1';
-              g.status = 'running';
-            }
-            if (g.id === 4) {
-              g.location = 'running-p2';
-              g.status = 'running';
-            }
-          });
-          break;
+        case 5:
+          return updated.map(g => ({
+            ...g,
+            location: g.id === 2 ? 'running-p1' : g.id === 4 ? 'running-p2' : g.location,
+            status: (g.id === 2 || g.id === 4) ? 'running' : g.status
+          }));
 
-        case 6: // All return to global for next cycle
-          updated.forEach(g => {
-            g.location = 'global';
-            g.status = 'ready';
-          });
-          break;
+        case 6:
+          return updated.map(g => ({
+            ...g,
+            location: 'global',
+            status: 'ready'
+          }));
 
-        case 0: // Initial state
-          updated.forEach(g => {
-            g.location = 'global';
-            g.status = 'ready';
-          });
-          break;
+        default:
+          return prev;
       }
-
-      return updated;
     });
+
+    animationTimeoutRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+      // If we've reached the end of the cycle, stop the animation
+      if (currentStep === 6) {
+        setIsRunning(false);
+        setCurrentDescription('Cycle completed. Click Start to run again.');
+      }
+    }, currentStep === 3 || currentStep === 5 ? RUNNING_STATE_DURATION : ANIMATION_DURATION);
   }, []);
 
   useEffect(() => {
     initializeState();
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+      if (stepTimeoutRef.current) {
+        clearTimeout(stepTimeoutRef.current);
+      }
+    };
   }, [initializeState]);
 
   useEffect(() => {
     if (!isRunning) return;
 
-    const intervalId = setInterval(() => {
+    const runStep = () => {
+      if (isTransitioning) return;
+
       setStep(prevStep => {
-        const newStep = (prevStep + 1) % 7;
-        if (newStep === 0) {
-          setCycleCount(prev => prev + 1);
-        }
-        setCurrentDescription(stepDescriptions[newStep]);
+        const newStep = prevStep + 1;
+        setCurrentDescription(stepDescriptions[newStep as keyof typeof stepDescriptions]);
         updateGoroutineState(newStep);
         return newStep;
       });
-    }, 3000);
 
-    return () => clearInterval(intervalId);
-  }, [isRunning, updateGoroutineState]);
+      stepTimeoutRef.current = setTimeout(
+        runStep,
+        step === 3 || step === 5 ? RUNNING_STATE_DURATION : STEP_INTERVAL
+      );
+    };
 
-  const toggleScheduling = () => {
+    runStep();
+
+    return () => {
+      if (stepTimeoutRef.current) {
+        clearTimeout(stepTimeoutRef.current);
+      }
+    };
+  }, [isRunning, step, updateGoroutineState, isTransitioning]);
+
+  const toggleScheduling = useCallback(() => {
     if (isRunning) {
-      setIsRunning(false);
       initializeState();
     } else {
       setIsRunning(true);
+      setStep(0);
       setCurrentDescription(stepDescriptions[1]);
     }
-  };
+  }, [isRunning, initializeState]);
 
-  const getGoroutinesByLocation = (location: Goroutine['location']) => 
-    goroutines.filter(g => g.location === location);
+  const getGoroutinesByLocation = useCallback((location: Goroutine['location']) => 
+    goroutines.filter(g => g.location === location),
+    [goroutines]
+  );
+
+  const globalGoroutines = useMemo(() => getGoroutinesByLocation('global'), [getGoroutinesByLocation]);
 
   return (
-    <div className="p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-200 dark:border-neutral-800">
+    <div className={`p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-200 dark:border-neutral-800 ${isTransitioning ? 'pointer-events-none' : ''}`}>
       <div className="mb-6">
         <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-2">Go Scheduler Visualization</h3>
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -180,26 +249,26 @@ export const GoroutineScheduler = () => {
         </p>
       </div>
 
-      {/* Current Step Description */}
       <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
         <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">{currentDescription}</p>
       </div>
 
-      {/* Global Run Queue */}
       <div className="mb-6">
         <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">Global Run Queue</h4>
         <div className="flex gap-2 p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg overflow-x-auto min-h-[4rem] items-center">
-          <AnimatePresence mode="popLayout">
-            {getGoroutinesByLocation('global').map(g => (
+          <AnimatePresence mode="wait" initial={false}>
+            {globalGoroutines.map(g => (
               <motion.div
                 key={g.id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.4 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                exit={{ opacity: 0, scale: 0.4 }}
                 transition={{ 
-                  duration: 0.5,
-                  layout: { duration: 0.3 }
+                  duration: 1.5,
+                  type: "spring",
+                  stiffness: 50,
+                  damping: 12,
+                  mass: 1.5
                 }}
                 className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
               >
@@ -210,58 +279,12 @@ export const GoroutineScheduler = () => {
         </div>
       </div>
 
-      {/* Processors */}
       {[1, 2].map(pid => (
-        <div key={pid} className="mb-4 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">P{pid}</span>
-              <span className="px-2 py-1 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-md">
-                M{pid}
-              </span>
-            </div>
-            <AnimatePresence mode="popLayout">
-              {getGoroutinesByLocation(`running-p${pid}` as Goroutine['location']).map(g => (
-                <motion.div
-                  key={g.id}
-                  layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ 
-                    duration: 0.5,
-                    layout: { duration: 0.3 }
-                  }}
-                  className="px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-md text-sm font-medium shadow-sm"
-                >
-                  Running G{g.id}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-          
-          {/* Local Run Queue */}
-          <div className="flex gap-2 p-2 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg overflow-x-auto min-h-[3rem] items-center">
-            <AnimatePresence mode="popLayout">
-              {getGoroutinesByLocation(`p${pid}` as Goroutine['location']).map(g => (
-                <motion.div
-                  key={g.id}
-                  layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ 
-                    duration: 0.5,
-                    layout: { duration: 0.3 }
-                  }}
-                  className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
-                >
-                  G{g.id}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
+        <Processor
+          key={pid}
+          pid={pid}
+          getGoroutinesByLocation={getGoroutinesByLocation}
+        />
       ))}
 
       <button
