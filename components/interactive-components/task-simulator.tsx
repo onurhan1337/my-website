@@ -8,6 +8,8 @@ interface Task {
   duration: number;
   progress: number;
   status: 'waiting' | 'running' | 'completed';
+  startTime?: number;
+  endTime?: number;
 }
 
 type TaskMode = 'sequential' | 'concurrent';
@@ -28,7 +30,9 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     setTaskList(tasks => tasks.map(task => ({
       ...task,
       progress: 0,
-      status: 'waiting' as const
+      status: 'waiting' as const,
+      startTime: undefined,
+      endTime: undefined
     })));
     setIsRunning(false);
     setStartTime(null);
@@ -56,23 +60,51 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
 
         const updatedTasks = prevTasks.map(task => {
           if (mode === 'sequential') {
+            const previousTasksDuration = prevTasks
+              .filter(t => t.id < task.id)
+              .reduce((sum, t) => sum + t.duration, 0);
+
             const previousTasksCompleted = prevTasks
               .filter(t => t.id < task.id)
               .every(t => t.status === 'completed');
 
             if (!previousTasksCompleted) {
               allCompleted = false;
-              return task;
+              return {
+                ...task,
+                progress: 0,
+                status: 'waiting' as const,
+                startTime: startTime + previousTasksDuration,
+                endTime: startTime + previousTasksDuration + task.duration
+              };
             }
+
+            const taskStartTime = startTime + previousTasksDuration;
+            const taskElapsedTime = Math.max(0, currentTime - taskStartTime);
+            const newProgress = Math.min(100, (taskElapsedTime / task.duration) * 100);
+            const newStatus = newProgress >= 100 
+              ? 'completed' as const 
+              : 'running' as const;
+
+            if (newStatus !== 'completed') {
+              allCompleted = false;
+            }
+
+            return {
+              ...task,
+              progress: newProgress,
+              status: newStatus,
+              startTime: taskStartTime,
+              endTime: taskStartTime + task.duration
+            };
           }
 
-          if (task.status === 'completed') {
-            return task;
-          }
-
+          // Concurrent mode
           const newProgress = Math.min(100, (elapsedTime / task.duration) * 100);
-          const newStatus = (newProgress >= 100 ? 'completed' : 'running') as Task['status'];
-          
+          const newStatus = newProgress >= 100 
+            ? 'completed' as const 
+            : 'running' as const;
+
           if (newStatus !== 'completed') {
             allCompleted = false;
           }
@@ -80,12 +112,18 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
           return {
             ...task,
             progress: newProgress,
-            status: newStatus
+            status: newStatus,
+            startTime: startTime,
+            endTime: startTime + task.duration
           };
         });
 
-        if (allCompleted && isMounted) {
-          setIsRunning(false);
+        if (allCompleted) {
+          if (isMounted) {
+            setTimeout(() => {
+              setIsRunning(false);
+            }, 500); // Add a small delay before stopping
+          }
         }
 
         return updatedTasks;
@@ -156,6 +194,178 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
       : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50'
   }`, [isRunning]);
 
+  const getTaskColor = (task: Task) => {
+    const baseColors = {
+      1: {
+        base: 'bg-blue-400 dark:bg-blue-500 border-blue-500 dark:border-blue-400',
+        light: 'bg-blue-200 dark:bg-blue-800/30 border-blue-300 dark:border-blue-600'
+      },
+      2: {
+        base: 'bg-purple-400 dark:bg-purple-500 border-purple-500 dark:border-purple-400',
+        light: 'bg-purple-200 dark:bg-purple-800/30 border-purple-300 dark:border-purple-600'
+      },
+      3: {
+        base: 'bg-orange-400 dark:bg-orange-500 border-orange-500 dark:border-orange-400',
+        light: 'bg-orange-200 dark:bg-orange-800/30 border-orange-300 dark:border-orange-600'
+      }
+    }[task.id] ?? {
+      base: 'bg-neutral-400 dark:bg-neutral-500 border-neutral-500 dark:border-neutral-400',
+      light: 'bg-neutral-200 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
+    };
+
+    if (task.status === 'completed' && task.progress === 100) {
+      return 'bg-emerald-400 dark:bg-emerald-500 border-emerald-500 dark:border-emerald-400';
+    }
+    return task.status === 'running' ? baseColors.base : baseColors.light;
+  };
+
+  const TimeAxis = () => {
+    const totalDuration = Math.max(...taskList.map(task => 
+      mode === 'sequential' 
+        ? task.duration + (task.startTime ?? 0) - (startTime ?? 0)
+        : task.duration
+    ));
+    
+    const timeMarkers = Array.from({ length: 6 }).map((_, i) => {
+      const seconds = ((i * totalDuration) / 5000).toFixed(1);
+      return {
+        position: i * 20,
+        time: parseFloat(seconds)
+      };
+    });
+
+    return (
+      <div className="h-12 relative mb-6">
+        {/* Base timeline */}
+        <div className="absolute left-0 right-0 h-0.5 bg-neutral-200 dark:bg-neutral-700 top-1/2 transform -translate-y-1/2" />
+        
+        {/* Time markers */}
+        {timeMarkers.map(({ position, time }, i) => (
+          <div
+            key={`marker-${i}`}
+            className="absolute h-2 w-0.5 bg-neutral-300 dark:bg-neutral-600 top-1/2 transform -translate-y-1/2"
+            style={{ left: `${position}%` }}
+          >
+            <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-neutral-500 dark:text-neutral-400">
+              {time}s
+            </span>
+          </div>
+        ))}
+
+        {/* Unified progress bar */}
+        <div className="absolute inset-y-0 left-0 right-0 top-1/2 transform -translate-y-1/2">
+          <div className="relative h-2">
+            {/* Background track */}
+            <div className="absolute inset-0 rounded-full border overflow-hidden">
+              {taskList.map((task) => {
+                const taskLeft = mode === 'sequential'
+                  ? ((task.startTime ?? 0) - (startTime ?? 0)) / totalDuration * 100
+                  : 0;
+                const taskWidth = task.duration / totalDuration * 100;
+
+                return (
+                  <div
+                    key={`track-${task.id}`}
+                    className={`absolute h-full border-r last:border-r-0 ${getTaskColor({ ...task, status: 'waiting' })}`}
+                    style={{
+                      left: `${taskLeft}%`,
+                      width: `${taskWidth}%`
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Progress overlay */}
+            <div className="absolute inset-0 rounded-full overflow-hidden">
+              {taskList.map((task) => {
+                const taskLeft = mode === 'sequential'
+                  ? ((task.startTime ?? 0) - (startTime ?? 0)) / totalDuration * 100
+                  : 0;
+                const taskWidth = task.duration / totalDuration * 100;
+
+                return (
+                  <motion.div
+                    key={`progress-${task.id}`}
+                    className={`absolute h-full border-r last:border-r-0 ${getTaskColor(task)}`}
+                    style={{
+                      left: `${taskLeft}%`,
+                      width: `${taskWidth}%`
+                    }}
+                    initial={false}
+                    animate={{ 
+                      clipPath: `inset(0 ${task.status !== 'waiting' ? 100 - task.progress : 100}% 0 0)`
+                    }}
+                    transition={{ 
+                      duration: 0.1,
+                      ease: 'linear'
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const TaskItem = ({ task }: { task: Task }) => (
+    <motion.div
+      initial={false}
+      animate={{ opacity: 1, y: 0 }}
+      className="group relative bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-50/80 dark:hover:bg-neutral-800/80 rounded-xl p-4 transition-colors duration-300"
+      style={{
+        zIndex: task.status === 'running' ? 2 : 1
+      }}
+      layout
+    >
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center gap-3">
+          <div className={`w-2 h-2 rounded-full ${getTaskColor(task)}`} />
+          <span className="font-medium text-neutral-700 dark:text-neutral-200">Task {task.id}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-sm ${
+            task.status === 'completed' 
+              ? 'text-emerald-600 dark:text-emerald-400' 
+              : task.status === 'running' 
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-neutral-400 dark:text-neutral-500'
+          }`}>
+            {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+          </span>
+        </div>
+      </div>
+      <div className="relative h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+        <motion.div
+          className={`h-full transition-colors duration-300 ${getTaskColor(task)}`}
+          initial={false}
+          animate={{ 
+            width: `${task.progress}%`
+          }}
+          transition={{ 
+            duration: 0.1,
+            ease: 'linear'
+          }}
+        />
+        {task.status === 'completed' && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            initial={{ x: '-100%' }}
+            animate={{ x: '100%' }}
+            transition={{ 
+              duration: 0.6,
+              ease: 'easeInOut',
+              repeat: Infinity,
+              repeatDelay: 1
+            }}
+          />
+        )}
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="p-8 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-800">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
@@ -184,45 +394,12 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
 
       {explanation}
 
+      <TimeAxis />
+
       <div className="space-y-5">
         <AnimatePresence mode="wait">
           {taskList.map((task) => (
-            <motion.div
-              key={task.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="group relative bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-50/80 dark:hover:bg-neutral-800/80 rounded-xl p-4 transition-colors duration-300"
-              layout
-            >
-              <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(task.status)}`} />
-                  <span className="font-medium text-neutral-700 dark:text-neutral-200">Task {task.id}</span>
-                </div>
-                <span className={`text-sm ${
-                  task.status === 'completed' 
-                    ? 'text-emerald-600 dark:text-emerald-400' 
-                    : task.status === 'running' 
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-neutral-400 dark:text-neutral-500'
-                }`}>
-                  {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-                </span>
-              </div>
-              <div className="h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
-                <motion.div
-                  className={`h-full transition-colors duration-300 ${
-                    task.status === 'completed'
-                      ? 'bg-emerald-400 dark:bg-emerald-500'
-                      : 'bg-blue-400 dark:bg-blue-500'
-                  }`}
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${task.progress}%` }}
-                  transition={{ duration: 0.1 }}
-                />
-              </div>
-            </motion.div>
+            <TaskItem key={task.id} task={task} />
           ))}
         </AnimatePresence>
       </div>
