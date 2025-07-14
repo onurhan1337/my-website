@@ -200,10 +200,6 @@ table {
   margin: 0 !important;
 }
 
-.title {
-  text-wrap: balance;
-}
-
 ::-webkit-scrollbar {
   width: 0.5rem;
 }
