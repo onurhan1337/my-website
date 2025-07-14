@@ -1,0 +1,69 @@
+---
+title: "markdown2pdf: A Minimal Way to Turn Markdown into PDF"
+publishedAt: "2025-07-08"
+summary: "Exploring a small Rust-based CLI tool to convert Markdown files into styled PDFs, without the overhead."
+---
+
+For years, I've relied on Markdown for notes, documentation, and blog drafts like this one.
+
+But converting `.md` files to polished PDFs is often more complicated than necessary.
+
+I've used Pandoc; it works well but is overkill for simple needs. The Markdown-to-HTML-to-PDF process feels cumbersome and error-prone.
+
+Recently, my close friend created [markdown2pdf](https://github.com/theiskaa/markdown2pdf)—a command-line tool and library in Rust.
+
+## The Essence of markdown2pdf
+
+markdown2pdf turns Markdown into styled PDFs by parsing it into semantic elements and applying configurable styles.
+
+### Key Features
+
+- **CLI**: Convert Markdown from files, URLs, or input to PDFs with TOML config for styles.
+
+- **Rust Library**: Integrate into projects for control over conversion and formatting.
+
+It avoids external tools like browsers or LaTeX, keeping it self-contained and fast.
+
+## Practical Application
+
+Using it is straightforward.
+
+### Installation
+
+```bash
+cargo install markdown2pdf
+```
+
+### Usage Examples
+
+Convert a file:
+
+```bash
+markdown2pdf -p "docs/resume.md" -o "resume.pdf"
+```
+
+From a URL:
+
+```bash
+markdown2pdf -u "https://raw.githubusercontent.com/user/repo/main/README.md" -o "readme.pdf"
+```
+
+More in the [GitHub README](https://github.com/theiskaa/markdown2pdf).
+
+## Design Philosophy: Simplicity Through Omission
+
+It skips complex tables, basic image handling, and limits styling on purpose—that's its strength.
+
+For clean PDFs from Markdown without heavy setup, it excels and delivers quick results.
+
+## Concluding Thoughts
+
+I'm not the author, but I appreciate its lightweight power in the Rust ecosystem.
+
+If you use Markdown often and need simple PDF generation, try markdown2pdf.
+
+It's focused and efficient.
+
+Explore it on GitHub: [github.com/theiskaa/markdown2pdf](https://github.com/theiskaa/markdown2pdf)
+
+შესანიშნავი საქმეა, ძმაო 🇬🇪 ❤️
