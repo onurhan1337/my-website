@@ -1,0 +1,229 @@
+---
+title: "How Realtime Audio Really Works"
+publishedAt: "2025-09-21"
+summary: "Speech → Text → LLM → Text → Speech. Realtime audio is just a chain — cut the delay and it feels alive."
+---
+
+import { Callout } from "components/Callout";
+
+Realtime audio looks simple: **input → process → output**.  
+But every step hides real engineering problems. The trick isn’t building the chain. The trick is cutting latency until it feels alive.
+
+## The Flow
+
+<RealtimeAudioFlow />
+
+### 1. Speech Input
+
+Raw audio comes from the mic — usually PCM chunks, 16kHz mono.  
+Don’t overthink it. Just stream small frames (20–50ms).  
+If you buffer too much, you’re already losing.
+
+### 2. STT (Speech-to-Text)
+
+This is ASR (Automatic Speech Recognition).  
+It turns waveforms into tokens — basically phonemes → words.  
+Modern STT models (like Whisper or Conformer) don't wait for the whole sentence. They stream partial hypotheses.  
+That's the only way to stay realtime.
+
+<Callout>
+  If your STT waits for punctuation, you've already killed the experience.
+</Callout>
+
+**Streaming vs Batch STT:**
+
+- **Streaming**: Processes word-by-word as speech is heard → Lower perceived latency
+- **Batch**: Waits for complete speech before processing → Higher accuracy but higher latency
+
+For realtime audio, streaming STT is essential. Users expect immediate feedback, not perfect accuracy.
+
+**STT Technical Considerations:**
+
+<Table
+  data={{
+    headers: ["Component", "Purpose", "Impact on Latency"],
+    rows: [
+      [
+        "Voice Activity Detection (VAD)",
+        "Detects when speech starts/stops",
+        "Critical - prevents processing silence",
+      ],
+      [
+        "Partial Hypotheses",
+        "Stream preliminary results that get refined",
+        "Essential - enables word-by-word processing",
+      ],
+      [
+        "Confidence Thresholding",
+        "Balance accuracy vs speed",
+        "70% confident beats 2-second wait",
+      ],
+      [
+        "Speaker Adaptation",
+        "Adapt to accents and speech patterns",
+        "Improves accuracy in realtime scenarios",
+      ],
+    ],
+  }}
+/>
+
+### 3. LLM
+
+Text tokens hit the brain.  
+LLMs are slow if you treat them like batch processors.  
+Stream input in, stream tokens out.  
+Chunk your prompts. Don’t send a whole transcript; feed deltas.
+
+The orchestration layer lives here. Decide:
+
+- Do I answer now or wait for more speech?
+- Do I interrupt TTS mid-sentence with a better response?
+- How do I keep context without drowning in tokens?
+
+That’s the hustle: not just “use GPT”, but manage the dance.
+
+4. TTS (Text-to-Speech)
+   TTS converts tokens back into audio.
+   Fast engines (like VITS or Tacotron variants) can stream phonemes as they're generated.
+   Never wait for the full paragraph — start talking on the first word.
+   Otherwise, it sounds like GPS: "in… 300… meters…"
+   TTS Quality vs Speed Tradeoff:
+   <Table
+     data={{
+       headers: ["Speed Tier", "Latency", "Quality", "Best Use Case"],
+       rows: [
+         [
+           "Ultra Fast",
+           "50ms/word",
+           "Robotic but instant",
+           "Gaming, quick responses",
+         ],
+         ["Fast", "150ms/word", "Clear but mechanical", "Customer service"],
+         [
+           "Balanced",
+           "300ms/word",
+           "Natural, expressive",
+           "Educational content",
+         ],
+         ["Premium", "500ms/word", "Human-like, emotional", "Audiobooks"],
+       ],
+     }}
+   />
+   For realtime audio, speed often trumps quality. The sweet spot is usually 150-300ms
+   per word. Advanced TTS Streaming Techniques:
+   <ProsCard
+     pros={[
+       "Phoneme-Level Streaming: Generate audio for individual sounds before full sentences",
+       "Incremental Synthesis: Process audio chunks as text tokens arrive from LLM",
+       "Predictive Audio: Pre-generate common phrase beginnings for faster response",
+       "Smart Buffer Management: 50-100ms buffers smooth inconsistencies without delay",
+     ]}
+   />
+
+Session Manager Responsibilities:
+
+<ProsCard
+  pros={[
+    "Coordinate Components: Manages STT, LLM, and TTS in perfect sync",
+    "Stream Management: Handles overlapping operations seamlessly",
+    "Interrupt Handling: Can stop TTS mid-sentence for better responsiveness",
+    "Context Management: Prevents token overflow and maintains conversation flow",
+    "Error Recovery: Handles failures gracefully without breaking the experience",
+  ]}
+/>
+The session manager is the unsung hero that makes realtime audio feel natural.
+
+### 5. Speech Output
+
+Push audio chunks back to the user.
+Keep jitter low, stream frames fast.
+The closer you are to sub-200ms roundtrip, the more it feels human.
+Beyond 500ms, it's just another clunky bot.
+Latency Impact on User Experience:
+
+<Table
+  data={{
+    headers: ["Latency Range", "User Experience", "Perception"],
+    rows: [
+      [
+        "< 200ms",
+        "Feels completely natural and human-like",
+        "Seamless conversation",
+      ],
+      ["200-500ms", "Noticeable but acceptable delay", "Slightly robotic feel"],
+      [
+        "500ms+",
+        "Users start to feel the delay",
+        "Engagement drops significantly",
+      ],
+      [
+        "1s+",
+        "Conversation becomes frustrating",
+        "Unusable for most applications",
+      ],
+    ],
+  }}
+/>
+
+The goal is to stay under 200ms total roundtrip for the best experience.
+
+## The Agent Session
+
+All of this sits in a **session**.  
+That's the conductor: keeps STT, LLM, and TTS in sync.  
+Handles streams, errors, interruptions.  
+Without session orchestration, you're stuck with laggy call-center bots.
+
+**Session Manager Responsibilities:**
+
+- **Coordinate Components**: Manages STT, LLM, and TTS in sync
+- **Stream Management**: Handles overlapping operations (STT + LLM + TTS)
+- **Interrupt Handling**: Can stop TTS mid-sentence for better responsiveness
+- **Context Management**: Prevents token overflow and maintains conversation flow
+- **Error Recovery**: Handles failures gracefully without breaking the experience
+
+The session manager is the unsung hero that makes realtime audio feel natural.
+
+<Callout title="Quick Recap">
+  Audio in → Text tokens → LLM reply → Voice out. The less you wait, the more it
+  feels alive.
+</Callout>
+
+## Where the Pain Is
+
+<ConsCard
+  cons={[
+    "STT: Accuracy vs. latency - Don't wait for perfect, stream partials",
+    "LLM: Token speed - Smaller, faster models often beat massive ones for voice",
+    "TTS: Voice quality vs. response speed - Realistic but late is worse than robotic but instant",
+  ]}
+/>
+
+## Why It Matters
+
+<LinkCardList
+  cards={[
+    {
+      title: "Support: Agents that actually keep up with humans",
+      link: "#support",
+    },
+    {
+      title: "Education: Real tutoring, not just chatbots reading PDFs",
+      link: "#education",
+    },
+    { title: "Gaming: Characters that banter back instantly", link: "#gaming" },
+  ]}
+/>
+Latency decides if it feels like magic or junk.
+
+---
+
+I’ve built this loop myself.  
+First tries felt like talking to voicemail. STT was waiting for commas.  
+Then I switched to streaming STT + token-by-token LLM + partial TTS.  
+Suddenly it clicked — not just fast, but conversational.
+
+Realtime audio isn’t a dream.  
+It’s already here.
+
+<BuyMeACoffee username="onurhan" />
