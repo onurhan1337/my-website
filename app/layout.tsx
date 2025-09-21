@@ -71,11 +71,12 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="theme"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
+          storageKey="theme"
         >
-          <main className=" antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row  mt-2 sm:mt-8 lg:mx-auto">
+          <main className="antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row mt-2 sm:mt-8 lg:mx-auto bg-background">
             <section className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
               <Header />
 
