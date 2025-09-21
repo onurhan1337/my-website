@@ -24,6 +24,7 @@
 }
 
 @variant dark (&:where(.dark, .dark *));
+@plugin "@tailwindcss/typography";
 
 @import "@upstash/claps/style.css";
 
@@ -121,6 +122,55 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .prose h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-8 mb-6;
+  }
+
+  .prose h2 {
+    @apply mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mb-4;
+  }
+
+  .prose h3 {
+    @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight mb-3;
+  }
+
+  .prose h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight mt-6 mb-2;
+  }
+
+  .prose h5 {
+    @apply scroll-m-20 text-lg font-semibold tracking-tight mt-4 mb-2;
+  }
+
+  .prose h6 {
+    @apply scroll-m-20 text-base font-semibold tracking-tight mt-4 mb-2;
+  }
+
+  .prose p {
+    @apply leading-7 mb-6;
+  }
+
+  .prose blockquote {
+    @apply mt-6 border-l-2 pl-6 italic border-neutral-300 dark:border-neutral-700;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply my-6 ml-6 space-y-2;
+  }
+
+  .prose li {
+    @apply leading-7;
+  }
+
+  .prose ul > li {
+    @apply list-disc;
+  }
+
+  .prose ol > li {
+    @apply list-decimal;
+  }
 }
 
 .prose .anchor {
@@ -169,11 +219,7 @@
   @apply m-0;
 }
 
-.prose h2,
-h3,
-h4 {
-  @apply !font-medium !tracking-tighter;
-}
+/* Removed duplicate heading styles - now handled in @layer base */
 
 .prose strong {
   @apply font-medium;
