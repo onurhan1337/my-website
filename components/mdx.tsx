@@ -6,8 +6,15 @@ import React from "react";
 import { highlight } from "sugar-high";
 import { CopyCode } from "./copy-code";
 import { ExpandableCode } from "./expandable-code";
-import { TaskSimulator, RaceConditionVisualizer, GoroutineScheduler, ChannelSimulator, UnbufferedChannelDemo } from './interactive-components';
-import { CodePlayground } from './interactive-components/code-playground';
+import {
+  TaskSimulator,
+  RaceConditionVisualizer,
+  GoroutineScheduler,
+  ChannelSimulator,
+  UnbufferedChannelDemo,
+  RealtimeAudioFlow,
+} from "./interactive-components";
+import { CodePlayground } from "./interactive-components/code-playground";
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -88,25 +95,26 @@ function Callout(props) {
 
 function ProsCard({ title, pros }) {
   return (
-    <div className="border border-emerald-200 dark:border-emerald-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-4 w-full">
-      <div className="mt-4">
-        {pros.map((pro) => (
-          <div key={pro} className="flex font-medium items-baseline mb-2">
-            <div className="h-4 w-4 mr-2">
-              <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24">
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-                  <path d="M22 4L12 14.01l-3-3" />
-                </g>
-              </svg>
-            </div>
-            <span>{pro}</span>
+    <div
+      className="border border-neutral-200 dark:border-neutral-800 
+                    bg-white dark:bg-neutral-900 
+                    rounded-lg p-6 my-4 w-full"
+    >
+      {title && (
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+          <h4 className="font-medium text-neutral-900 dark:text-neutral-100">
+            {title}
+          </h4>
+        </div>
+      )}
+      <div className="space-y-2">
+        {pros.map((pro, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              {pro}
+            </span>
           </div>
         ))}
       </div>
@@ -116,21 +124,26 @@ function ProsCard({ title, pros }) {
 
 function ConsCard({ title, cons }) {
   return (
-    <div className="border border-red-200 dark:border-red-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-6 w-full">
-      <div className="mt-4">
-        {cons.map((con) => (
-          <div key={con} className="flex font-medium items-baseline mb-2">
-            <div className="h-4 w-4 mr-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="h-4 w-4 text-red-500"
-              >
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
-            </div>
-            <span>{con}</span>
+    <div
+      className="border border-neutral-200 dark:border-neutral-800 
+                    bg-white dark:bg-neutral-900 
+                    rounded-lg p-6 my-4 w-full"
+    >
+      {title && (
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+          <h4 className="font-medium text-neutral-900 dark:text-neutral-100">
+            {title}
+          </h4>
+        </div>
+      )}
+      <div className="space-y-2">
+        {cons.map((con, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <div className="w-1.5 h-1.5 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              {con}
+            </span>
           </div>
         ))}
       </div>
@@ -247,8 +260,8 @@ export function BuyMeACoffee({ username }: BuyMeACoffeeProps) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm text-neutral-900 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-50 dark:hover:bg-neutral-800"
       >
-        <Coffee className="h-4 w-4" />
-        <span>support content</span>
+        <Coffee className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+        <span>Support Content</span>
       </Link>
     </div>
   );
@@ -276,6 +289,7 @@ const components = {
   ChannelSimulator,
   UnbufferedChannelDemo,
   CodePlayground,
+  RealtimeAudioFlow,
 };
 
 export function CustomMDX({ source }: { source: string }) {
