@@ -23,6 +23,8 @@
   --radius: 0.5rem;
 }
 
+@variant dark (&:where(.dark, .dark *));
+
 @import "@upstash/claps/style.css";
 
 ::selection {
