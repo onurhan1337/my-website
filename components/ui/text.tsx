@@ -26,12 +26,12 @@ const styleVariants: Record<StyleVariant, string> = {
   muted: "text-sm text-muted-foreground",
 };
 
-export const Text: React.FC<TextProps> = ({
+export const Text = ({
   as: Component,
   styleVariant,
   className,
   children,
-}) => {
+}: TextProps) => {
   return (
     <Component
       className={cn(

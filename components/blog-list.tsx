@@ -3,9 +3,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { BlogCard } from "./blog-card";
 import Separator from "./shared/separator";
+import { Blog } from "@/types/blog";
 
 interface BlogListProps {
-  blogs: any[];
+  blogs: Blog[];
   currentPage: number;
 }
 
@@ -26,7 +27,7 @@ export function BlogList({ blogs, currentPage }: BlogListProps) {
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 150,
         damping: 10,
         duration: 0.5,
