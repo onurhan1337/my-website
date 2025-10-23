@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from 'clsx'
+import { type ClassValue, clsx } from "clsx";
 import { unstable_noStore } from "next/cache";
 import { twMerge } from "tailwind-merge";
 
@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string) {
+export function formatDate(date: string, options?: { time?: boolean }) {
   unstable_noStore();
   let currentDate = new Date();
   if (!date.includes("T")) {
@@ -35,6 +35,15 @@ export function formatDate(date: string) {
     day: "numeric",
     year: "numeric",
   });
+
+  if (options?.time) {
+    let time = targetDate.toLocaleString("en-us", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    return `${time} • ${formattedDate}`;
+  }
 
   return `${fullDate} (${formattedDate})`;
 }

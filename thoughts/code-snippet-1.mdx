@@ -1,0 +1,12 @@
+---
+type: code
+createdAt: 2025-01-23T14:30:00
+---
+
+```typescript
+// Clean way to handle optional chaining with fallbacks
+const getUserDisplayName = (user: User | null) =>
+  user?.profile?.displayName ?? user?.email?.split("@")[0] ?? "Anonymous";
+```
+
+Sometimes the simplest solutions are the most elegant. This pattern handles three levels of fallback gracefully.

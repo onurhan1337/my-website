@@ -1,0 +1,103 @@
+---
+type: code
+createdAt: 2025-01-23T15:45:00
+---
+
+Here's a comprehensive React hook for managing complex state with undo/redo functionality:
+
+```typescript
+import { useState, useCallback, useRef } from "react";
+
+interface HistoryState<T> {
+  past: T[];
+  present: T;
+  future: T[];
+}
+
+export function useHistoryState<T>(initialState: T) {
+  const [state, setState] = useState<HistoryState<T>>({
+    past: [],
+    present: initialState,
+    future: [],
+  });
+
+  const canUndo = state.past.length > 0;
+  const canRedo = state.future.length > 0;
+
+  const setValue = useCallback((newValue: T) => {
+    setState((prevState) => ({
+      past: [...prevState.past, prevState.present],
+      present: newValue,
+      future: [],
+    }));
+  }, []);
+
+  const undo = useCallback(() => {
+    if (!canUndo) return;
+
+    setState((prevState) => {
+      const previous = prevState.past[prevState.past.length - 1];
+      const newPast = prevState.past.slice(0, -1);
+
+      return {
+        past: newPast,
+        present: previous,
+        future: [prevState.present, ...prevState.future],
+      };
+    });
+  }, [canUndo]);
+
+  const redo = useCallback(() => {
+    if (!canRedo) return;
+
+    setState((prevState) => {
+      const next = prevState.future[0];
+      const newFuture = prevState.future.slice(1);
+
+      return {
+        past: [...prevState.past, prevState.present],
+        present: next,
+        future: newFuture,
+      };
+    });
+  }, [canRedo]);
+
+  const clear = useCallback(() => {
+    setState({
+      past: [],
+      present: initialState,
+      future: [],
+    });
+  }, [initialState]);
+
+  return {
+    value: state.present,
+    setValue,
+    undo,
+    redo,
+    clear,
+    canUndo,
+    canRedo,
+    historyLength: state.past.length,
+  };
+}
+
+// Usage example:
+function MyComponent() {
+  const { value, setValue, undo, redo, canUndo, canRedo } = useHistoryState("");
+
+  return (
+    <div>
+      <input value={value} onChange={(e) => setValue(e.target.value)} />
+      <button onClick={undo} disabled={!canUndo}>
+        Undo
+      </button>
+      <button onClick={redo} disabled={!canRedo}>
+        Redo
+      </button>
+    </div>
+  );
+}
+```
+
+This hook provides a complete undo/redo system for any state value. Perfect for forms, text editors, or any interactive component where users might want to step back through their changes.

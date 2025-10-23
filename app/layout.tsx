@@ -68,6 +68,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} bg-background text-foreground overflow-y-scroll`}
+        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"

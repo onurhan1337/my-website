@@ -210,6 +210,10 @@
   @apply bg-zinc-200/40 dark:bg-neutral-900;
 }
 
+.thoughts-prose > pre {
+  @apply bg-transparent;
+}
+
 .prose code span {
   @apply font-medium;
 }
