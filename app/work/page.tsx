@@ -3,27 +3,26 @@ import Container from "@/components/shared/container";
 export default function Work() {
   return (
     <Container size="large">
-      <main className="prose prose-neutral dark:prose-invert">
+      <main className="prose prose-neutral">
         <header>
-          <p>
+          <p className="text-[15px] leading-relaxed opacity-80">
             On a mission to create impactful applications that engage users and
             drive value for businesses. Here&apos;s a summary of my journey so
             far.
           </p>
-          <hr className="my-6 border-neutral-200 dark:border-neutral-800" />
         </header>
 
         <section>
-          <article>
-            <header>
-              <h2 className="font-medium text-xl mb-1 tracking-tighter">
+          <article className="mb-12">
+            <header className="mb-4">
+              <h2 className="font-medium text-xl mb-2 tracking-tight">
                 Insider
               </h2>
-              <time className="text-neutral-600 dark:text-neutral-400 text-sm">
-                Software Developer, 2024 — present
+              <time className="opacity-60 text-[15px] tracking-tight">
+                Software Developer, 2024 — 2025
               </time>
             </header>
-            <p>
+            <p className="text-[15px] leading-relaxed opacity-80">
               At Insider, I am part of the Partner Solution Development team,
               where I contribute to the development of B2B SaaS solutions
               tailored to our clients&apos; needs. My role involves
@@ -31,7 +30,7 @@ export default function Work() {
               efficient software solutions that help businesses grow and
               optimize their workflows.
             </p>
-            <ul>
+            <ul className="text-[15px] leading-relaxed opacity-80">
               <li>
                 Developing and customizing solutions for enterprise clients to
                 enhance their business operations.
@@ -51,23 +50,23 @@ export default function Work() {
             </ul>
           </article>
 
-          <article>
-            <header>
-              <h2 className="font-medium text-xl mb-1 tracking-tighter">
+          <article className="mb-12">
+            <header className="mb-4">
+              <h2 className="font-medium text-xl mb-2 tracking-tight">
                 Utilify
               </h2>
-              <time className="text-neutral-600 dark:text-neutral-400 text-sm">
+              <time className="opacity-60 text-[15px] tracking-tight">
                 Frontend Engineer, 2023 — 2024
               </time>
             </header>
-            <p>
+            <p className="text-[15px] leading-relaxed opacity-80">
               I joined{" "}
               <a href="https://utilify.xyz" rel="noopener noreferrer">
                 Utilify
               </a>{" "}
               to build intuitive interfaces and pages for users and brands.
             </p>
-            <ul>
+            <ul className="text-[15px] leading-relaxed opacity-80">
               <li>
                 Successfully converted wireframe designs into active working
                 user interface components.

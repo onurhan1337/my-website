@@ -82,45 +82,46 @@ The orchestration layer lives here. Decide:
 
 That’s the hustle: not just “use GPT”, but manage the dance.
 
-4. TTS (Text-to-Speech)
-   TTS converts tokens back into audio.
-   Fast engines (like VITS or Tacotron variants) can stream phonemes as they're generated.
-   Never wait for the full paragraph — start talking on the first word.
-   Otherwise, it sounds like GPS: "in… 300… meters…"
-   TTS Quality vs Speed Tradeoff:
-   <Table
-     data={{
-       headers: ["Speed Tier", "Latency", "Quality", "Best Use Case"],
-       rows: [
-         [
-           "Ultra Fast",
-           "50ms/word",
-           "Robotic but instant",
-           "Gaming, quick responses",
-         ],
-         ["Fast", "150ms/word", "Clear but mechanical", "Customer service"],
-         [
-           "Balanced",
-           "300ms/word",
-           "Natural, expressive",
-           "Educational content",
-         ],
-         ["Premium", "500ms/word", "Human-like, emotional", "Audiobooks"],
-       ],
-     }}
-   />
-   For realtime audio, speed often trumps quality. The sweet spot is usually 150-300ms
-   per word. Advanced TTS Streaming Techniques:
-   <ProsCard
-     pros={[
-       "Phoneme-Level Streaming: Generate audio for individual sounds before full sentences",
-       "Incremental Synthesis: Process audio chunks as text tokens arrive from LLM",
-       "Predictive Audio: Pre-generate common phrase beginnings for faster response",
-       "Smart Buffer Management: 50-100ms buffers smooth inconsistencies without delay",
-     ]}
-   />
+### 4. TTS (Text-to-Speech)
 
-Session Manager Responsibilities:
+TTS converts tokens back into audio.  
+Fast engines (like VITS or Tacotron variants) can stream phonemes as they're generated.  
+Never wait for the full paragraph — start talking on the first word.  
+Otherwise, it sounds like GPS: "in… 300… meters…"
+
+**TTS Quality vs Speed Tradeoff:**
+
+<Table
+  data={{
+    headers: ["Speed Tier", "Latency", "Quality", "Best Use Case"],
+    rows: [
+      [
+        "Ultra Fast",
+        "50ms/word",
+        "Robotic but instant",
+        "Gaming, quick responses",
+      ],
+      ["Fast", "150ms/word", "Clear but mechanical", "Customer service"],
+      ["Balanced", "300ms/word", "Natural, expressive", "Educational content"],
+      ["Premium", "500ms/word", "Human-like, emotional", "Audiobooks"],
+    ],
+  }}
+/>
+
+For realtime audio, speed often trumps quality. The sweet spot is usually 150-300ms per word.
+
+**Advanced TTS Streaming Techniques:**
+
+<ProsCard
+  pros={[
+    "Phoneme-Level Streaming: Generate audio for individual sounds before full sentences",
+    "Incremental Synthesis: Process audio chunks as text tokens arrive from LLM",
+    "Predictive Audio: Pre-generate common phrase beginnings for faster response",
+    "Smart Buffer Management: 50-100ms buffers smooth inconsistencies without delay",
+  ]}
+/>
+
+**Session Manager Responsibilities:**
 
 <ProsCard
   pros={[
@@ -135,11 +136,12 @@ The session manager is the unsung hero that makes realtime audio feel natural.
 
 ### 5. Speech Output
 
-Push audio chunks back to the user.
-Keep jitter low, stream frames fast.
-The closer you are to sub-200ms roundtrip, the more it feels human.
+Push audio chunks back to the user.  
+Keep jitter low, stream frames fast.  
+The closer you are to sub-200ms roundtrip, the more it feels human.  
 Beyond 500ms, it's just another clunky bot.
-Latency Impact on User Experience:
+
+**Latency Impact on User Experience:**
 
 <Table
   data={{

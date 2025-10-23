@@ -13,10 +13,12 @@ function SocialButton({ href, children }: SocialButtonProps) {
       rel="noopener noreferrer"
       target="_blank"
       passHref
-      className="flex w-full border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 no-underline items-center text-neutral-800 dark:text-neutral-200 hover:dark:bg-neutral-900 hover:bg-neutral-100 transition-all justify-between"
+      className="flex w-full border border-foreground/10 rounded-lg p-4 no-underline items-center hover:bg-foreground/[0.02] hover:border-foreground/20 transition-all justify-between group"
     >
       {children}
-      <IconArrowRightUp />
+      <div className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+        <IconArrowRightUp />
+      </div>
     </Link>
   );
 }
@@ -27,19 +29,19 @@ export default function Social() {
       <SocialButton href="https://youtube.com/@onurhandev">
         <div className="flex flex-row items-center">
           <IconYoutube />
-          <span className="ml-3">Youtube</span>
+          <span className="ml-3 text-[15px] tracking-tight">Youtube</span>
         </div>
       </SocialButton>
       <SocialButton href="https://github.com/onurhan1337">
         <div className="flex flex-row items-center">
           <IconGithub />
-          <span className="ml-3">Github</span>
+          <span className="ml-3 text-[15px] tracking-tight">Github</span>
         </div>
       </SocialButton>
       <SocialButton href="https://read.cv/onurhan">
         <div className="flex flex-row items-center">
           <IconCv />
-          <span className="ml-3">Read.cv</span>
+          <span className="ml-3 text-[15px] tracking-tight">Read.cv</span>
         </div>
       </SocialButton>
     </div>

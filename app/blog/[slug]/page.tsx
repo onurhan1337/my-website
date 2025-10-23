@@ -98,22 +98,22 @@ export default async function BlogDetailPage({ params }: Props) {
           }),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
+      <h1 className="title font-medium text-2xl tracking-tight max-w-[650px]">
         {blog.metadata.title}
       </h1>
-      <div className="flex justify-start items-center mt-2 mb-8 text-sm max-w-[650px]">
+      <div className="flex justify-start items-center mt-3 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-[15px] opacity-60 tracking-tight">
             {formatDate(blog.metadata.publishedAt)}
           </p>
-          <span className="mx-2 text-neutral-400">—</span>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <span className="mx-2 opacity-40">—</span>
+          <p className="text-[15px] opacity-60 tracking-tight">
             {blog.readingTime} min read
           </p>
         </Suspense>
       </div>
       <TableOfContents headings={headings} />
-      <article className="prose prose-quoteless prose-neutral dark:prose-invert text-justify w-auto">
+      <article className="prose prose-quoteless prose-neutral text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
 

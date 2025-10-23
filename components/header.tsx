@@ -1,15 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Container from "./shared/container";
-import { ModeToggle } from "./ui/theme-toggle";
 
 const NAV_ITEMS = {
   about: "/",
   blog: "/blog",
+  thoughts: "/thoughts",
   work: "/work",
 };
 
@@ -20,45 +19,29 @@ export const Header = () => {
     <header>
       <Container size="large">
         <nav
-          className="flex flex-col fade items-center md:items-start justify-start py-8 tracking-tight w-full sm:pr-0 md:pr-6 lg:pr-0"
+          className="flex flex-col fade items-center md:items-start justify-start py-12 tracking-tight w-full"
           aria-label="Main navigation"
         >
-          <div className="flex flex-row items-center">
-            <Link href="/">
-              <Image
-                src="/logo.svg"
-                alt="Logo"
-                width={40}
-                height={40}
-                priority={true}
-              />
-              <span className="sr-only">Onurhan Demir</span>
-            </Link>
-
-            <div className="flex flex-col ml-4">
-              <span className="text-medium inline-block font-medium">
-                Onurhan Demir
-              </span>
-              <span className="opacity-60">software developer</span>
-            </div>
+          <div className="flex flex-col items-start">
+            <span className="text-base font-medium">Onurhan Demir</span>
+            <span className="text-sm opacity-50">software developer</span>
           </div>
 
-          <div className="flex flex-row items-center justify-between sm:justify-end w-full mt-8 sm:mt-4 mb-0 sm:mb-4 tracking-tight">
-            <div className="inline-flex items-center">
+          <div className="flex flex-row items-center justify-start w-full mt-12 sm:mt-6 tracking-tight">
+            <div className="inline-flex items-center gap-1">
               {Object.entries(NAV_ITEMS).map(([name, href]) => (
                 <Link
                   key={name}
                   href={href}
                   className={cn(
-                    pathname === href ? "font-semibold" : "font-normal",
-                    "transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2"
+                    pathname === href ? "opacity-100" : "opacity-50",
+                    "transition-opacity hover:opacity-100 py-1 px-2 first:pl-0 text-[15px]"
                   )}
                 >
                   {name}
                 </Link>
               ))}
             </div>
-            <ModeToggle />
           </div>
         </nav>
       </Container>

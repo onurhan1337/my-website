@@ -1,77 +1,72 @@
 "use client";
 
+import { CodeExpandModal } from "./code-expand-modal";
 import { cn } from "@/lib/utils";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "./ui/button";
+import { highlight } from "sugar-high";
 
 interface ExpandableCodeProps {
   children: React.ReactNode;
-  maxHeight?: number;
   className?: string;
 }
 
 export function ExpandableCode({
   children,
-  maxHeight = 400,
   className,
+  ...props
 }: ExpandableCodeProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [shouldShowButton, setShouldShowButton] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const language = className?.replace(/language-/, "") || "text";
+  const codeContent = children?.toString() || "";
+  const lines = codeContent.split("\n");
+  const isLongCode = lines.length > 10;
 
-  useEffect(() => {
-    if (contentRef.current) {
-      setShouldShowButton(contentRef.current.scrollHeight > maxHeight);
-    }
-  }, [maxHeight]);
+  if (!isLongCode) {
+    const codeHTML = highlight(codeContent);
+    return (
+      <pre className="!border-none">
+        <code
+          className={cn("language-" + language, className)}
+          dangerouslySetInnerHTML={{ __html: codeHTML }}
+          {...props}
+        />
+      </pre>
+    );
+  }
 
-  const toggleExpand = useCallback(() => {
-    setIsExpanded((prev) => !prev);
-  }, []);
+  const previewCode = lines.slice(0, 10).join("\n");
+  const remainingLines = lines.length - 10;
+  const previewHTML = highlight(previewCode);
 
   return (
-    <div className={cn("bg-zinc-50 dark:bg-neutral-950 rounded-lg", className)}>
-      <div
-        ref={contentRef}
-        className={cn(
-          "relative transition-all duration-300 ease-in-out",
-          !isExpanded && "max-h-[400px]"
-        )}
-        style={{
-          overflow: isExpanded ? "visible" : "hidden",
-        }}
-      >
-        {children}
-        {!isExpanded && shouldShowButton && (
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-zinc-50 dark:from-neutral-950 to-transparent" />
-        )}
-      </div>
+    <CodeExpandModal code={codeContent} language={language}>
+      <div className="group relative cursor-pointer bg-zinc-50 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <pre className="!border-none p-4 pb-14">
+          <code
+            className={cn("language-" + language, className)}
+            dangerouslySetInnerHTML={{ __html: previewHTML }}
+            {...props}
+          />
+        </pre>
 
-      {shouldShowButton && (
-        <div className="flex justify-center mt-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleExpand}
-            className={cn(
-              "text-xs gap-1 h-7 text-neutral-400",
-              "hover:text-neutral-500 hover:bg-transparent dark:hover:text-neutral-500 dark:hover:bg-neutral-950",
-              "transition-all duration-200"
-            )}
-          >
-            {isExpanded ? (
-              <>
-                Show Less <ChevronUp className="h-3 w-3" />
-              </>
-            ) : (
-              <>
-                Show More <ChevronDown className="h-3 w-3" />
-              </>
-            )}
-          </Button>
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-50 to-transparent pointer-events-none" />
+
+        <div className="absolute bottom-3 right-3">
+          <div className="bg-stone-500 backdrop-blur-sm text-background rounded-full p-2 shadow-xl group-hover:bg-foreground transition-all duration-300">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+              />
+            </svg>
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+    </CodeExpandModal>
   );
 }

@@ -23,49 +23,47 @@
   --radius: 0.5rem;
 }
 
-@variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 
 @import "@upstash/claps/style.css";
 
 ::selection {
-  color: #047857;
-  background-color: #34d399;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--foreground) / 0.1);
 }
 
 @layer base {
   :root {
-    --background: 240 5% 96%;
-    --foreground: 240 10% 3.9%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 240 5.9% 10%;
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 214 3.31% 91.4%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 150 65% 67%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 9%;
 
     --radius: 0.5rem;
 
-    /* Sugar high  */
     --sh-class: #2d5e9d;
     --sh-identifier: #354150;
     --sh-sign: #8996a3;
@@ -75,42 +73,6 @@
     --sh-jsxliterals: #6266d1;
     --sh-property: #e25a1c;
     --sh-entity: #e25a1c;
-  }
-
-  .dark {
-    --background: 240 10% 4%; /* zinc-950 equivalent */
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-
-    /* Sugar high */
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
   }
 }
 
@@ -124,27 +86,27 @@
   }
 
   .prose h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-8 mb-6;
+    @apply scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl mt-8 mb-6;
   }
 
   .prose h2 {
-    @apply mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mb-4;
+    @apply mt-10 scroll-m-20 border-b border-foreground/10 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mb-4;
   }
 
   .prose h3 {
-    @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight mb-3;
+    @apply mt-8 scroll-m-20 text-2xl font-medium tracking-tight mb-3;
   }
 
   .prose h4 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight mt-6 mb-2;
+    @apply scroll-m-20 text-xl font-medium tracking-tight mt-6 mb-2;
   }
 
   .prose h5 {
-    @apply scroll-m-20 text-lg font-semibold tracking-tight mt-4 mb-2;
+    @apply scroll-m-20 text-lg font-medium tracking-tight mt-4 mb-2;
   }
 
   .prose h6 {
-    @apply scroll-m-20 text-base font-semibold tracking-tight mt-4 mb-2;
+    @apply scroll-m-20 text-base font-medium tracking-tight mt-4 mb-2;
   }
 
   .prose p {
@@ -152,7 +114,7 @@
   }
 
   .prose blockquote {
-    @apply mt-6 border-l-2 pl-6 italic border-neutral-300 dark:border-neutral-700;
+    @apply mt-6 border-l-2 pl-6 italic border-foreground/10;
   }
 
   .prose ul,
@@ -188,11 +150,11 @@
 }
 
 .prose a {
-  @apply transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+  @apply transition-all decoration-foreground/30 underline-offset-2 decoration-[0.1em];
 }
 
 .prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700;
+  @apply text-foreground/20;
   content: "#";
 }
 
@@ -201,13 +163,16 @@
 }
 
 .prose pre {
-  @apply relative overflow-x-auto rounded-lg bg-zinc-50 dark:bg-neutral-950;
+  @apply relative overflow-x-auto rounded-lg bg-foreground/[0.03];
   margin: 0;
 }
 
-/* Target only the outermost pre tag */
 .prose > pre {
-  @apply bg-zinc-200/40 dark:bg-neutral-900;
+  @apply bg-foreground/[0.05];
+}
+
+.thoughts-prose > pre {
+  @apply bg-transparent;
 }
 
 .prose code span {

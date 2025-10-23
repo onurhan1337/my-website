@@ -34,18 +34,18 @@ export function CopyCode({ children, code, className }: CopyCodeProps) {
           size="icon"
           className={cn(
             "h-8 w-8",
-            "bg-zinc-100/80 dark:bg-neutral-900/80 backdrop-blur-sm",
-            "hover:bg-zinc-200/80 dark:hover:bg-neutral-800/80",
+            "bg-zinc-100/80 backdrop-blur-sm",
+            "hover:bg-zinc-200/80",
             "opacity-0 group-hover:opacity-100 transition-all duration-200",
-            "border border-zinc-200 dark:border-neutral-800"
+            "border border-zinc-200"
           )}
           onClick={copyToClipboard}
           title={isCopied ? "Copied!" : "Copy code"}
         >
           {isCopied ? (
-            <Check className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+            <Check className="h-4 w-4 text-emerald-500" />
           ) : (
-            <Copy className="h-4 w-4 text-zinc-600 dark:text-neutral-400" />
+            <Copy className="h-4 w-4 text-zinc-600" />
           )}
           <span className="sr-only">{isCopied ? "Copied!" : "Copy code"}</span>
         </Button>
