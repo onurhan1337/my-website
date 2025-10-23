@@ -20,10 +20,10 @@ function Table({ data }) {
   let headers = data.headers.map((header, index) => (
     <th
       key={index}
-      className="border-b border-neutral-200 dark:border-neutral-800
-        bg-secondary dark:bg-secondary/50
+      className="border-b border-neutral-200
+        bg-secondary
         px-4 py-2 text-left
-        text-sm font-semibold text-secondary-foreground dark:text-secondary-foreground
+        text-sm font-semibold text-secondary-foreground
         first:pl-6 last:pr-6 whitespace-nowrap"
     >
       {header}
@@ -33,12 +33,12 @@ function Table({ data }) {
   let rows = data.rows.map((row, index) => (
     <tr
       key={index}
-      className="group transition-colors hover:bg-muted/50 dark:hover:bg-muted/50 text-start tracking-wide"
+      className="group transition-colors hover:bg-muted/50 text-start tracking-wide"
     >
       {row.map((cell, cellIndex) => (
         <td
           key={cellIndex}
-          className="border-b border-neutral-200 dark:border-neutral-800
+          className="border-b border-neutral-200
             px-4 py-2 text-xs text-muted-foreground
             first:pl-6 last:pr-6"
         >
@@ -96,14 +96,14 @@ function Callout(props) {
 function ProsCard({ title, pros }) {
   return (
     <div
-      className="border border-neutral-200 dark:border-neutral-800 
-                    bg-white dark:bg-neutral-900 
+      className="border border-neutral-200
+                    bg-white
                     rounded-lg p-6 my-4 w-full"
     >
       {title && (
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-          <h4 className="font-medium text-neutral-900 dark:text-neutral-100">
+          <h4 className="font-medium text-neutral-900">
             {title}
           </h4>
         </div>
@@ -112,7 +112,7 @@ function ProsCard({ title, pros }) {
         {pros.map((pro, index) => (
           <div key={index} className="flex items-start gap-3">
             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
-            <span className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            <span className="text-sm text-neutral-700 leading-relaxed">
               {pro}
             </span>
           </div>
@@ -125,14 +125,14 @@ function ProsCard({ title, pros }) {
 function ConsCard({ title, cons }) {
   return (
     <div
-      className="border border-neutral-200 dark:border-neutral-800 
-                    bg-white dark:bg-neutral-900 
+      className="border border-neutral-200
+                    bg-white
                     rounded-lg p-6 my-4 w-full"
     >
       {title && (
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-          <h4 className="font-medium text-neutral-900 dark:text-neutral-100">
+          <h4 className="font-medium text-neutral-900">
             {title}
           </h4>
         </div>
@@ -141,7 +141,7 @@ function ConsCard({ title, cons }) {
         {cons.map((con, index) => (
           <div key={index} className="flex items-start gap-3">
             <div className="w-1.5 h-1.5 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
-            <span className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+            <span className="text-sm text-neutral-700 leading-relaxed">
               {con}
             </span>
           </div>
@@ -154,7 +154,7 @@ function ConsCard({ title, cons }) {
 function LinkCardList({ cards }) {
   return (
     <div
-      className=" bg-neutral-100 dark:bg-neutral-900 rounded-xl p-6
+      className=" bg-neutral-100 rounded-xl p-6
     my-4 w-full gap-12"
     >
       {cards.map((card) => (
@@ -200,7 +200,7 @@ function Code({ children, ...props }) {
   );
 
   const wrappedCode = (
-    <div className="bg-zinc-50 dark:bg-neutral-950 rounded-lg">
+    <div className="bg-zinc-50 rounded-lg">
       <CopyCode code={children} className="p-4">
         {codeBlock}
       </CopyCode>
@@ -258,9 +258,9 @@ export function BuyMeACoffee({ username }: BuyMeACoffeeProps) {
         href={`https://buymeacoffee.com/${username}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm text-neutral-900 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-50 dark:hover:bg-neutral-800"
+        className="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-2 text-sm text-neutral-900 transition-colors hover:bg-neutral-100"
       >
-        <Coffee className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+        <Coffee className="h-5 w-5 text-orange-600" />
         <span>Support Content</span>
       </Link>
     </div>

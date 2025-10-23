@@ -52,13 +52,13 @@ const Processor = React.memo(
     );
 
     return (
-      <div className="mb-4 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4">
+      <div className="mb-4 border border-neutral-200 rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+            <span className="text-sm font-medium text-neutral-700">
               P{pid}
             </span>
-            <span className="px-2 py-1 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded-md">
+            <span className="px-2 py-1 text-xs bg-neutral-100 text-neutral-600 rounded-md">
               M{pid}
             </span>
           </div>
@@ -73,7 +73,7 @@ const Processor = React.memo(
                   duration: 1.5,
                   ease: [0.4, 0, 0.2, 1],
                 }}
-                className="px-3 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-md text-sm font-medium shadow-sm border border-emerald-200 dark:border-emerald-800"
+                className="px-3 py-2 bg-emerald-50 text-emerald-700 rounded-md text-sm font-medium shadow-sm border border-emerald-200"
               >
                 Running G{g.id}
               </motion.div>
@@ -81,7 +81,7 @@ const Processor = React.memo(
           </AnimatePresence>
         </div>
 
-        <div className="flex gap-2 p-2 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg overflow-x-auto min-h-[3rem] items-center">
+        <div className="flex gap-2 p-2 bg-neutral-50 rounded-lg overflow-x-auto min-h-[3rem] items-center">
           <AnimatePresence mode="wait" initial={false}>
             {localQueueGoroutines.map((g) => (
               <motion.div
@@ -96,7 +96,7 @@ const Processor = React.memo(
                   damping: 12,
                   mass: 1.5,
                 }}
-                className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 G{g.id}
               </motion.div>
@@ -286,32 +286,32 @@ export const GoroutineScheduler = () => {
 
   return (
     <div
-      className={`p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-200 dark:border-neutral-800 ${
+      className={`p-6 bg-white rounded-2xl shadow-sm border border-neutral-200 ${
         isTransitioning ? "pointer-events-none" : ""
       }`}
     >
       <div className="mb-6">
-        <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-2">
+        <h3 className="text-lg font-medium text-neutral-900 mb-2">
           Go Scheduler Visualization
         </h3>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="text-sm text-neutral-600">
           This demonstrates Go&apos;s M:N scheduler model where M (OS Threads)
           and N (Goroutines) are scheduled through P (Processors). Each P has a
           local run queue and can steal work from other Ps when idle.
         </p>
       </div>
 
-      <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-        <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">
+      <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+        <p className="text-sm text-blue-700 font-medium">
           {currentDescription}
         </p>
       </div>
 
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">
+        <h4 className="text-sm font-medium text-neutral-700 mb-2">
           Global Run Queue
         </h4>
-        <div className="flex gap-2 p-3 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg overflow-x-auto min-h-[4rem] items-center">
+        <div className="flex gap-2 p-3 bg-neutral-50 rounded-lg overflow-x-auto min-h-[4rem] items-center">
           <AnimatePresence mode="wait" initial={false}>
             {globalGoroutines.map((g) => (
               <motion.div
@@ -326,7 +326,7 @@ export const GoroutineScheduler = () => {
                   damping: 12,
                   mass: 1.5,
                 }}
-                className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                className="flex-shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 G{g.id}
               </motion.div>
@@ -347,8 +347,8 @@ export const GoroutineScheduler = () => {
         onClick={toggleScheduling}
         className={`mt-6 px-6 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
           isRunning
-            ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700"
-            : "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+            ? "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+            : "bg-blue-50 text-blue-600 hover:bg-blue-100"
         }`}
       >
         {isRunning ? "Reset" : "Start"} Scheduling

@@ -1,12 +1,14 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { Thought } from "@/types/thought";
 import { ThoughtCard } from "@/components/thought-card";
 import { Button } from "@/components/ui/button";
+import { useThoughtsStore } from "@/stores/thoughts-store";
+
+const THOUGHTS_PER_PAGE = 8;
 
 const typeFilters = [
   { key: "all", label: "All" },
@@ -21,112 +23,57 @@ interface ThoughtsClientProps {
 }
 
 export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { filter, page, setFilter, setPage } = useThoughtsStore();
 
-  const activeFilter =
-    (searchParams?.get("filter") as (typeof typeFilters)[number]["key"]) ||
-    "all";
+  const { paginatedThoughts, totalPages, hasNextPage, hasPreviousPage } =
+    useMemo(() => {
+      const filteredThoughts =
+        filter === "all"
+          ? thoughts
+          : thoughts.filter((thought) => thought.metadata.type === filter);
 
-  const { currentPage, totalPages, paginatedThoughts } = useMemo(() => {
-    const currentPage = Math.max(1, Number(searchParams?.get("page")) || 1);
-
-    const filteredThoughts =
-      activeFilter === "all"
-        ? thoughts
-        : thoughts.filter((thought) => thought.metadata.type === activeFilter);
-
-    const thoughtsPerPage = 8;
-    const totalPages = Math.max(
-      1,
-      Math.ceil(filteredThoughts.length / thoughtsPerPage)
-    );
-
-    const paginatedThoughts = [...filteredThoughts]
-      .sort(
-        (a, b) =>
-          new Date(b.metadata.createdAt).getTime() -
-          new Date(a.metadata.createdAt).getTime()
-      )
-      .slice(
-        (currentPage - 1) * thoughtsPerPage,
-        currentPage * thoughtsPerPage
+      const totalPages = Math.max(
+        1,
+        Math.ceil(filteredThoughts.length / THOUGHTS_PER_PAGE)
       );
 
-    return { currentPage, totalPages, paginatedThoughts };
-  }, [thoughts, searchParams, activeFilter]);
+      const paginatedThoughts = [...filteredThoughts]
+        .sort(
+          (a, b) =>
+            new Date(b.metadata.createdAt).getTime() -
+            new Date(a.metadata.createdAt).getTime()
+        )
+        .slice((page - 1) * THOUGHTS_PER_PAGE, page * THOUGHTS_PER_PAGE);
 
-  const handleFilterChange = (filter: (typeof typeFilters)[number]["key"]) => {
-    const params = new URLSearchParams(searchParams?.toString());
-    if (filter === "all") {
-      params.delete("filter");
-    } else {
-      params.set("filter", filter);
-    }
-    params.delete("page");
-    const query = params.toString();
-    router.push(query ? `/thoughts?${query}` : "/thoughts");
-  };
-
-  const handlePageChange = (page: number) => {
-    if (page < 1 || page > totalPages) return;
-    const params = new URLSearchParams(searchParams?.toString());
-    if (page === 1) {
-      params.delete("page");
-    } else {
-      params.set("page", page.toString());
-    }
-    if (activeFilter !== "all") {
-      params.set("filter", activeFilter);
-    }
-    const query = params.toString();
-    router.push(query ? `/thoughts?${query}` : "/thoughts");
-  };
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 5 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 150,
-        damping: 10,
-        duration: 0.5,
-      },
-    },
-  };
+      return {
+        paginatedThoughts,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      };
+    }, [thoughts, page, filter]);
 
   return (
     <div className="pb-32">
-      <div className="mb-8">
-        <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px] mb-4">
-          Thoughts
-        </h1>
-        <p className="text-neutral-600 dark:text-neutral-400 max-w-[650px]">
-          Quick thoughts, ideas, code snippets, quotes, and book notes.
-        </p>
-      </div>
-
       <AnimatePresence mode="wait">
         <motion.div
-          key={currentPage}
-          variants={container}
-          initial="hidden"
-          animate="show"
+          key={page}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.05 }}
         >
           {paginatedThoughts.map((thought) => (
-            <motion.div key={thought.slug} variants={item}>
+            <motion.div
+              key={thought.slug}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 150,
+                damping: 10,
+                duration: 0.5,
+              }}
+            >
               <ThoughtCard thought={thought} />
             </motion.div>
           ))}
@@ -136,26 +83,32 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
       {totalPages > 1 && (
         <nav
           aria-label="Thoughts pagination"
-          className="flex justify-center gap-4 mt-8"
+          className="flex justify-center gap-4 mt-12"
         >
           <Button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => setPage(page - 1)}
+            disabled={!hasPreviousPage}
             variant="outline"
-            className={cn("tracking-tight shadow-none", currentPage === 1 && "opacity-50")}
+            className={cn(
+              "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/[0.02]",
+              !hasPreviousPage && "opacity-30 cursor-not-allowed"
+            )}
           >
             Previous
           </Button>
 
-          <span className="flex items-center tracking-tight text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
+          <span className="flex items-center tracking-tight text-sm opacity-50">
+            Page {page} of {totalPages}
           </span>
 
           <Button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            onClick={() => setPage(page + 1)}
+            disabled={!hasNextPage}
             variant="outline"
-            className={cn("tracking-tight shadow-none", currentPage === totalPages && "opacity-50")}
+            className={cn(
+              "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/[0.02]",
+              !hasNextPage && "opacity-30 cursor-not-allowed"
+            )}
           >
             Next
           </Button>
@@ -168,29 +121,29 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
       >
-        <div className="bg-background/95 backdrop-blur-xl border border-border rounded-full shadow-2xl px-3 py-2">
+        <div className="bg-background/95 backdrop-blur-xl border border-foreground/10 rounded-full shadow-lg px-3 py-2">
           <div className="flex items-center gap-1">
-            {typeFilters.map((filter) => (
+            {typeFilters.map((filterOption) => (
               <motion.button
-                key={filter.key}
-                onClick={() => handleFilterChange(filter.key)}
+                key={filterOption.key}
+                onClick={() => setFilter(filterOption.key)}
                 className={cn(
-                  "relative px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all duration-300 rounded-full",
-                  activeFilter === filter.key
+                  "relative px-4 py-2 text-xs tracking-wider transition-all duration-300 rounded-full",
+                  filter === filterOption.key
                     ? "text-background"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "opacity-50 hover:opacity-100"
                 )}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {activeFilter === filter.key && (
+                {filter === filterOption.key && (
                   <motion.div
                     layoutId="activeFilter"
                     className="absolute inset-0 bg-foreground rounded-full"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{filter.label}</span>
+                <span className="relative z-10">{filterOption.label}</span>
               </motion.button>
             ))}
           </div>

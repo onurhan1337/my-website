@@ -47,7 +47,7 @@ export function CodeExpandModal({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-left w-full hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors rounded-md p-2 -m-2 focus:outline-none"
+        className="text-left w-full hover:bg-neutral-50 transition-colors rounded-md p-2 -m-2 focus:outline-none"
       >
         {children}
       </button>
@@ -63,9 +63,9 @@ export function CodeExpandModal({
             <div className="flex items-center justify-between px-6 py-4 border-b border-border/50 bg-muted/50 backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500 dark:bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500 dark:bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500 dark:bg-green-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
                 <div className="h-4 w-px bg-border/80 mx-2" />
                 <span className="font-mono text-xs font-medium text-foreground/80">

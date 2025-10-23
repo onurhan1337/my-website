@@ -38,7 +38,7 @@ export function ExpandableCode({
 
   return (
     <CodeExpandModal code={codeContent} language={language}>
-      <div className="group relative cursor-pointer bg-zinc-50 dark:bg-neutral-950 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <div className="group relative cursor-pointer bg-zinc-50 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg">
         <pre className="!border-none p-4 pb-14">
           <code
             className={cn("language-" + language, className)}
@@ -47,7 +47,7 @@ export function ExpandableCode({
           />
         </pre>
 
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-50 dark:from-neutral-950 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-50 to-transparent pointer-events-none" />
 
         <div className="absolute bottom-3 right-3">
           <div className="bg-stone-500 backdrop-blur-sm text-background rounded-full p-2 shadow-xl group-hover:bg-foreground transition-all duration-300">

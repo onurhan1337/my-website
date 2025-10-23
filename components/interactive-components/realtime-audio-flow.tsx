@@ -83,10 +83,10 @@ export function RealtimeAudioFlow() {
     const isCompleted = completedSteps.has(index);
 
     if (isCompleted)
-      return "bg-neutral-900 border-neutral-900 text-white dark:bg-neutral-100 dark:border-neutral-100 dark:text-neutral-900";
+      return "bg-neutral-900 border-neutral-900 text-white";
     if (isActive)
-      return "bg-white border-neutral-900 text-neutral-900 shadow-lg dark:bg-neutral-900 dark:border-neutral-100 dark:text-neutral-100 scale-110";
-    return "bg-white border-neutral-200 text-neutral-300 dark:bg-neutral-800 dark:border-neutral-900 dark:text-neutral-300";
+      return "bg-white border-neutral-900 text-neutral-900 shadow-lg scale-110";
+    return "bg-white border-neutral-200 text-neutral-300";
   };
 
   const getLatencyStatus = () => {
@@ -115,17 +115,17 @@ export function RealtimeAudioFlow() {
     <div className="max-w-4xl mx-auto p-8">
       <div className="flex items-center justify-between mb-12">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-neutral-900 dark:text-neutral-100 mb-2">
+          <h1 className="text-2xl font-light tracking-wide text-neutral-900 mb-2">
             Realtime Audio Processing
           </h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 font-mono">
+          <p className="text-sm text-neutral-500 font-mono">
             Speech → STT → LLM → TTS → Output
           </p>
         </div>
 
         <button
           onClick={toggleSimulation}
-          className="flex items-center gap-2 px-6 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors duration-200 font-mono text-sm dark:border-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
+          className="flex items-center gap-2 px-6 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors duration-200 font-mono text-sm"
         >
           {isRunning ? (
             <Pause className="w-4 h-4" />
@@ -140,9 +140,9 @@ export function RealtimeAudioFlow() {
         <div className="absolute top-12 left-0 right-0 flex items-center justify-between px-8">
           {STEPS.slice(0, -1).map((_, i) => (
             <div key={i} className="flex-1 flex justify-center">
-              <div className="w-full max-w-32 h-px bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+              <div className="w-full max-w-32 h-px bg-neutral-200 overflow-hidden">
                 <div
-                  className={`h-full bg-neutral-900 dark:bg-neutral-100 transition-all duration-500 ${
+                  className={`h-full bg-neutral-900 transition-all duration-500 ${
                     completedSteps.has(i) ? "w-full" : "w-0"
                   }`}
                 />
@@ -167,7 +167,7 @@ export function RealtimeAudioFlow() {
                   <Icon className="w-6 h-6" />
 
                   {isActive && (
-                    <div className="absolute inset-0 border-2 border-neutral-900 rounded-full opacity-20 dark:border-neutral-900 animate-ping" />
+                    <div className="absolute inset-0 border-2 border-neutral-900 rounded-full opacity-20 animate-ping" />
                   )}
                 </div>
 
@@ -175,15 +175,15 @@ export function RealtimeAudioFlow() {
                   <div
                     className={`font-mono text-sm tracking-wider ${
                       isActive || isCompleted
-                        ? "text-neutral-900 dark:text-neutral-100"
-                        : "text-neutral-400 dark:text-neutral-400"
+                        ? "text-neutral-900"
+                        : "text-neutral-400"
                     }`}
                   >
                     {step.name}
                   </div>
 
                   {isActive && (
-                    <div className="text-xs text-neutral-500 mt-1 font-mono dark:text-neutral-400 animate-in fade-in slide-in-from-bottom-1 duration-300">
+                    <div className="text-xs text-neutral-500 mt-1 font-mono animate-in fade-in slide-in-from-bottom-1 duration-300">
                       {step.duration}ms
                     </div>
                   )}
@@ -195,19 +195,19 @@ export function RealtimeAudioFlow() {
       </div>
 
       {isRunning && (
-        <div className="mt-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm dark:bg-neutral-800 dark:border-neutral-900 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="mt-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-neutral-800 mb-1 dark:text-neutral-200">
+              <h4 className="text-sm font-semibold text-neutral-800 mb-1">
                 Total Latency: {totalLatency}ms
               </h4>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400">
+              <p className="text-xs text-neutral-600">
                 {status.desc}
               </p>
             </div>
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${status.color}`} />
-              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
+              <span className="text-xs font-medium text-neutral-600">
                 {status.text}
               </span>
             </div>
@@ -215,9 +215,9 @@ export function RealtimeAudioFlow() {
         </div>
       )}
 
-      <div className="mt-8 border-l-2 border-neutral-900 pl-6 dark:border-neutral-100">
-        <p className="text-sm text-neutral-600 leading-relaxed dark:text-neutral-400">
-          <span className="font-mono text-neutral-900 dark:text-neutral-100">
+      <div className="mt-8 border-l-2 border-neutral-900 pl-6">
+        <p className="text-sm text-neutral-600 leading-relaxed">
+          <span className="font-mono text-neutral-900">
             KEY INSIGHT:
           </span>
           <br />

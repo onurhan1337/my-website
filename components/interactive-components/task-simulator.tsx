@@ -149,29 +149,29 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
   const getStatusColor = useCallback((status: Task['status']) => {
     switch (status) {
       case 'waiting':
-        return 'bg-neutral-200 dark:bg-neutral-700';
+        return 'bg-neutral-200';
       case 'running':
-        return 'bg-blue-400 dark:bg-blue-500';
+        return 'bg-blue-400';
       case 'completed':
-        return 'bg-emerald-400 dark:bg-emerald-500';
+        return 'bg-emerald-400';
       default:
-        return 'bg-neutral-200 dark:bg-neutral-700';
+        return 'bg-neutral-200';
     }
   }, []);
 
   const explanation = useMemo(() => {
     if (mode === 'sequential') {
       return (
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
+        <p className="text-sm text-neutral-600 mb-6">
           In Go, when tasks run <strong>sequentially</strong>, each goroutine waits for the previous one to complete before starting. 
-          This is similar to using a <code className="px-1 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded text-sm">sync.WaitGroup</code> or chaining goroutines with channels.
+          This is similar to using a <code className="px-1 py-0.5 bg-neutral-100 rounded text-sm">sync.WaitGroup</code> or chaining goroutines with channels.
         </p>
       );
     }
     return (
-      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
-        In Go&apos;s <strong>concurrent</strong> execution, multiple goroutines run independently and simultaneously. 
-        This is like launching goroutines with <code className="px-1 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded text-sm">go func()</code> without synchronization.
+      <p className="text-sm text-neutral-600 mb-6">
+        In Go&apos;s <strong>concurrent</strong> execution, multiple goroutines run independently and simultaneously.
+        This is like launching goroutines with <code className="px-1 py-0.5 bg-neutral-100 rounded text-sm">go func()</code> without synchronization.
       </p>
     );
   }, [mode]);
@@ -190,31 +190,31 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
 
   const buttonClassName = useMemo(() => `px-6 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
     isRunning
-      ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700'
-      : 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50'
+      ? 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+      : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
   }`, [isRunning]);
 
   const getTaskColor = (task: Task) => {
     const baseColors = {
       1: {
-        base: 'bg-blue-400 dark:bg-blue-500 border-blue-500 dark:border-blue-400',
-        light: 'bg-blue-200 dark:bg-blue-800/30 border-blue-300 dark:border-blue-600'
+        base: 'bg-blue-400 border-blue-500',
+        light: 'bg-blue-200 border-blue-300'
       },
       2: {
-        base: 'bg-purple-400 dark:bg-purple-500 border-purple-500 dark:border-purple-400',
-        light: 'bg-purple-200 dark:bg-purple-800/30 border-purple-300 dark:border-purple-600'
+        base: 'bg-purple-400 border-purple-500',
+        light: 'bg-purple-200 border-purple-300'
       },
       3: {
-        base: 'bg-orange-400 dark:bg-orange-500 border-orange-500 dark:border-orange-400',
-        light: 'bg-orange-200 dark:bg-orange-800/30 border-orange-300 dark:border-orange-600'
+        base: 'bg-orange-400 border-orange-500',
+        light: 'bg-orange-200 border-orange-300'
       }
     }[task.id] ?? {
-      base: 'bg-neutral-400 dark:bg-neutral-500 border-neutral-500 dark:border-neutral-400',
-      light: 'bg-neutral-200 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600'
+      base: 'bg-neutral-400 border-neutral-500',
+      light: 'bg-neutral-200 border-neutral-300'
     };
 
     if (task.status === 'completed' && task.progress === 100) {
-      return 'bg-emerald-400 dark:bg-emerald-500 border-emerald-500 dark:border-emerald-400';
+      return 'bg-emerald-400 border-emerald-500';
     }
     return task.status === 'running' ? baseColors.base : baseColors.light;
   };
@@ -237,16 +237,16 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     return (
       <div className="h-12 relative mb-6">
         {/* Base timeline */}
-        <div className="absolute left-0 right-0 h-0.5 bg-neutral-200 dark:bg-neutral-700 top-1/2 transform -translate-y-1/2" />
+        <div className="absolute left-0 right-0 h-0.5 bg-neutral-200 top-1/2 transform -translate-y-1/2" />
         
         {/* Time markers */}
         {timeMarkers.map(({ position, time }, i) => (
           <div
             key={`marker-${i}`}
-            className="absolute h-2 w-0.5 bg-neutral-300 dark:bg-neutral-600 top-1/2 transform -translate-y-1/2"
+            className="absolute h-2 w-0.5 bg-neutral-300 top-1/2 transform -translate-y-1/2"
             style={{ left: `${position}%` }}
           >
-            <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-neutral-500 dark:text-neutral-400">
+            <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-neutral-500">
               {time}s
             </span>
           </div>
@@ -314,7 +314,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     <motion.div
       initial={false}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative bg-neutral-50 dark:bg-neutral-800/50 hover:bg-neutral-50/80 dark:hover:bg-neutral-800/80 rounded-xl p-4 transition-colors duration-300"
+      className="group relative bg-neutral-50 hover:bg-neutral-50/80 rounded-xl p-4 transition-colors duration-300"
       style={{
         zIndex: task.status === 'running' ? 2 : 1
       }}
@@ -323,21 +323,21 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
       <div className="flex justify-between items-center mb-3">
         <div className="flex items-center gap-3">
           <div className={`w-2 h-2 rounded-full ${getTaskColor(task)}`} />
-          <span className="font-medium text-neutral-700 dark:text-neutral-200">Task {task.id}</span>
+          <span className="font-medium text-neutral-700">Task {task.id}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className={`text-sm ${
-            task.status === 'completed' 
-              ? 'text-emerald-600 dark:text-emerald-400' 
-              : task.status === 'running' 
-                ? 'text-blue-600 dark:text-blue-400'
-                : 'text-neutral-400 dark:text-neutral-500'
+            task.status === 'completed'
+              ? 'text-emerald-600'
+              : task.status === 'running'
+                ? 'text-blue-600'
+                : 'text-neutral-400'
           }`}>
             {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
           </span>
         </div>
       </div>
-      <div className="relative h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+      <div className="relative h-1.5 bg-neutral-100 rounded-full overflow-hidden">
         <motion.div
           className={`h-full transition-colors duration-300 ${getTaskColor(task)}`}
           initial={false}
@@ -367,16 +367,16 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
   );
 
   return (
-    <div className="p-8 bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-800">
+    <div className="p-8 bg-white rounded-2xl shadow-sm border border-neutral-100">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <div className="inline-flex p-1 bg-neutral-50 dark:bg-neutral-800 rounded-xl">
+        <div className="inline-flex p-1 bg-neutral-50 rounded-xl">
           {(['sequential', 'concurrent'] as const).map((modeOption) => (
             <button
               key={modeOption}
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
                 mode === modeOption
-                  ? 'bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 shadow-sm'
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300'
+                  ? 'bg-white text-neutral-800 shadow-sm'
+                  : 'text-neutral-500 hover:text-neutral-700'
               }`}
               onClick={() => handleModeChange(modeOption)}
             >

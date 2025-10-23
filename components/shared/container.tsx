@@ -21,13 +21,13 @@ export default function Container({
       break;
     case "large":
     default:
-      width = "w-full sm:max-w-screen-lg";
+      width = "w-full sm:max-w-2xl";
       break;
   }
 
   return (
     <div
-      className={`mx-auto px-4 sm:px-6 lg:px-8 bg-background ${width} ${
+      className={`mx-auto bg-background ${width} ${
         className || ""
       }`}
     >

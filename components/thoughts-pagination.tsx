@@ -25,7 +25,6 @@ export default function ThoughtsPagination({
     const searchParams = searchParamsHook ?? new URLSearchParams();
     const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
-    // Filter thoughts by type if not "all"
     const filteredThoughts =
       filter === "all"
         ? allThoughts
@@ -72,7 +71,7 @@ export default function ThoughtsPagination({
       {totalPages > 1 && (
         <nav
           aria-label="Thoughts pagination"
-          className="flex justify-center gap-4 mt-8"
+          className="flex justify-center gap-4 mt-12"
         >
           <PaginationButton
             onClick={() => handlePageChange(currentPage - 1)}
@@ -81,7 +80,7 @@ export default function ThoughtsPagination({
             Previous
           </PaginationButton>
 
-          <span className="flex items-center tracking-tight text-sm text-muted-foreground">
+          <span className="flex items-center tracking-tight text-sm opacity-50">
             Page {currentPage} of {totalPages}
           </span>
 
@@ -111,7 +110,10 @@ function PaginationButton({
       onClick={onClick}
       disabled={disabled}
       variant="outline"
-      className={cn("tracking-tight shadow-none", disabled && "opacity-50")}
+      className={cn(
+        "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/[0.02]",
+        disabled && "opacity-30 cursor-not-allowed"
+      )}
     >
       {children}
     </Button>

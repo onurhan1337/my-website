@@ -2,25 +2,30 @@ import Link from "next/link";
 
 export const BlogCard = ({ blog }) => {
   return (
-    <article className="py-4 sm:py-8 dark:border-b-zinc-800">
+    <article className="py-6 border-b border-foreground/5 last:border-0">
       <header>
-        <h3 className="font-semibold underline underline-offset-4 decoration-1 decoration-zinc-300">
-          <Link href={`/blog/${blog.slug}`}>{blog.metadata.title}</Link>
+        <h3 className="font-medium text-[17px] leading-tight tracking-tight">
+          <Link
+            href={`/blog/${blog.slug}`}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {blog.metadata.title}
+          </Link>
         </h3>
-        <p className="mt-1 opacity-70 dark:opacity-60">
+        <p className="mt-2 text-[15px] leading-relaxed opacity-70">
           {blog.metadata.summary}
         </p>
       </header>
-      <footer className="mt-1 flex items-center space-x-2 font-mono text-sm uppercase tracking-wider opacity-50 dark:opacity-40">
+      <footer className="mt-3 flex items-center gap-2 text-[13px] opacity-40 tracking-tight">
         <time>
           {new Date(blog.metadata.publishedAt).toLocaleDateString("en-US", {
             year: "numeric",
-            month: "long",
+            month: "short",
             day: "numeric",
           })}
         </time>
         <span>·</span>
-        <span>{blog.readingTime} MIN READ</span>
+        <span>{blog.readingTime} min</span>
       </footer>
     </article>
   );

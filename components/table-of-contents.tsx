@@ -19,17 +19,17 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       ref={containerRef}
       className="w-full max-w-3xl mx-auto mt-8 mb-12"
       layout
       layoutRoot
     >
       <motion.div layout className="flex items-center gap-4 mb-4">
-        <div className="flex-1 h-px bg-border" />
+        <div className="flex-1 h-px bg-foreground/10" />
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity"
         >
           <span className="text-sm font-medium">On this page</span>
           <motion.div
@@ -39,21 +39,21 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
             <ChevronDown className="w-4 h-4" />
           </motion.div>
         </button>
-        <div className="flex-1 h-px bg-border" />
+        <div className="flex-1 h-px bg-foreground/10" />
       </motion.div>
 
       <motion.div
         layout
         className="relative overflow-hidden"
-        animate={{ 
+        animate={{
           height: isOpen ? "auto" : 0,
           opacity: isOpen ? 1 : 0,
-          marginBottom: isOpen ? "1rem" : 0
+          marginBottom: isOpen ? "1rem" : 0,
         }}
         transition={{
           height: { duration: 0.3, ease: "easeInOut" },
           opacity: { duration: 0.2 },
-          marginBottom: { duration: 0.3 }
+          marginBottom: { duration: 0.3 },
         }}
       >
         <nav className="flex flex-col space-y-2 px-4">
@@ -61,16 +61,16 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
             <motion.a
               key={heading.id}
               initial={false}
-              animate={{ 
+              animate={{
                 opacity: isOpen ? 1 : 0,
-                x: isOpen ? 0 : -4 
+                x: isOpen ? 0 : -4,
               }}
               transition={{
                 duration: 0.2,
-                delay: isOpen ? i * 0.05 : 0
+                delay: isOpen ? i * 0.05 : 0,
               }}
               href={`#${heading.id}`}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1 hover:underline underline-offset-4"
+              className="text-sm opacity-50 hover:opacity-100 transition-opacity py-1 hover:underline underline-offset-4"
               onClick={(e) => handleClick(e, heading.id)}
             >
               {heading.title}
@@ -82,4 +82,4 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
   );
 };
 
-export default TableOfContents; 
+export default TableOfContents;
