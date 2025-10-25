@@ -7,19 +7,25 @@ import { highlight } from "sugar-high";
 interface ExpandableCodeProps {
   children: React.ReactNode;
   className?: string;
+  code?: string;
+  [key: string]: unknown;
 }
 
 export function ExpandableCode({
   children,
   className,
+  code,
   ...props
 }: ExpandableCodeProps) {
   const language = className?.replace(/language-/, "") || "text";
-  const codeContent = children?.toString() || "";
+  const codeContent = code || children?.toString() || "";
   const lines = codeContent.split("\n");
   const isLongCode = lines.length > 10;
 
   if (!isLongCode) {
+    if (code) {
+      return <>{children}</>;
+    }
     const codeHTML = highlight(codeContent);
     return (
       <pre className="!border-none">
@@ -33,7 +39,6 @@ export function ExpandableCode({
   }
 
   const previewCode = lines.slice(0, 10).join("\n");
-  const remainingLines = lines.length - 10;
   const previewHTML = highlight(previewCode);
 
   return (

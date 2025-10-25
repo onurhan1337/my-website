@@ -2,7 +2,7 @@ import { ArrowUpRight, Coffee } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { ReactNode } from "react";
 import { highlight } from "sugar-high";
 import { CopyCode } from "./copy-code";
 import { ExpandableCode } from "./expandable-code";
@@ -16,7 +16,23 @@ import {
 } from "./interactive-components";
 import { CodePlayground } from "./interactive-components/code-playground";
 
-function Table({ data }) {
+interface TableData {
+  headers: string[];
+  rows: string[][];
+}
+
+interface LinkCardProps {
+  title: string;
+  link: string;
+}
+
+interface BuyMeACoffeeProps {
+  username: string;
+}
+
+const LONG_CODE_THRESHOLD = 15;
+
+function Table({ data }: { data: TableData }) {
   let headers = data.headers.map((header, index) => (
     <th
       key={index}
@@ -60,8 +76,8 @@ function Table({ data }) {
   );
 }
 
-function CustomLink(props) {
-  let href = props.href;
+function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const href = props.href || "";
 
   if (href.startsWith("/")) {
     return (
@@ -78,22 +94,22 @@ function CustomLink(props) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />;
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />;
+function RoundedImage(props: React.ComponentProps<typeof Image>) {
+  return <Image {...props} className="rounded-lg" />;
 }
 
-function Callout(props) {
+function Callout({ children }: { children: React.ReactNode }) {
   return (
     <div className="my-4 text-xs flex items-start">
       <div className="flex items-center w-4 mr-4">↪</div>
       <div className="w-full callout text-muted-foreground tracking-tight">
-        {props.children}
+        {children}
       </div>
     </div>
   );
 }
 
-function ProsCard({ title, pros }) {
+function ProsCard({ title, pros }: { title?: string; pros: string[] }) {
   return (
     <div
       className="border border-neutral-200
@@ -103,9 +119,7 @@ function ProsCard({ title, pros }) {
       {title && (
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-          <h4 className="font-medium text-neutral-900">
-            {title}
-          </h4>
+          <h4 className="font-medium text-neutral-900">{title}</h4>
         </div>
       )}
       <div className="space-y-2">
@@ -122,7 +136,7 @@ function ProsCard({ title, pros }) {
   );
 }
 
-function ConsCard({ title, cons }) {
+function ConsCard({ title, cons }: { title?: string; cons: string[] }) {
   return (
     <div
       className="border border-neutral-200
@@ -132,9 +146,7 @@ function ConsCard({ title, cons }) {
       {title && (
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-          <h4 className="font-medium text-neutral-900">
-            {title}
-          </h4>
+          <h4 className="font-medium text-neutral-900">{title}</h4>
         </div>
       )}
       <div className="space-y-2">
@@ -151,7 +163,7 @@ function ConsCard({ title, cons }) {
   );
 }
 
-function LinkCardList({ cards }) {
+function LinkCardList({ cards }: { cards: LinkCardProps[] }) {
   return (
     <div
       className=" bg-neutral-100 rounded-xl p-6
@@ -164,7 +176,7 @@ function LinkCardList({ cards }) {
   );
 }
 
-function LinkCard({ title, link }) {
+function LinkCard({ title, link }: LinkCardProps) {
   return (
     <Link
       href={link}
@@ -185,13 +197,23 @@ function LinkCard({ title, link }) {
   );
 }
 
-function Code({ children, ...props }) {
-  if (typeof children === "string" && !children.includes("\n")) {
-    return <code {...props}>{children}</code>;
+function normalizeCodeString(children: ReactNode): string {
+  if (React.isValidElement(children)) {
+    return String((children.props as { children?: unknown })?.children ?? children);
+  }
+  return typeof children === "string" ? children : String(children);
+}
+
+function Code({ children, ...props }: { children: ReactNode; [key: string]: unknown }) {
+  const codeString = normalizeCodeString(children);
+
+  if (!codeString.includes("\n")) {
+    return <code {...props}>{codeString}</code>;
   }
 
-  let codeHTML = highlight(children);
-  const isLongCode = children.split("\n").length > 15;
+  const codeHTML = highlight(codeString);
+  const lineCount = codeString.split("\n").length;
+  const isLongCode = lineCount > LONG_CODE_THRESHOLD;
 
   const codeBlock = (
     <pre className="!border-none">
@@ -201,35 +223,32 @@ function Code({ children, ...props }) {
 
   const wrappedCode = (
     <div className="bg-zinc-50 rounded-lg">
-      <CopyCode code={children} className="p-4">
+      <CopyCode code={codeString} className="p-4">
         {codeBlock}
       </CopyCode>
     </div>
   );
 
   if (isLongCode) {
-    return (
-      <ExpandableCode className="prose-pre:my-0">{wrappedCode}</ExpandableCode>
-    );
+    return <ExpandableCode code={codeString}>{wrappedCode}</ExpandableCode>;
   }
 
   return wrappedCode;
 }
 
-function slugify(str) {
-  return str
-    .toString()
+function slugify(str: ReactNode): string {
+  return String(str)
     .toLowerCase()
-    .trim() // Remove whitespace from both ends of a string
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/&/g, "-and-") // Replace & with 'and'
-    .replace(/[^\w\-]+/g, "") // Remove all non-word characters except for -
-    .replace(/\-\-+/g, "-"); // Replace multiple - with single -
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/&/g, "-and-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
 }
 
-function createHeading(level) {
-  const Component = ({ children }) => {
-    let slug = slugify(children);
+function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
+  const Component = ({ children }: { children: ReactNode }) => {
+    const slug = slugify(children);
     return React.createElement(
       `h${level}`,
       { id: slug },
@@ -245,10 +264,6 @@ function createHeading(level) {
   };
   Component.displayName = `Heading${level}`;
   return Component;
-}
-
-interface BuyMeACoffeeProps {
-  username: string;
 }
 
 export function BuyMeACoffee({ username }: BuyMeACoffeeProps) {
