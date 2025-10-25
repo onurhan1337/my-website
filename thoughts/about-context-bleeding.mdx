@@ -1,0 +1,20 @@
+---
+type: code
+createdAt: 2025-10-25T15:18:27
+---
+
+```typescript
+// Context isolation fix in RSC tracing
+// enterWith() was causing user data to leak between parallel renders
+// run() isolates each execution and prevents silent corruption
+
+asyncLocalStorage.run(newContext, () => {
+  renderReactServerComponent();
+});
+```
+
+A single line caused traces from User A to appear in User B’s metrics.
+Replacing enterWith() with run() fixed it. Slower by 20%, but correctness wins.
+In async-heavy environments, context isolation is survival, not optional.
+
+[read enterWith() document](https://nodejs.org/api/async_context.html#asynclocalstorageenterwithstore)
