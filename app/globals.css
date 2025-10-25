@@ -264,3 +264,11 @@ table {
   animation-delay: calc(var(--delay) * var(--stagger));
   --delay: 120ms;
 }
+
+body.modal-open .fixed.bottom-8 {
+  display: none !important;
+}
+
+.fixed.inset-0.z-\[99999\] {
+  z-index: 99999 !important;
+}
