@@ -13,8 +13,10 @@ asyncLocalStorage.run(newContext, () => {
 });
 ```
 
-A single line caused traces from User A to appear in User B’s metrics.
-Replacing enterWith() with run() fixed it. Slower by 20%, but correctness wins.
+A single line caused traces from User A to appear in User B's metrics.
+Replacing enterWith() with run() fixed it. The performance cost is worth it.
 In async-heavy environments, context isolation is survival, not optional.
+
+The key difference: `enterWith()` modifies the current context and persists through all subsequent async operations, while `run()` creates a new isolated context that only exists within the callback. This prevents context bleeding where data from one request contaminates another.
 
 [read enterWith() document](https://nodejs.org/api/async_context.html#asynclocalstorageenterwithstore)
