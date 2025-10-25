@@ -1,0 +1,395 @@
+---
+title: "Turning an Idea into a Tool: quzz"
+publishedAt: "2025-10-25"
+keywords: "React Server Components, RSC debugging, Next.js debugging, React debugging tools, server components, withRSCTrace, quzz package, development tools, AsyncLocalStorage, RSCBoundary, developer experience, first npm package"
+summary: "Building my first npm package. A weekend project that taught me more about JavaScript internals than I expected."
+---
+
+Late night. Terminal full of console.logs. React Server Component refusing to cooperate.
+
+The error message was useless. The stack trace pointed nowhere. React DevTools couldn't help - server components are invisible to it.
+
+I needed to see what was happening inside these components. When they rendered. What props they received. How long they took. Simple stuff.
+
+That's when I decided to build **quzz**.
+
+<Callout>
+  What started as a quick fix turned into a deep dive into AsyncLocalStorage,
+  React's rendering pipeline, and Node.js internals. The solution was 25 lines
+  of code. Getting those 25 lines right took a bit longer.
+</Callout>
+
+This is how I built my first npm package. No drama. Just problem-solving.
+
+## The Problem
+
+React Server Components are great. Until you need to debug them.
+
+<ConsCard
+  cons={[
+    "React DevTools doesn't work with server components",
+    "Console.log appears somewhere, maybe, eventually",
+    "Error messages show useless stack traces",
+    "No visibility into component performance",
+    "Props are invisible during debugging",
+  ]}
+/>
+
+I needed to see what was happening. When. Where. How long it took. What props were passed. When it failed and why.
+
+The solution seemed simple: wrap the component, log some stuff, done.
+
+It wasn't.
+
+## Three Days, Three Problems
+
+### Day 1: AsyncLocalStorage
+
+"I'll use AsyncLocalStorage to track component context."
+
+Four hours later: "Why is User A seeing User B's traces?"
+
+The problem was simple. React Server Components can be nested, and each request needs isolated context. AsyncLocalStorage should handle this. In theory.
+
+```ts
+// Looks simple. Wasn't.
+getContext() {
+  if (this.asyncLocalStorage) {
+    let context = this.asyncLocalStorage.getStore();
+    if (context) return context;
+
+    // If no context exists, create one
+    let newContext = { traceStack: [], traceMap: new Map() };
+    this.asyncLocalStorage.enterWith(newContext);
+    return newContext;
+  }
+  // Fallback to global context
+  return { traceStack: this.globalTraceStack, traceMap: this.globalTraceMap };
+}
+```
+
+What I learned about AsyncLocalStorage:
+
+- Use `enterWith()` wrong? Context disappears. No error message.
+- Promise.resolve() in the wrong place? Context gone.
+- Nested async functions? Unpredictable.
+
+The fix: Both a fallback mechanism AND careful async boundary management. Every Promise, every await needed special handling.
+
+Took me all night to figure that out.
+
+### Day 2: Measuring What Doesn't Exist Yet
+
+"I'll measure how long components take to render."
+
+First attempt:
+
+```tsx
+// Always measured 0ms
+export function RSCBoundary({ label, children }) {
+  const start = Date.now();
+  // Children haven't rendered yet...
+  const end = Date.now();
+  console.log(`${label} took ${end - start}ms`); // 0ms
+  return children;
+}
+```
+
+Problem: `children` in RSC is a promise that resolves to rendered content. Sometimes. Maybe.
+
+I spent the afternoon reading Next.js source code. Found the answer buried in a comment.
+
+The actual requirements:
+
+- Measure real render time, not function execution
+- Track CPU time and wall clock time separately
+- Maintain context through async rendering
+- Handle nested boundaries correctly
+
+The solution:
+
+```ts
+async function RSCBoundary({ label, children, trackTotalLatency }) {
+  const computeStart = performance.now();
+  const wallStart = trackTotalLatency ? Date.now() : 0;
+
+  try {
+    // Promise.resolve() waits for rendering
+    const result = await Promise.resolve(children);
+
+    const computeTime = performance.now() - computeStart;
+    const wallTime = wallStart ? Date.now() - wallStart : computeTime;
+
+    // Now you can see: 50ms CPU, 2000ms total = slow DB query
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+```
+
+This simple change made everything visible. Component takes 2 seconds but only uses 50ms of CPU? You've got a slow database query. Clear as day.
+
+### Day 3: The Reality Check
+
+Showed it to a friend. Reality hit hard.
+
+My first version:
+
+```ts
+import { quzz, QuzzProvider } from "quzz";
+
+const config = {
+  logLevel: "info",
+  outputFormat: "pretty",
+  performance: { enabled: true, warnThreshold: 500 },
+  // ... 15 more options
+};
+
+export default function RootLayout({ children }) {
+  return <QuzzProvider config={config}>{children}</QuzzProvider>;
+}
+```
+
+"I need to read docs for this?"
+
+"The config is straightforward..."
+
+"Pass."
+
+He was right. A debugging tool shouldn't need debugging to set up.
+
+Back to the drawing board. New principle: one line or it's too complex.
+
+```tsx
+import { withRSCTrace } from "quzz";
+
+async function UserProfile({ userId }) {
+  const user = await fetchUser(userId);
+  return <div>{user.name}</div>;
+}
+
+export default withRSCTrace(UserProfile);
+```
+
+One import. One wrapper. Done.
+
+The lesson: Make the simple case trivial, the complex case possible.
+
+## How It Works
+
+Four parts, working together:
+
+**ConfigManager** - Checks environment, handles configuration
+**TraceContext** - Manages AsyncLocalStorage, keeps requests isolated
+**PerformanceMonitor** - Tracks metrics, auto-cleans old data
+**Logger** - Formats output for terminal or JSON
+
+The core:
+
+```javascript
+export function withRSCTrace(Component, options) {
+  if (!isEnabled()) return Component;
+
+  return async (props) => {
+    const start = performance.now();
+    const traceId = generateTraceId();
+
+    startTrace({ componentName, traceId, props });
+
+    try {
+      const result = await Component(props);
+      const duration = performance.now() - start;
+
+      recordRender(componentName, duration);
+      logInfo(`Rendered in ${duration.toFixed(2)}ms`);
+
+      return result;
+    } catch (error) {
+      logError(error, { componentName, props, duration });
+      throw error;
+    } finally {
+      endTrace(traceId);
+    }
+  };
+}
+```
+
+25 lines of actual logic. Everything else is making those 25 lines reliable.
+
+## What quzz Gives You
+
+<ProsCard
+  pros={[
+    "Clear visibility",
+    "Component render times with CPU and wall clock separation",
+    "Props logging with automatic sensitive data redaction",
+    "Full error context with component hierarchy",
+    "Performance warnings for slow components",
+    "Automatic request isolation - no trace mixing",
+  ]}
+/>
+
+Your terminal output becomes actually useful:
+
+```bash
+# Normal render
+ℹ️ UserProfile rendered in 142ms
+Props: { userId: "user_123" }
+
+# Slow component
+⚠️ DataTable: Slow render detected: 523ms
+Props: { filters: { status: "active", limit: 100 } }
+
+# Error with context
+❌ PaymentProcessor: Payment processing failed
+Props: { orderId: "order_123" }
+Stack trace: app/payments/processor.ts:45
+```
+
+Everything in one place. Clean. Organized. Useful.
+
+## Beyond the Basics
+
+Once you're comfortable with `withRSCTrace`, there are some power features:
+
+### RSCBoundary - For Sections, Not Components
+
+Sometimes you want to trace a section of your page without wrapping individual components:
+
+```jsx
+import { RSCBoundary } from "quzz";
+
+export default async function Dashboard({ userId }) {
+  return (
+    <RSCBoundary label="dashboard" trackTotalLatency={true}>
+      <div className="dashboard">
+        <RSCBoundary label="user-section">
+          <UserProfile userId={userId} />
+        </RSCBoundary>
+        <RSCBoundary label="feed-section" performance={{ warnThreshold: 200 }}>
+          <UserFeed userId={userId} />
+        </RSCBoundary>
+      </div>
+    </RSCBoundary>
+  );
+}
+```
+
+This is great for tracking "which section of my dashboard is slow" without modifying every component.
+
+### Plugins - Hook Into Everything
+
+Want to send errors to Sentry? Performance metrics to Datadog? Just write a plugin:
+
+```ts
+const sentryPlugin = {
+  onError: async (metadata, error) => {
+    Sentry.captureException(error, {
+      tags: { component: metadata.componentName },
+      extra: { props: metadata.props },
+    });
+  },
+};
+
+configure({ plugins: [sentryPlugin] });
+```
+
+### Visualizer (Coming Soon)
+
+I'm working on a CLI tool that visualizes traces as a timeline. It's still rough around the edges, but it's coming in v0.3.0:
+
+```bash
+npx quzz-viz ./traces.json
+# Opens a web UI showing your component tree and timing
+```
+
+## Production Safety First
+
+One thing I was paranoid about: quzz should NEVER impact production. Ever.
+
+So I built multiple safety layers:
+
+```ts
+// Layer 1: Environment check
+if (process.env.NODE_ENV === "production" && !config.forceEnable) {
+  return Component; // Complete no-op
+}
+
+// Layer 2: Runtime check
+if (typeof window !== "undefined") {
+  return Component; // Only works on server
+}
+
+// Layer 3: Manual override
+if (process.env.QUZZ_DISABLE === "true") {
+  return Component;
+}
+```
+
+If you deploy to production with quzz, it's automatically disabled. Zero overhead. Zero logs. It's like it's not even there.
+
+(Unless you explicitly set `forceEnable: true`, but don't do that. Seriously. Don't.)
+
+## Lessons From Building quzz
+
+**Build what people need, not what you think is cool.**
+Started with AI-powered insights. Deleted it all. People just wanted working console.logs.
+
+**If it takes more than 30 seconds to use, it's too complex.**
+First version had 20 config options. Current version: one import.
+
+**Production safety is non-negotiable.**
+Someone deployed with debug logging on. Their server crashed. Now quzz has triple-redundant production checks.
+
+**AsyncLocalStorage will teach you humility.**
+Thought I knew JavaScript. AsyncLocalStorage proved otherwise.
+
+**Simple is harder than complex.**
+Getting from 20 config options to 1 was harder than building the initial 20.
+
+## The 30-Second Test
+
+```bash
+npm install quzz
+```
+
+<br />
+
+```tsx
+import { withRSCTrace } from "quzz";
+
+async function MyComponent({ data }) {
+  const result = await fetchData(data);
+  return <div>{result}</div>;
+}
+
+export default withRSCTrace(MyComponent);
+```
+
+That's it. If it takes you longer than 30 seconds, I failed.
+
+## What Matters
+
+Someone opened a GitHub issue last week. Not a bug. Just to say thanks. They found a memory leak that had been crashing their server for weeks.
+
+That made the whole weekend worth it.
+
+## Current Status
+
+quzz v0.2.0 is on [npm](https://www.npmjs.com/package/quzz). 500+ weekly downloads. Nothing viral. Just useful.
+
+The code's on [GitHub](https://github.com/onurhan1337/quzz). Some parts are messy. There are TODOs. But it works.
+
+## Final Thoughts
+
+Building your first npm package teaches you things. Not just about code. About simplicity. About what developers actually need versus what you think they need.
+
+You start wanting to solve everyone's problems. You end up solving one problem well. And sometimes, that's enough.
+
+Someone installs your package. Wraps their component. Finds their bug. Moves on with their day.
+
+Small victories. But they add up.
+
+<BuyMeACoffee username="onurhan" />
