@@ -2,38 +2,22 @@
 
 import { cn } from "@/lib/utils";
 import type { Blog } from "@/types/blog";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { BlogList } from "./blog-list";
 import { Button } from "./ui/button";
 
 interface PaginationProps {
-  allBlogs: Blog[];
-  postsPerPage?: number;
+  blogs: Blog[];
+  currentPage: number;
+  totalPages: number;
 }
 
 export default function Pagination({
-  allBlogs,
-  postsPerPage = 5,
+  blogs,
+  currentPage,
+  totalPages,
 }: PaginationProps) {
   const router = useRouter();
-  const searchParamsHook = useSearchParams();
-
-  const { currentPage, totalPages, paginatedBlogs } = useMemo(() => {
-    const searchParams = searchParamsHook ?? new URLSearchParams();
-    const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
-    const totalPages = Math.max(1, Math.ceil(allBlogs.length / postsPerPage));
-
-    const paginatedBlogs = [...allBlogs]
-      .sort(
-        (a, b) =>
-          new Date(b.metadata.publishedAt).getTime() -
-          new Date(a.metadata.publishedAt).getTime()
-      )
-      .slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
-
-    return { currentPage, totalPages, paginatedBlogs };
-  }, [allBlogs, searchParamsHook, postsPerPage]);
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -43,7 +27,7 @@ export default function Pagination({
 
   return (
     <>
-      <BlogList blogs={paginatedBlogs} currentPage={currentPage} />
+      <BlogList blogs={blogs} currentPage={currentPage} />
       <nav
         aria-label="Blog pagination"
         className="flex justify-center gap-4 mt-12"

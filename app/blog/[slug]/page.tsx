@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { getBlogPosts } from "@/app/db/blog";
+import { getAllBlogPosts } from "@/app/db/blog";
 import Claps from "@/components/claps";
 import { CustomMDX } from "@/components/mdx";
 import TableOfContents from "@/components/table-of-contents";
@@ -16,7 +16,7 @@ export async function generateMetadata({
   params,
 }: Props): Promise<Metadata | undefined> {
   const { slug } = await params;
-  const blog = getBlogPosts().find((blog) => blog.slug === slug);
+  const blog = getAllBlogPosts().find((blog) => blog.slug === slug);
 
   if (!blog) {
     return;
@@ -67,7 +67,7 @@ export async function generateMetadata({
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const blog = getBlogPosts().find((blog) => blog.slug === slug);
+  const blog = getAllBlogPosts().find((blog) => blog.slug === slug);
   const headings = blog ? extractHeadings(blog.content) : [];
 
   if (!blog) {

@@ -1,8 +1,8 @@
-import { getBlogPosts } from "app/db/blog";
+import { getAllBlogPosts } from "app/db/blog";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  let blogs = getBlogPosts().map((blog) => ({
+  let blogs = getAllBlogPosts().map((blog) => ({
     url: `https://onurhan.dev/blog/${blog.slug}`,
     lastModified: blog.metadata.publishedAt,
     changeFrequency: "monthly" as const,

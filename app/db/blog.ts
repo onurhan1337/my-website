@@ -74,6 +74,29 @@ function getMDXData(dir) {
   });
 }
 
-export function getBlogPosts() {
-  return getMDXData(path.join(process.cwd(), "content"));
+function getAllBlogPostsSorted() {
+  const allPosts = getMDXData(path.join(process.cwd(), "content"));
+  return [...allPosts].sort(
+    (left, right) =>
+      new Date(right.metadata.publishedAt).getTime() -
+      new Date(left.metadata.publishedAt).getTime()
+  );
+}
+
+export function getAllBlogPosts() {
+  return getAllBlogPostsSorted();
+}
+
+export function getBlogPosts(page: number = 1, limit: number = 5) {
+  const sortedPosts = getAllBlogPostsSorted();
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
+
+  return {
+    posts: paginatedPosts,
+    total: sortedPosts.length,
+    totalPages: Math.ceil(sortedPosts.length / limit),
+  };
 }

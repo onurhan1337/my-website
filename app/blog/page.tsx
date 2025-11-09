@@ -9,13 +9,23 @@ export const metadata: Metadata = {
   description: "Read my thoughts on software development, design, and more.",
 };
 
-export default function Blog() {
-  const allBlogs = getBlogPosts();
+interface BlogPageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function Blog({ searchParams }: BlogPageProps) {
+  const { page = "1" } = await searchParams;
+  const currentPage = Math.max(1, Number(page));
+  const { posts, totalPages } = getBlogPosts(currentPage);
 
   return (
     <Container size="large">
       <Suspense fallback={<div>Loading...</div>}>
-        <Pagination allBlogs={allBlogs} />
+        <Pagination
+          blogs={posts}
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </Suspense>
     </Container>
   );
