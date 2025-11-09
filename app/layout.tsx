@@ -6,7 +6,10 @@ import "./globals.css";
 
 import { Header } from "@/components/header";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -85,10 +88,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} bg-background text-foreground overflow-y-scroll`}
-      >
+    <html lang="en" className={inter.className}>
+      <body className="bg-background text-foreground overflow-y-scroll">
         <main className="antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row mt-2 sm:mt-8 lg:mx-auto bg-background">
           <section className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
             <Header />
