@@ -1,8 +1,8 @@
 import { SocialButtonProps } from "@/types";
 import IconArrowRightUp from "./shared/icons/arrow-right-up";
-import IconYoutube from "./shared/icons/youtube";
+import IconLinkedIn from "./shared/icons/linkedin";
 import IconGithub from "./shared/icons/github";
-import IconCv from "./shared/icons/cv";
+import IconX from "./shared/icons/x";
 
 import Link from "next/link";
 
@@ -26,10 +26,10 @@ function SocialButton({ href, children }: SocialButtonProps) {
 export default function Social() {
   return (
     <div className="flex flex-col gap-2 md:flex-row md:gap-2">
-      <SocialButton href="https://youtube.com/@onurhandev">
+      <SocialButton href="https://linkedin.com/in/onurhan-demir">
         <div className="flex flex-row items-center">
-          <IconYoutube />
-          <span className="ml-3 text-[15px] tracking-tight">Youtube</span>
+          <IconLinkedIn />
+          <span className="ml-3 text-[15px] tracking-tight">LinkedIn</span>
         </div>
       </SocialButton>
       <SocialButton href="https://github.com/onurhan1337">
@@ -38,10 +38,10 @@ export default function Social() {
           <span className="ml-3 text-[15px] tracking-tight">Github</span>
         </div>
       </SocialButton>
-      <SocialButton href="https://read.cv/onurhan">
+      <SocialButton href="https://x.com/onurhan1337">
         <div className="flex flex-row items-center">
-          <IconCv />
-          <span className="ml-3 text-[15px] tracking-tight">Read.cv</span>
+          <IconX />
+          <span className="ml-3 text-[15px] tracking-tight">X / Twitter</span>
         </div>
       </SocialButton>
     </div>
