@@ -1,43 +1,43 @@
 import { type ClassValue, clsx } from "clsx";
 import { unstable_noStore } from "next/cache";
 import { twMerge } from "tailwind-merge";
+import type { FormatDateOptions, Heading } from "@/types";
 
-export function cn(...inputs: ClassValue[]) {
+export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string, options?: { time?: boolean }) {
+export function formatDate(date: string, options?: FormatDateOptions): string {
   unstable_noStore();
-  let currentDate = new Date();
-  if (!date.includes("T")) {
-    date = `${date}T00:00:00`;
-  }
-  let targetDate = new Date(date);
+  const currentDate = new Date();
+  const normalizedDate = date.includes("T") ? date : `${date}T00:00:00`;
+  const targetDate = new Date(normalizedDate);
 
-  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  let monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  let daysAgo = currentDate.getDate() - targetDate.getDate();
+  const diffInMs = currentDate.getTime() - targetDate.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const diffInMonths = Math.floor(diffInDays / 30);
+  const diffInYears = Math.floor(diffInDays / 365);
 
   let formattedDate = "";
 
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`;
+  if (diffInYears > 0) {
+    formattedDate = `${diffInYears}y ago`;
+  } else if (diffInMonths > 0) {
+    formattedDate = `${diffInMonths}mo ago`;
+  } else if (diffInDays > 0) {
+    formattedDate = `${diffInDays}d ago`;
   } else {
     formattedDate = "Today";
   }
 
-  let fullDate = targetDate.toLocaleString("en-us", {
+  const fullDate = targetDate.toLocaleString("en-us", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
 
   if (options?.time) {
-    let time = targetDate.toLocaleString("en-us", {
+    const time = targetDate.toLocaleString("en-us", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -48,23 +48,58 @@ export function formatDate(date: string, options?: { time?: boolean }) {
   return `${fullDate} (${formattedDate})`;
 }
 
-export function extractHeadings(content: string) {
-  interface Heading {
-    title: string;
-    id: string;
-  }
+export function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = [];
-  const headingRegex = /^#{2}\s+(.+)$/gm;
-  let match;
+  const len = content.length;
+  let i = 0;
 
-  while ((match = headingRegex.exec(content)) !== null) {
-    headings.push({
-      title: match[1],
-      id: match[1]
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-"),
-    });
+  while (i < len) {
+    if (content.charCodeAt(i) === 10 || i === 0) {
+      if (i > 0) i++;
+
+      if (
+        i < len &&
+        content.charCodeAt(i) === 35 &&
+        content.charCodeAt(i + 1) === 35 &&
+        content.charCodeAt(i + 2) === 32
+      ) {
+        i += 3;
+        let title = "";
+
+        while (
+          i < len &&
+          content.charCodeAt(i) !== 10 &&
+          content.charCodeAt(i) !== 13
+        ) {
+          title += content[i];
+          i++;
+        }
+
+        title = title.trim();
+
+        let id = "";
+        for (let j = 0; j < title.length; j++) {
+          const code = title.charCodeAt(j);
+          if (
+            (code >= 97 && code <= 122) ||
+            (code >= 48 && code <= 57) ||
+            code === 45
+          ) {
+            id += title[j];
+          } else if (code >= 65 && code <= 90) {
+            id += String.fromCharCode(code + 32);
+          } else if (code === 32) {
+            id += "-";
+          }
+        }
+
+        headings.push({ title, id });
+      } else {
+        i++;
+      }
+    } else {
+      i++;
+    }
   }
 
   return headings;
