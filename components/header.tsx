@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Container from "./shared/container";
+import { AvailabilityBadge } from "./availability-badge";
+import { AvailabilityDialog } from "./availability-dialog";
+import { config } from "@/lib/config";
 
 const NAV_ITEMS = {
   about: "/",
@@ -14,6 +18,7 @@ const NAV_ITEMS = {
 
 export const Header = () => {
   const pathname = usePathname();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <header>
@@ -22,10 +27,21 @@ export const Header = () => {
           className="flex flex-col fade items-center md:items-start justify-start py-12 tracking-tight w-full"
           aria-label="Main navigation"
         >
-          <div className="flex flex-col items-start">
-            <span className="text-base font-medium">Onurhan Demir</span>
-            <span className="text-sm opacity-50">software developer</span>
+          <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-col items-start">
+              <span className="text-base font-medium">Onurhan Demir</span>
+              <span className="text-sm opacity-50">software developer</span>
+            </div>
+            {config.availability.enabled && (
+              <AvailabilityBadge onClick={() => setIsDialogOpen(true)} />
+            )}
           </div>
+          {config.availability.enabled && (
+            <AvailabilityDialog
+              open={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+            />
+          )}
 
           <div className="flex flex-row items-center justify-start w-full mt-12 sm:mt-6 tracking-tight">
             <div className="inline-flex items-center gap-1">
