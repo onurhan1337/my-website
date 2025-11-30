@@ -8,7 +8,7 @@ export type SocialButtonProps = {
 };
 
 export interface CachedResult<T> {
-  metadata: Partial<T>;
+  metadata: T;
   content: string;
   mtime: number;
 }
@@ -24,7 +24,7 @@ export interface FormatDateOptions {
 
 export interface BlogIndexItem<T> {
   slug: string;
-  metadata: Partial<T>;
+  metadata: T;
   readingTime: number;
 }
 

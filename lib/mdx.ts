@@ -122,28 +122,3 @@ export function getReadingTime(content: string): number {
 
   return Math.ceil(readingTime);
 }
-
-export function extractHeadings(
-  content: string
-): Array<{ title: string; id: string }> {
-  if (!content || typeof content !== "string") {
-    return [];
-  }
-
-  const headings: Array<{ title: string; id: string }> = [];
-  const lines = content.split("\n");
-
-  for (const line of lines) {
-    if (line.startsWith("## ")) {
-      const title = line.slice(3).trim();
-      const id = title
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s+/g, "-");
-
-      headings.push({ title, id });
-    }
-  }
-
-  return headings;
-}

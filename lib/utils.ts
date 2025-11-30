@@ -49,57 +49,32 @@ export function formatDate(date: string, options?: FormatDateOptions): string {
 }
 
 export function extractHeadings(content: string): Heading[] {
+  if (!content || typeof content !== "string") {
+    return [];
+  }
+
   const headings: Heading[] = [];
   const len = content.length;
   let i = 0;
+  let lineStart = 0;
 
-  while (i < len) {
-    if (content.charCodeAt(i) === 10 || i === 0) {
-      if (i > 0) i++;
+  while (i <= len) {
+    if (i === len || content.charCodeAt(i) === 10) {
+      const line = content.slice(lineStart, i);
 
-      if (
-        i < len &&
-        content.charCodeAt(i) === 35 &&
-        content.charCodeAt(i + 1) === 35 &&
-        content.charCodeAt(i + 2) === 32
-      ) {
-        i += 3;
-        let title = "";
-
-        while (
-          i < len &&
-          content.charCodeAt(i) !== 10 &&
-          content.charCodeAt(i) !== 13
-        ) {
-          title += content[i];
-          i++;
-        }
-
-        title = title.trim();
-
-        let id = "";
-        for (let j = 0; j < title.length; j++) {
-          const code = title.charCodeAt(j);
-          if (
-            (code >= 97 && code <= 122) ||
-            (code >= 48 && code <= 57) ||
-            code === 45
-          ) {
-            id += title[j];
-          } else if (code >= 65 && code <= 90) {
-            id += String.fromCharCode(code + 32);
-          } else if (code === 32) {
-            id += "-";
-          }
-        }
+      if (line.startsWith("## ")) {
+        const title = line.slice(3).trim();
+        const id = title
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-");
 
         headings.push({ title, id });
-      } else {
-        i++;
       }
-    } else {
-      i++;
+
+      lineStart = i + 1;
     }
+    i++;
   }
 
   return headings;

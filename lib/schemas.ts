@@ -7,7 +7,7 @@ export const blogMetadataSchema = z.object({
   title: z.string().min(1, "Title is required"),
   publishedAt: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}/, "Invalid date format. Expected YYYY-MM-DD"),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
   summary: z.string().min(1, "Summary is required"),
   keywords: z
     .union([
@@ -33,7 +33,7 @@ export const thoughtMetadataSchema = z.object({
   }),
   createdAt: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}/, "Invalid date format. Expected YYYY-MM-DD"),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
 });
 
 /**

@@ -62,12 +62,12 @@ function getMDXListData(dir: string): BlogListItem[] {
   for (const file of mdxFiles) {
     try {
       const filePath = path.join(dir, file);
-      const metadata = getMDXMetadata<Record<string, string>>(filePath);
+      const { metadata, content } =
+        getMDXMetadata<Record<string, string>>(filePath);
       const slug = path.basename(file, path.extname(file));
 
       const validatedMetadata = validateBlogMetadata(metadata);
 
-      const { content } = readMDXFile<Record<string, string>>(filePath);
       const readingTime = getReadingTime(content);
 
       posts.push({
