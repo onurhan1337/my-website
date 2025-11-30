@@ -1,4 +1,27 @@
 import Container from "@/components/shared/container";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Work",
+  description:
+    "Onurhan Demir's professional experience and work history. Software Developer at Insider, Frontend Engineer at Utilify. Building B2B SaaS solutions and web applications.",
+  keywords: [
+    "Onurhan Demir Work",
+    "Onurhan Demir Experience",
+    "Onurhan Demir Career",
+    "Software Developer Turkey",
+    "Full Stack Developer Experience",
+  ],
+  openGraph: {
+    title: "Work | Onurhan Demir",
+    description:
+      "Onurhan Demir's professional experience and work history. Software Developer specializing in full-stack development.",
+    url: "https://onurhan.dev/work",
+  },
+  alternates: {
+    canonical: "https://onurhan.dev/work",
+  },
+};
 
 export default function Work() {
   return (
@@ -23,28 +46,28 @@ export default function Work() {
               </time>
             </header>
             <p className="text-[15px] leading-relaxed opacity-80">
-              At Insider, I am part of the Partner Solution Development team,
-              where I contribute to the development of B2B SaaS solutions
-              tailored to our clients&apos; needs. My role involves
+              At Insider, I was part of the Partner Solution Development team,
+              where I contributed to the development of B2B SaaS solutions
+              tailored to our clients&apos; needs. My role involved
               collaborating with cross-functional teams to deliver scalable and
-              efficient software solutions that help businesses grow and
+              efficient software solutions that helped businesses grow and
               optimize their workflows.
             </p>
             <ul className="text-[15px] leading-relaxed opacity-80">
               <li>
-                Developing and customizing solutions for enterprise clients to
+                Developed and customized solutions for enterprise clients to
                 enhance their business operations.
               </li>
               <li>
-                Collaborating closely with product managers and designers to
+                Collaborated closely with product managers and designers to
                 deliver user-centric features for B2B applications.
               </li>
               <li>
-                Implementing efficient and maintainable codebases using modern
+                Implemented efficient and maintainable codebases using modern
                 software development practices.
               </li>
               <li>
-                Actively improving existing systems by identifying bottlenecks
+                Actively improved existing systems by identifying bottlenecks
                 and implementing optimizations.
               </li>
             </ul>

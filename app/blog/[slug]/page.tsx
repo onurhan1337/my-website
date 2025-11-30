@@ -35,6 +35,8 @@ export async function generateMetadata({
       process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
     ).toString() + `?title=${encodeURIComponent(title)}`;
 
+  const blogUrl = `https://onurhan.dev/blog/${blog.slug}`;
+
   return {
     title,
     description,
@@ -44,7 +46,10 @@ export async function generateMetadata({
       description,
       type: "article",
       publishedTime,
-      url: `https://onurhan.dev/blog/${blog.slug}`,
+      url: blogUrl,
+      siteName: "Onurhan Demir",
+      locale: "en_US",
+      alternateLocale: ["tr_TR"],
       images: [
         {
           url: ogImage,
@@ -61,6 +66,13 @@ export async function generateMetadata({
       site: "@onurhan1337",
       creator: "@onurhan1337",
       images: [ogImage],
+    },
+    alternates: {
+      canonical: blogUrl,
+      languages: {
+        en: blogUrl,
+        tr: blogUrl,
+      },
     },
   };
 }
@@ -85,16 +97,33 @@ export default async function BlogDetailPage({ params }: Props) {
             "@type": "BlogPosting",
             headline: blog.metadata.title,
             datePublished: blog.metadata.publishedAt,
-            dateModified: blog.metadata.publishedAt,
+            dateModified:
+              blog.metadata.publishedAt || blog.metadata.publishedAt,
             description: blog.metadata.summary,
             image: blog.metadata.image
               ? `https://onurhan.dev${blog.metadata.image}`
               : `https://onurhan.dev/og?title=${blog.metadata.title}`,
             url: `https://onurhan.dev/blog/${blog.slug}`,
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://onurhan.dev/blog/${blog.slug}`,
+            },
             author: {
               "@type": "Person",
               name: "Onurhan Demir",
+              url: "https://onurhan.dev",
+              sameAs: [
+                "https://github.com/onurhan1337",
+                "https://youtube.com/@onurhandev",
+                "https://x.com/onurhan1337",
+              ],
             },
+            publisher: {
+              "@type": "Person",
+              name: "Onurhan Demir",
+              url: "https://onurhan.dev",
+            },
+            inLanguage: "en-US",
           }),
         }}
       />

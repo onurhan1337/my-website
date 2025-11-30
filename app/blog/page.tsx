@@ -6,7 +6,25 @@ import { getBlogPosts } from "../db/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Read my thoughts on software development, design, and more.",
+  description:
+    "Read Onurhan Demir's thoughts on software development, design, React, Next.js, TypeScript, and modern web technologies. Articles about building web applications and B2B SaaS solutions.",
+  keywords: [
+    "Onurhan Demir Blog",
+    "Software Development Blog",
+    "React Blog",
+    "Next.js Blog",
+    "TypeScript Blog",
+    "Web Development Articles",
+  ],
+  openGraph: {
+    title: "Blog | Onurhan Demir",
+    description:
+      "Read Onurhan Demir's thoughts on software development, design, and modern web technologies.",
+    url: "https://onurhan.dev/blog",
+  },
+  alternates: {
+    canonical: "https://onurhan.dev/blog",
+  },
 };
 
 interface BlogPageProps {

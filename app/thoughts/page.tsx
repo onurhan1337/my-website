@@ -5,7 +5,23 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Thoughts",
-  description: "Quick thoughts, ideas, code snippets, quotes, and book notes.",
+  description:
+    "Quick thoughts, ideas, code snippets, quotes, and book notes by Onurhan Demir. Insights on software development, technology, and learning.",
+  keywords: [
+    "Onurhan Demir Thoughts",
+    "Onurhan Demir Ideas",
+    "Software Development Thoughts",
+    "Tech Notes",
+  ],
+  openGraph: {
+    title: "Thoughts | Onurhan Demir",
+    description:
+      "Quick thoughts, ideas, code snippets, quotes, and book notes by Onurhan Demir.",
+    url: "https://onurhan.dev/thoughts",
+  },
+  alternates: {
+    canonical: "https://onurhan.dev/thoughts",
+  },
 };
 
 export default async function ThoughtsPage() {

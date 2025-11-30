@@ -1,6 +1,30 @@
 import Container from "@/components/shared/container";
 import Social from "@/components/social";
 import Script from "next/script";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Based in Turkey.",
+  keywords: [
+    "Onurhan Demir",
+    "Onurhan Demir About",
+    "Onurhan Demir Software Developer",
+    "Onurhan Demir Türkiye",
+    "Software Developer Turkey",
+    "Full Stack Developer Turkey",
+  ],
+  openGraph: {
+    title: "About | Onurhan Demir",
+    description:
+      "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products.",
+    url: "https://onurhan.dev",
+  },
+  alternates: {
+    canonical: "https://onurhan.dev",
+  },
+};
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -10,7 +34,7 @@ const structuredData = {
   jobTitle: "Software Developer",
   url: "https://onurhan.dev",
   description:
-    "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies.",
+    "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Available for new opportunities.",
   knowsAbout: [
     "Software Development",
     "Web Development",
@@ -24,9 +48,24 @@ const structuredData = {
   sameAs: [
     "https://github.com/onurhan1337",
     "https://youtube.com/@onurhandev",
-    "https://read.cv/onurhan",
-    "https://twitter.com/onurhan1337",
+    "https://x.com/onurhan1337",
   ],
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "TR",
+    addressLocality: "Turkey",
+  },
+  nationality: {
+    "@type": "Country",
+    name: "Turkey",
+  },
+  jobLocation: {
+    "@type": "Place",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "TR",
+    },
+  },
 };
 
 export default function About() {
@@ -41,7 +80,9 @@ export default function About() {
       size="large"
       className="prose prose-zinc container animate-enter"
     >
-      <p className="text-lg font-medium tracking-tight mb-8">Hi, I&apos;m Onurhan.</p>
+      <p className="text-lg font-medium tracking-tight mb-8">
+        Hi, I&apos;m Onurhan.
+      </p>
       {paragraphs.map((paragraph, index) => (
         <div
           key={index}
@@ -51,7 +92,11 @@ export default function About() {
             }
           }
         >
-          <p className={`text-[15px] leading-relaxed opacity-80 ${index === paragraphs.length - 1 ? "mb-8" : "mb-6"}`}>
+          <p
+            className={`text-[15px] leading-relaxed opacity-80 ${
+              index === paragraphs.length - 1 ? "mb-8" : "mb-6"
+            }`}
+          >
             {paragraph}
           </p>
           {index === 0 && <hr className="border-foreground/10 my-8" />}
