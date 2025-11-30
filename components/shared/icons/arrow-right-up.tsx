@@ -1,4 +1,4 @@
-import { ISVGProps } from "@/types";
+import type { ISVGProps } from "@/types";
 
 export default function IconArrowRightUp({ size = 24, ...props }: ISVGProps) {
   return (

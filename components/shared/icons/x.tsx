@@ -1,4 +1,4 @@
-import { ISVGProps } from "@/types";
+import type { ISVGProps } from "@/types";
 
 export default function IconX({ size = 16, ...props }: ISVGProps) {
   return (

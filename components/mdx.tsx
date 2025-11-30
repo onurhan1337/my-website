@@ -2,7 +2,7 @@ import { ArrowUpRight, Coffee } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Image from "next/image";
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { highlight } from "sugar-high";
 import { CopyCode } from "./copy-code";
 import { ExpandableCode } from "./expandable-code";
@@ -26,7 +26,7 @@ import type { LinkCardProps, BuyMeACoffeeProps } from "@/types";
 const LONG_CODE_THRESHOLD = 15;
 
 function Table({ data }: { data: TableData }) {
-  let headers = data.headers.map((header, index) => (
+  const headers = data.headers.map((header, index) => (
     <th
       key={index}
       className="border-b border-neutral-200
@@ -39,7 +39,7 @@ function Table({ data }: { data: TableData }) {
     </th>
   ));
 
-  let rows = data.rows.map((row, index) => (
+  const rows = data.rows.map((row, index) => (
     <tr
       key={index}
       className="group transition-colors hover:bg-muted/50 text-start tracking-wide"
@@ -243,8 +243,8 @@ function slugify(str: ReactNode): string {
     .trim()
     .replace(/\s+/g, "-")
     .replace(/&/g, "-and-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-");
+    .replace(/[^\w-]+/g, "")
+    .replace(/--+/g, "-");
 }
 
 function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {

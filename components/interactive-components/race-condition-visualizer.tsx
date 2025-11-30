@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import type React from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo } from 'react';
 
@@ -414,7 +415,7 @@ export const RaceConditionVisualizer = () => {
           description: "Initial value read by Goroutine 1"
         }]);
         break;
-      case 3:
+      case 3: {
         // First goroutine writes
         const expectedAfterIncrement = sharedState + 1;
         setCurrentStep({
@@ -437,6 +438,7 @@ export const RaceConditionVisualizer = () => {
           }
         ]);
         break;
+      }
       case 4:
         // Second goroutine writes
         setCurrentStep({
