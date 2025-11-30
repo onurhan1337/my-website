@@ -1,51 +1,124 @@
-import fs from "fs";
 import path from "path";
+import { unstable_cache } from "next/cache";
+import type {
+  Thought,
+  ThoughtPost,
+  ThoughtListItem,
+  ThoughtMetadata,
+} from "@/types/thought";
+import { getMDXFiles, readMDXFile, getMDXMetadata } from "@/lib/mdx";
+import { validateThoughtMetadata } from "@/lib/schemas";
 
-type Metadata = {
-  type: "code" | "idea" | "quote" | "book";
-  createdAt: string;
-};
+function getMDXData(dir: string): ThoughtPost[] {
+  const mdxFiles = getMDXFiles(dir);
+  const thoughts: ThoughtPost[] = [];
+  const errors: string[] = [];
 
-function parseFrontmatter(fileContent: string) {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
-  let content = fileContent.replace(frontmatterRegex, "").trim();
-  let frontMatterLines = frontMatterBlock.trim().split("\n");
-  let metadata: Partial<Metadata> = {};
+  for (const file of mdxFiles) {
+    try {
+      const { metadata, content } = readMDXFile<Record<string, string>>(
+        path.join(dir, file)
+      );
+      const slug = path.basename(file, path.extname(file));
 
-  frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(": ");
-    let value = valueArr.join(": ").trim();
-    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    (metadata as Metadata)[key.trim()] = value as any;
-  });
+      const validatedMetadata = validateThoughtMetadata(metadata);
+      thoughts.push({
+        metadata: validatedMetadata,
+        slug,
+        content,
+      });
+    } catch (error) {
+      errors.push(
+        `Invalid metadata in ${file}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
 
-  return { metadata: metadata as Metadata, content };
+  if (errors.length > 0) {
+    console.error("Thought validation errors:", errors);
+  }
+
+  return thoughts.sort(
+    (left, right) =>
+      new Date(right.metadata.createdAt).getTime() -
+      new Date(left.metadata.createdAt).getTime()
+  );
 }
 
-function getMDXFiles(dir) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
+function getMDXListData(dir: string): ThoughtListItem[] {
+  const mdxFiles = getMDXFiles(dir);
+  const thoughts: ThoughtListItem[] = [];
+  const errors: string[] = [];
+
+  for (const file of mdxFiles) {
+    try {
+      const filePath = path.join(dir, file);
+      const metadata = getMDXMetadata<Record<string, string>>(filePath);
+      const slug = path.basename(file, path.extname(file));
+
+      const validatedMetadata = validateThoughtMetadata(metadata);
+      thoughts.push({
+        metadata: validatedMetadata,
+        slug,
+      });
+    } catch (error) {
+      errors.push(
+        `Invalid metadata in ${file}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error("Thought validation errors:", errors);
+  }
+
+  return thoughts.sort(
+    (left, right) =>
+      new Date(right.metadata.createdAt).getTime() -
+      new Date(left.metadata.createdAt).getTime()
+  );
 }
 
-function readMDXFile(filePath) {
-  let rawContent = fs.readFileSync(filePath, "utf-8");
-  return parseFrontmatter(rawContent);
+const getCachedThoughtsData = unstable_cache(
+  async (dir: string): Promise<ThoughtPost[]> => getMDXData(dir),
+  ["thoughts"],
+  {
+    revalidate: 3600,
+    tags: ["thoughts"],
+  }
+);
+
+const getCachedThoughtsListData = unstable_cache(
+  async (dir: string): Promise<ThoughtListItem[]> => getMDXListData(dir),
+  ["thoughts-list"],
+  {
+    revalidate: 3600,
+    tags: ["thoughts"],
+  }
+);
+
+export async function getThoughts(): Promise<Thought[]> {
+  return getCachedThoughtsData(path.join(process.cwd(), "thoughts"));
 }
 
-function getMDXData(dir) {
-  let mdxFiles = getMDXFiles(dir);
-  return mdxFiles.map((file) => {
-    let { metadata, content } = readMDXFile(path.join(dir, file));
-    let slug = path.basename(file, path.extname(file));
-    return {
-      metadata,
-      slug,
-      content,
-    };
-  });
+export async function getThoughtsList(): Promise<ThoughtListItem[]> {
+  return getCachedThoughtsListData(path.join(process.cwd(), "thoughts"));
 }
 
-export function getThoughts() {
-  return getMDXData(path.join(process.cwd(), "thoughts"));
+export async function getThought(slug: string): Promise<ThoughtPost | null> {
+  const thoughts = await getCachedThoughtsData(
+    path.join(process.cwd(), "thoughts")
+  );
+  return thoughts.find((thought) => thought.slug === slug) ?? null;
+}
+
+export async function getThoughtsByType(
+  type: ThoughtMetadata["type"]
+): Promise<Thought[]> {
+  const thoughts = await getThoughts();
+  return thoughts.filter((thought) => thought.metadata.type === type);
 }
