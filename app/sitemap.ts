@@ -4,7 +4,8 @@ import { MetadataRoute } from "next";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://onurhan.dev";
 
-  let blogs = getAllBlogPosts().map((blog) => ({
+  const allBlogPosts = await getAllBlogPosts();
+  let blogs = allBlogPosts.map((blog) => ({
     url: `${baseUrl}/blog/${blog.slug}`,
     lastModified: blog.metadata.publishedAt,
     changeFrequency: "monthly" as const,

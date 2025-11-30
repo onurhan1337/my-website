@@ -8,6 +8,8 @@ import { CustomMDX } from "@/components/mdx";
 import TableOfContents from "@/components/table-of-contents";
 import { extractHeadings, formatDate } from "@/lib/utils";
 
+export const revalidate = 3600;
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -16,20 +18,21 @@ export async function generateMetadata({
   params,
 }: Props): Promise<Metadata | undefined> {
   const { slug } = await params;
-  const blog = getAllBlogPosts().find((blog) => blog.slug === slug);
+  const allPosts = await getAllBlogPosts();
+  const blog = allPosts.find((blog) => blog.slug === slug);
 
   if (!blog) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
     keywords,
   } = blog.metadata;
 
-  let ogImage =
+  const ogImage =
     new URL(
       "/opengraph-image",
       process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
@@ -79,7 +82,8 @@ export async function generateMetadata({
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const blog = getAllBlogPosts().find((blog) => blog.slug === slug);
+  const allPosts = await getAllBlogPosts();
+  const blog = allPosts.find((blog) => blog.slug === slug);
   const headings = blog ? extractHeadings(blog.content) : [];
 
   if (!blog) {
