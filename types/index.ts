@@ -1,3 +1,21 @@
+export type {
+  BlogMetadata,
+  BlogPost,
+  BlogListItem,
+  PaginatedResult,
+  BlogCardProps,
+  BlogListProps,
+  PaginationProps,
+} from "./blog";
+
+export type {
+  ThoughtMetadata,
+  ThoughtPost,
+  ThoughtCardProps,
+  ThoughtsListProps,
+  ThoughtsPaginationProps,
+} from "./thought";
+
 export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
 }
@@ -22,48 +40,8 @@ export interface FormatDateOptions {
   time?: boolean;
 }
 
-export interface BlogIndexItem<T> {
-  slug: string;
-  metadata: T;
-  readingTime: number;
-}
-
-export interface BlogCardProps {
-  blog: import("./blog").Blog;
-}
-
-export interface BlogListProps {
-  blogs: import("./blog").Blog[];
-  currentPage: number;
-}
-
-export interface PaginationProps {
-  blogs: import("./blog").Blog[];
-  currentPage: number;
-  totalPages: number;
-}
-
-export interface ThoughtCardProps {
-  thought: import("./thought").Thought & { renderedContent: React.ReactNode };
-}
-
-export interface ThoughtsListProps {
-  thoughts: (import("./thought").Thought & {
-    renderedContent: React.ReactNode;
-  })[];
-  currentPage: number;
-}
-
-export interface ThoughtsPaginationProps {
-  allThoughts: (import("./thought").Thought & {
-    renderedContent: React.ReactNode;
-  })[];
-  thoughtsPerPage?: number;
-  filter?: string;
-}
-
 export interface TableOfContentsProps {
-  headings: { title: string; id: string }[];
+  headings: Heading[];
 }
 
 export interface AvailabilityBadgeProps {
@@ -120,10 +98,4 @@ export interface CodeStep {
 export interface CodePlaygroundProps {
   steps: CodeStep[];
   language?: string;
-}
-
-export interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }

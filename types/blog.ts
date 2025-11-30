@@ -1,23 +1,7 @@
-export interface Blog {
-  slug: string;
-  metadata: {
-    title: string;
-    publishedAt: string;
-    summary: string;
-    keywords: string[];
-    image?: string;
-  };
-  content: string;
-  readingTime: number;
-}
+import type { z } from "zod";
+import type { blogMetadataSchema } from "@/lib/schemas";
 
-export type BlogMetadata = {
-  title: string;
-  publishedAt: string;
-  summary: string;
-  keywords: string[];
-  image?: string;
-};
+export type BlogMetadata = z.infer<typeof blogMetadataSchema>;
 
 export interface BlogPost {
   metadata: BlogMetadata;
@@ -33,7 +17,22 @@ export interface BlogListItem {
 }
 
 export interface PaginatedResult {
-  posts: Blog[];
+  posts: BlogListItem[];
   total: number;
+  totalPages: number;
+}
+
+export interface BlogCardProps {
+  blog: BlogListItem;
+}
+
+export interface BlogListProps {
+  blogs: BlogListItem[];
+  currentPage: number;
+}
+
+export interface PaginationProps {
+  blogs: BlogListItem[];
+  currentPage: number;
   totalPages: number;
 }

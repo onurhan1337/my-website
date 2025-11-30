@@ -1,16 +1,7 @@
-export interface Thought {
-  slug: string;
-  metadata: {
-    type: "code" | "idea" | "quote" | "book";
-    createdAt: string;
-  };
-  content: string;
-}
+import type { z } from "zod";
+import type { thoughtMetadataSchema } from "@/lib/schemas";
 
-export type ThoughtMetadata = {
-  type: "code" | "idea" | "quote" | "book";
-  createdAt: string;
-};
+export type ThoughtMetadata = z.infer<typeof thoughtMetadataSchema>;
 
 export interface ThoughtPost {
   metadata: ThoughtMetadata;
@@ -18,7 +9,23 @@ export interface ThoughtPost {
   content: string;
 }
 
-export interface ThoughtListItem {
-  metadata: ThoughtMetadata;
-  slug: string;
+export interface ThoughtCardProps {
+  thought: ThoughtPost & {
+    renderedContent: React.ReactNode;
+  };
+}
+
+export interface ThoughtsListProps {
+  thoughts: (ThoughtPost & {
+    renderedContent: React.ReactNode;
+  })[];
+  currentPage: number;
+}
+
+export interface ThoughtsPaginationProps {
+  allThoughts: (ThoughtPost & {
+    renderedContent: React.ReactNode;
+  })[];
+  thoughtsPerPage?: number;
+  filter?: string;
 }
