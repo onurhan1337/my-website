@@ -1,11 +1,6 @@
 import path from "path";
 import { unstable_cache } from "next/cache";
-import type {
-  Blog,
-  BlogPost,
-  BlogListItem,
-  PaginatedResult,
-} from "@/types/blog";
+import type { BlogPost, BlogListItem, PaginatedResult } from "@/types/blog";
 import {
   getMDXFiles,
   readMDXFile,
@@ -63,11 +58,10 @@ function getMDXListData(dir: string): BlogListItem[] {
     try {
       const filePath = path.join(dir, file);
       const { metadata, content } =
-        getMDXMetadata<Record<string, string>>(filePath);
+        readMDXFile<Record<string, string>>(filePath);
       const slug = path.basename(file, path.extname(file));
 
       const validatedMetadata = validateBlogMetadata(metadata);
-
       const readingTime = getReadingTime(content);
 
       posts.push({
@@ -121,7 +115,7 @@ async function getAllBlogPostsListSorted(): Promise<BlogListItem[]> {
   return getCachedMDXListData(path.join(process.cwd(), "content"));
 }
 
-export async function getAllBlogPosts(): Promise<Blog[]> {
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
   return getAllBlogPostsSorted();
 }
 
@@ -136,7 +130,7 @@ export async function getBlogPosts(
   const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
 
   return {
-    posts: paginatedPosts as Blog[],
+    posts: paginatedPosts,
     total: sortedPosts.length,
     totalPages: Math.ceil(sortedPosts.length / limit),
   };

@@ -1,11 +1,11 @@
 import { getAllBlogPosts } from "app/db/blog";
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://onurhan.dev";
 
   const allBlogPosts = await getAllBlogPosts();
-  let blogs = allBlogPosts.map((blog) => ({
+  const blogs = allBlogPosts.map((blog) => ({
     url: `${baseUrl}/blog/${blog.slug}`,
     lastModified: blog.metadata.publishedAt,
     changeFrequency: "monthly" as const,
@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   }));
 
-  let routes = [
+  const routes = [
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
     { path: "/blog", priority: 0.9, changeFrequency: "weekly" as const },
     { path: "/thoughts", priority: 0.8, changeFrequency: "weekly" as const },

@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "./logo.svg",
+    icon: "/logo.svg",
     shortcut: "/logo.svg",
     apple: "/logo.svg",
     other: {
@@ -153,6 +153,7 @@ export default function RootLayout({
         <Script
           id="person-structured-data"
           type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data is safe
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(personStructuredData),
           }}
