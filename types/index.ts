@@ -13,6 +13,15 @@ export interface CachedResult<T> {
   mtime: number;
 }
 
+export interface Heading {
+  title: string;
+  id: string;
+}
+
+export interface FormatDateOptions {
+  time?: boolean;
+}
+
 export interface BlogIndexItem<T> {
   slug: string;
   metadata: Partial<T>;
