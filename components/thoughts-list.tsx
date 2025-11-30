@@ -1,13 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { ThoughtsListProps } from "@/types";
 import { ThoughtCard } from "./thought-card";
-import type { Thought } from "@/types/thought";
-
-interface ThoughtsListProps {
-  thoughts: (Thought & { renderedContent: React.ReactNode })[];
-  currentPage: number;
-}
 
 export function ThoughtsList({ thoughts, currentPage }: ThoughtsListProps) {
   const container = {

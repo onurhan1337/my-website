@@ -6,12 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { X, Copy, Check } from "lucide-react";
 import { highlight } from "sugar-high";
-
-interface CodeExpandModalProps {
-  code: string;
-  language?: string;
-  children: React.ReactNode;
-}
+import type { CodeExpandModalProps } from "@/types";
 
 export function CodeExpandModal({
   code,

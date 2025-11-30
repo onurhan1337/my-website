@@ -8,11 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import Link from "next/link";
-
-interface AvailabilityDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import type { AvailabilityDialogProps } from "@/types";
 
 export function AvailabilityDialog({
   open,

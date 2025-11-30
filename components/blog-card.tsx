@@ -1,6 +1,7 @@
 import Link from "next/link";
+import type { BlogCardProps } from "@/types";
 
-export const BlogCard = ({ blog }) => {
+export const BlogCard = ({ blog }: BlogCardProps) => {
   return (
     <article className="py-6 border-b border-foreground/5 last:border-0">
       <header>

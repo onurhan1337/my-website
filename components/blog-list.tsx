@@ -2,12 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { BlogCard } from "./blog-card";
-import { Blog } from "@/types/blog";
-
-interface BlogListProps {
-  blogs: Blog[];
-  currentPage: number;
-}
+import type { BlogListProps } from "@/types";
 
 export function BlogList({ blogs, currentPage }: BlogListProps) {
   const container = {

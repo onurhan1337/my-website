@@ -21,14 +21,7 @@ interface TableData {
   rows: string[][];
 }
 
-interface LinkCardProps {
-  title: string;
-  link: string;
-}
-
-interface BuyMeACoffeeProps {
-  username: string;
-}
+import type { LinkCardProps, BuyMeACoffeeProps } from "@/types";
 
 const LONG_CODE_THRESHOLD = 15;
 
@@ -95,7 +88,7 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  return <Image {...props} className="rounded-lg" />;
+  return <Image {...props} alt={props.alt || ""} className="rounded-lg" />;
 }
 
 function Callout({ children }: { children: React.ReactNode }) {
@@ -199,12 +192,20 @@ function LinkCard({ title, link }: LinkCardProps) {
 
 function normalizeCodeString(children: ReactNode): string {
   if (React.isValidElement(children)) {
-    return String((children.props as { children?: unknown })?.children ?? children);
+    return String(
+      (children.props as { children?: unknown })?.children ?? children
+    );
   }
   return typeof children === "string" ? children : String(children);
 }
 
-function Code({ children, ...props }: { children: ReactNode; [key: string]: unknown }) {
+function Code({
+  children,
+  ...props
+}: {
+  children: ReactNode;
+  [key: string]: unknown;
+}) {
   const codeString = normalizeCodeString(children);
 
   if (!codeString.includes("\n")) {

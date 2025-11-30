@@ -1,9 +1,5 @@
 import { formatDate } from "@/lib/utils";
-import type { Thought } from "@/types/thought";
-
-interface ThoughtCardProps {
-  thought: Thought & { renderedContent: React.ReactNode };
-}
+import type { ThoughtCardProps } from "@/types";
 
 const typeLabels = {
   code: "CODE",

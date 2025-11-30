@@ -1,11 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-
-interface AvailabilityBadgeProps {
-  className?: string
-  onClick?: () => void
-}
+import type { AvailabilityBadgeProps } from "@/types"
 
 export function AvailabilityBadge({
   className,
