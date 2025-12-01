@@ -18,6 +18,8 @@ const typeFilters = [
   { key: "book", label: "Book" },
 ] as const;
 
+const filterLabelMap = new Map(typeFilters.map((f) => [f.key, f.label]));
+
 interface ThoughtsClientProps {
   thoughts: (ThoughtPost & { renderedContent: React.ReactNode })[];
 }
@@ -37,13 +39,10 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
         Math.ceil(filteredThoughts.length / THOUGHTS_PER_PAGE)
       );
 
-      const paginatedThoughts = [...filteredThoughts]
-        .sort(
-          (a, b) =>
-            new Date(b.metadata.createdAt).getTime() -
-            new Date(a.metadata.createdAt).getTime()
-        )
-        .slice((page - 1) * THOUGHTS_PER_PAGE, page * THOUGHTS_PER_PAGE);
+      const paginatedThoughts = filteredThoughts.slice(
+        (page - 1) * THOUGHTS_PER_PAGE,
+        page * THOUGHTS_PER_PAGE
+      );
 
       return {
         paginatedThoughts,
@@ -53,32 +52,52 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
       };
     }, [thoughts, page, filter]);
 
+  const isEmpty = paginatedThoughts.length === 0;
+  const filterLabel = filterLabelMap.get(filter) || "All";
+
   return (
     <div className="pb-32">
-      <AnimatePresence mode="wait">
+      {isEmpty ? (
         <motion.div
-          key={page}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ staggerChildren: 0.05 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col items-center justify-center py-24 text-center"
         >
-          {paginatedThoughts.map((thought) => (
-            <motion.div
-              key={thought.slug}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 150,
-                damping: 10,
-                duration: 0.5,
-              }}
-            >
-              <ThoughtCard thought={thought} />
-            </motion.div>
-          ))}
+          <div className="mb-6 text-6xl opacity-10">—</div>
+          <p className="text-sm tracking-tight opacity-50 mb-2">
+            No {filter === "all" ? "thoughts" : filterLabel.toLowerCase()} yet
+          </p>
+          <p className="text-xs tracking-wider opacity-30">
+            Simplicity is the ultimate sophistication
+          </p>
         </motion.div>
-      </AnimatePresence>
+      ) : (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={page}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ staggerChildren: 0.05 }}
+          >
+            {paginatedThoughts.map((thought) => (
+              <motion.div
+                key={thought.slug}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 10,
+                  duration: 0.5,
+                }}
+              >
+                <ThoughtCard thought={thought} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      )}
 
       {totalPages > 1 && (
         <nav
