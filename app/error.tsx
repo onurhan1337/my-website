@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Container from "@/components/shared/container";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -42,12 +43,12 @@ export default function Error({
             </motion.div>
           )}
 
-          <a
+          <Link
             href="/"
             className="mt-12 text-xs opacity-40 hover:opacity-60 transition-opacity tracking-tight"
           >
             ← Back
-          </a>
+          </Link>
         </motion.div>
       </div>
     </Container>
