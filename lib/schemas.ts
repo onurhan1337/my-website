@@ -33,7 +33,18 @@ export const thoughtMetadataSchema = z.object({
   }),
   createdAt: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
+    .transform((val) => {
+      const dateMatch = val.match(/^(\d{4}-\d{2}-\d{2})/);
+      if (!dateMatch) {
+        throw new Error(
+          "Invalid date format. Expected YYYY-MM-DD or ISO 8601 format"
+        );
+      }
+      return dateMatch[1];
+    })
+    .refine((val) => /^\d{4}-\d{2}-\d{2}$/.test(val), {
+      message: "Invalid date format. Expected YYYY-MM-DD",
+    }),
 });
 
 /**

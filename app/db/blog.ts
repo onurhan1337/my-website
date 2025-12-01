@@ -1,12 +1,7 @@
 import path from "path";
 import { unstable_cache } from "next/cache";
 import type { BlogPost, BlogListItem, PaginatedResult } from "@/types/blog";
-import {
-  getMDXFiles,
-  readMDXFile,
-  getReadingTime,
-  getMDXMetadata,
-} from "@/lib/mdx";
+import { getMDXFiles, readMDXFile, getReadingTime } from "@/lib/mdx";
 import { validateBlogMetadata } from "@/lib/schemas";
 
 function getMDXData(dir: string): BlogPost[] {
