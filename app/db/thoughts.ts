@@ -42,22 +42,26 @@ function getMDXData(dir: string): ThoughtPost[] {
   );
 }
 
+const thoughtsDir = path.join(process.cwd(), "thoughts");
+
 const getCachedThoughtsData = unstable_cache(
-  async (dir: string): Promise<ThoughtPost[]> => getMDXData(dir),
-  ["thoughts"],
+  async (): Promise<ThoughtPost[]> => getMDXData(thoughtsDir),
+  ["thoughts-data", thoughtsDir],
   {
     revalidate: 3600,
     tags: ["thoughts"],
   }
 );
 
+async function getAllThoughtsSorted(): Promise<ThoughtPost[]> {
+  return getCachedThoughtsData();
+}
+
 export async function getThoughts(): Promise<ThoughtPost[]> {
-  return getCachedThoughtsData(path.join(process.cwd(), "thoughts"));
+  return getAllThoughtsSorted();
 }
 
 export async function getThought(slug: string): Promise<ThoughtPost | null> {
-  const thoughts = await getCachedThoughtsData(
-    path.join(process.cwd(), "thoughts")
-  );
+  const thoughts = await getAllThoughtsSorted();
   return thoughts.find((thought) => thought.slug === slug) ?? null;
 }
