@@ -24,8 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 3600;
+
 export default async function ThoughtsPage() {
-  const thoughts = getThoughts();
+  const thoughts = await getThoughts();
 
   const thoughtsWithContent = await Promise.all(
     thoughts.map(async (thought) => {

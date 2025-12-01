@@ -1,17 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { Thought } from "@/types/thought";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import type { ThoughtsPaginationProps } from "@/types";
 import { ThoughtsList } from "./thoughts-list";
 import { Button } from "./ui/button";
-
-interface ThoughtsPaginationProps {
-  allThoughts: (Thought & { renderedContent: React.ReactNode })[];
-  thoughtsPerPage?: number;
-  filter?: string;
-}
 
 export default function ThoughtsPagination({
   allThoughts,

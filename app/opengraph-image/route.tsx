@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
@@ -90,7 +90,8 @@ export async function GET(req: NextRequest) {
       }
     );
   } catch (e) {
-    return new Response(`Failed to generate image: ${e.message}`, {
+    const message = e instanceof Error ? e.message : String(e);
+    return new Response(`Failed to generate image: ${message}`, {
       status: 500,
     });
   }

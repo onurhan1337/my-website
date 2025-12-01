@@ -10,18 +10,7 @@ import React, {
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { highlight } from "sugar-high";
 import { cn } from "@/lib/utils";
-
-interface CodeStep {
-  code: string;
-  explanation: string;
-  state?: { [key: string]: any };
-  title?: string;
-}
-
-interface CodePlaygroundProps {
-  steps: CodeStep[];
-  language?: string;
-}
+import type { CodePlaygroundProps } from "@/types";
 
 export const CodePlayground = ({
   steps,
@@ -45,7 +34,7 @@ export const CodePlayground = ({
         if (i >= prevLines.length || line !== prevLines[i]) {
           return `<span class="${cn(
             "inline-block w-full relative bg-blue-500/10",
-            'before:content-[""] before:absolute before:-left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-blue-500',
+            'before:content-[""] before:absolute before:-left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-blue-500'
           )}">${highlight(line)}</span>`;
         }
         return highlight(line);
@@ -154,10 +143,7 @@ export const CodePlayground = ({
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
             </div>
-            <div
-              className="text-sm font-medium text-neutral-500"
-              role="status"
-            >
+            <div className="text-sm font-medium text-neutral-500" role="status">
               {steps[currentStep].title ||
                 `Step ${currentStep + 1}/${steps.length}`}
             </div>

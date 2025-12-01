@@ -3,13 +3,8 @@
 import { cn } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useCallback, useState } from "react";
+import type { CopyCodeProps } from "@/types";
 import { Button } from "./ui/button";
-
-interface CopyCodeProps {
-  children: React.ReactNode;
-  code?: string;
-  className?: string;
-}
 
 export function CopyCode({ children, code, className }: CopyCodeProps) {
   const [isCopied, setIsCopied] = useState(false);

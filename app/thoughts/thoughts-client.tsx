@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import type { Thought } from "@/types/thought";
+import type { ThoughtPost } from "@/types/thought";
 import { ThoughtCard } from "@/components/thought-card";
 import { Button } from "@/components/ui/button";
 import { useThoughtsStore } from "@/stores/thoughts-store";
@@ -19,7 +19,7 @@ const typeFilters = [
 ] as const;
 
 interface ThoughtsClientProps {
-  thoughts: (Thought & { renderedContent: React.ReactNode })[];
+  thoughts: (ThoughtPost & { renderedContent: React.ReactNode })[];
 }
 
 export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {

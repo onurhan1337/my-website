@@ -3,13 +3,7 @@
 import { CodeExpandModal } from "./code-expand-modal";
 import { cn } from "@/lib/utils";
 import { highlight } from "sugar-high";
-
-interface ExpandableCodeProps {
-  children: React.ReactNode;
-  className?: string;
-  code?: string;
-  [key: string]: unknown;
-}
+import type { ExpandableCodeProps } from "@/types";
 
 export function ExpandableCode({
   children,

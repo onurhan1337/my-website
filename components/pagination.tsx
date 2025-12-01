@@ -1,16 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { Blog } from "@/types/blog";
 import { useRouter } from "next/navigation";
+import type { PaginationProps } from "@/types";
 import { BlogList } from "./blog-list";
 import { Button } from "./ui/button";
-
-interface PaginationProps {
-  blogs: Blog[];
-  currentPage: number;
-  totalPages: number;
-}
 
 export default function Pagination({
   blogs,

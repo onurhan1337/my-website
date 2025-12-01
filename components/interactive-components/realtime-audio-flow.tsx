@@ -78,7 +78,7 @@ export function RealtimeAudioFlow() {
     return () => timeouts.forEach(clearTimeout);
   }, [isRunning]);
 
-  const getStepStyle = (index) => {
+  const getStepStyle = (index: number) => {
     const isActive = currentStep === index;
     const isCompleted = completedSteps.has(index);
 

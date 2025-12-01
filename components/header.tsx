@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import Container from "./shared/container";
 import { AvailabilityBadge } from "./availability-badge";
 import { AvailabilityDialog } from "./availability-dialog";
-import { config } from "@/lib/config";
+import { appConfig } from "@/lib/config";
 
 const NAV_ITEMS = {
   about: "/",
@@ -32,11 +32,11 @@ export const Header = () => {
               <span className="text-base font-medium">Onurhan Demir</span>
               <span className="text-sm opacity-50">software developer</span>
             </div>
-            {config.availability.enabled && (
+            {appConfig.availability.enabled && (
               <AvailabilityBadge onClick={() => setIsDialogOpen(true)} />
             )}
           </div>
-          {config.availability.enabled && (
+          {appConfig.availability.enabled && (
             <AvailabilityDialog
               open={isDialogOpen}
               onOpenChange={setIsDialogOpen}

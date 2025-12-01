@@ -1,4 +1,4 @@
-import { SocialButtonProps } from "@/types";
+import type { SocialButtonProps } from "@/types";
 import IconArrowRightUp from "./shared/icons/arrow-right-up";
 import IconLinkedIn from "./shared/icons/linkedin";
 import IconGithub from "./shared/icons/github";

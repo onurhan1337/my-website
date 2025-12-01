@@ -31,10 +31,12 @@ interface BlogPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
+export const revalidate = 3600;
+
 export default async function Blog({ searchParams }: BlogPageProps) {
   const { page = "1" } = await searchParams;
   const currentPage = Math.max(1, Number(page));
-  const { posts, totalPages } = getBlogPosts(currentPage);
+  const { posts, totalPages } = await getBlogPosts(currentPage);
 
   return (
     <Container size="large">

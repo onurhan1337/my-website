@@ -1,94 +1,129 @@
-import fs from "fs";
 import path from "path";
+import { unstable_cache } from "next/cache";
+import type { BlogPost, BlogListItem, PaginatedResult } from "@/types/blog";
+import {
+  getMDXFiles,
+  readMDXFile,
+  getReadingTime,
+  getMDXMetadata,
+} from "@/lib/mdx";
+import { validateBlogMetadata } from "@/lib/schemas";
 
-type Metadata = {
-  title: string;
-  publishedAt: string;
-  summary: string;
-  keywords: string[];
-  image?: string;
-};
+function getMDXData(dir: string): BlogPost[] {
+  const mdxFiles = getMDXFiles(dir);
+  const posts: BlogPost[] = [];
+  const errors: string[] = [];
 
-function parseFrontmatter(fileContent: string) {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
-  let content = fileContent.replace(frontmatterRegex, "").trim();
-  let frontMatterLines = frontMatterBlock.trim().split("\n");
-  let metadata: Partial<Metadata> = {};
+  for (const file of mdxFiles) {
+    try {
+      const { metadata, content } = readMDXFile<Record<string, string>>(
+        path.join(dir, file)
+      );
+      const slug = path.basename(file, path.extname(file));
 
-  frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(": ");
-    let value = valueArr.join(": ").trim();
-    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    if (key.trim() === "keywords") {
-      (metadata as Metadata)[key.trim()] = value
-        .split(",")
-        .map((k) => k.trim());
-    } else {
-      (metadata as Metadata)[key.trim()] = value;
+      const validatedMetadata = validateBlogMetadata(metadata);
+      const readingTime = getReadingTime(content);
+      posts.push({
+        metadata: validatedMetadata,
+        slug,
+        content,
+        readingTime,
+      });
+    } catch (error) {
+      errors.push(
+        `Invalid metadata in ${file}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
     }
-  });
+  }
 
-  return { metadata: metadata as Metadata, content };
-}
+  if (errors.length > 0) {
+    console.error("Blog post validation errors:", errors);
+  }
 
-function getMDXFiles(dir) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
-}
-
-function readMDXFile(filePath) {
-  let rawContent = fs.readFileSync(filePath, "utf-8");
-  return parseFrontmatter(rawContent);
-}
-
-function getReadingTime(content) {
-  const wordsPerMinute = 200; // Average reading speed
-  const imageReadingTime = 12; // Estimated reading time for an image
-  const punctuationReadingTime = 0.05; // Estimated reading time for punctuation
-
-  const wordCount = content.split(" ").length;
-  const imageCount = (content.match(/<img /g) || []).length;
-  const punctuationCount = (content.match(/[.,:;]/g) || []).length;
-
-  const readingTime =
-    wordCount / wordsPerMinute +
-    imageCount * imageReadingTime +
-    punctuationCount * punctuationReadingTime;
-
-  return Math.ceil(readingTime);
-}
-
-function getMDXData(dir) {
-  let mdxFiles = getMDXFiles(dir);
-  return mdxFiles.map((file) => {
-    let { metadata, content } = readMDXFile(path.join(dir, file));
-    let slug = path.basename(file, path.extname(file));
-    let readingTime = getReadingTime(content);
-    return {
-      metadata,
-      slug,
-      content,
-      readingTime,
-    };
-  });
-}
-
-function getAllBlogPostsSorted() {
-  const allPosts = getMDXData(path.join(process.cwd(), "content"));
-  return [...allPosts].sort(
+  return posts.sort(
     (left, right) =>
       new Date(right.metadata.publishedAt).getTime() -
       new Date(left.metadata.publishedAt).getTime()
   );
 }
 
-export function getAllBlogPosts() {
+function getMDXListData(dir: string): BlogListItem[] {
+  const mdxFiles = getMDXFiles(dir);
+  const posts: BlogListItem[] = [];
+  const errors: string[] = [];
+
+  for (const file of mdxFiles) {
+    try {
+      const filePath = path.join(dir, file);
+      const { metadata, content } =
+        readMDXFile<Record<string, string>>(filePath);
+      const slug = path.basename(file, path.extname(file));
+
+      const validatedMetadata = validateBlogMetadata(metadata);
+      const readingTime = getReadingTime(content);
+
+      posts.push({
+        metadata: validatedMetadata,
+        slug,
+        readingTime,
+      });
+    } catch (error) {
+      errors.push(
+        `Invalid metadata in ${file}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error("Blog post validation errors:", errors);
+  }
+
+  return posts.sort(
+    (left, right) =>
+      new Date(right.metadata.publishedAt).getTime() -
+      new Date(left.metadata.publishedAt).getTime()
+  );
+}
+
+const getCachedMDXData = unstable_cache(
+  async (dir: string): Promise<BlogPost[]> => getMDXData(dir),
+  ["blog-posts"],
+  {
+    revalidate: 3600,
+    tags: ["blog-posts"],
+  }
+);
+
+const getCachedMDXListData = unstable_cache(
+  async (dir: string): Promise<BlogListItem[]> => getMDXListData(dir),
+  ["blog-posts-list"],
+  {
+    revalidate: 3600,
+    tags: ["blog-posts"],
+  }
+);
+
+async function getAllBlogPostsSorted(): Promise<BlogPost[]> {
+  return getCachedMDXData(path.join(process.cwd(), "content"));
+}
+
+async function getAllBlogPostsListSorted(): Promise<BlogListItem[]> {
+  return getCachedMDXListData(path.join(process.cwd(), "content"));
+}
+
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
   return getAllBlogPostsSorted();
 }
 
-export function getBlogPosts(page: number = 1, limit: number = 5) {
-  const sortedPosts = getAllBlogPostsSorted();
+export async function getBlogPosts(
+  page: number = 1,
+  limit: number = 5
+): Promise<PaginatedResult> {
+  const sortedPosts = await getAllBlogPostsListSorted();
 
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
@@ -99,4 +134,9 @@ export function getBlogPosts(page: number = 1, limit: number = 5) {
     total: sortedPosts.length,
     totalPages: Math.ceil(sortedPosts.length / limit),
   };
+}
+
+export async function getBlogPost(slug: string): Promise<BlogPost | null> {
+  const posts = await getAllBlogPostsSorted();
+  return posts.find((post) => post.slug === slug) ?? null;
 }

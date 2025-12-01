@@ -3,10 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
-
-interface TableOfContentsProps {
-  headings: { title: string; id: string }[];
-}
+import type { TableOfContentsProps } from "@/types";
 
 const TableOfContents = ({ headings }: TableOfContentsProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
