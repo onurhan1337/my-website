@@ -33,18 +33,21 @@ export const thoughtMetadataSchema = z.object({
   }),
   createdAt: z
     .string()
-    .transform((val) => {
-      const dateMatch = val.match(/^(\d{4}-\d{2}-\d{2})/);
-      if (!dateMatch) {
-        throw new Error(
-          "Invalid date format. Expected YYYY-MM-DD or ISO 8601 format"
-        );
-      }
-      return dateMatch[1];
+    .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, {
+      message:
+        "createdAt must be in the exact format YYYY-MM-DDTHH:MM (e.g. 2025-12-21T00:29). Seconds are not allowed.",
     })
-    .refine((val) => /^\d{4}-\d{2}-\d{2}$/.test(val), {
-      message: "Invalid date format. Expected YYYY-MM-DD",
-    }),
+    .refine(
+      (val) => {
+        const [, hour, minute] = val.match(/T(\d{2}):(\d{2})$/)!;
+        const h = parseInt(hour, 10);
+        const m = parseInt(minute, 10);
+        return h >= 0 && h <= 23 && m >= 0 && m <= 59;
+      },
+      {
+        message: "Hour must be 00-23 and minute must be 00-59.",
+      },
+    ),
 });
 
 /**
@@ -53,7 +56,7 @@ export const thoughtMetadataSchema = z.object({
  * @returns Validated metadata or throws error
  */
 export function validateBlogMetadata(
-  metadata: unknown
+  metadata: unknown,
 ): z.infer<typeof blogMetadataSchema> {
   return blogMetadataSchema.parse(metadata);
 }
@@ -64,7 +67,7 @@ export function validateBlogMetadata(
  * @returns Validated metadata or throws error
  */
 export function validateThoughtMetadata(
-  metadata: unknown
+  metadata: unknown,
 ): z.infer<typeof thoughtMetadataSchema> {
   return thoughtMetadataSchema.parse(metadata);
 }
