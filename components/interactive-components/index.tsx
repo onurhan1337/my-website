@@ -4,3 +4,6 @@ export { GoroutineScheduler } from "./goroutine-scheduler";
 export { ChannelSimulator } from "./channel-simulator";
 export { UnbufferedChannelDemo } from "./unbuffered-channel";
 export { RealtimeAudioFlow } from "./realtime-audio-flow";
+export { ApiRequest } from "./api-request";
+export { FlowSteps } from "./flow-steps";
+export { ProcessSteps } from "./process-steps";
