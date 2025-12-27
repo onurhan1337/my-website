@@ -13,7 +13,11 @@ import {
   ChannelSimulator,
   UnbufferedChannelDemo,
   RealtimeAudioFlow,
+  ApiRequest,
+  FlowSteps,
+  ProcessSteps,
 } from "./interactive-components";
+import { DocsExplorer } from "./docs-explorer";
 import { CodePlayground } from "./interactive-components/code-playground";
 
 interface TableData {
@@ -209,7 +213,14 @@ function Code({
   const codeString = normalizeCodeString(children);
 
   if (!codeString.includes("\n")) {
-    return <code {...props}>{codeString}</code>;
+    return (
+      <code
+        {...props}
+        className="rounded bg-[#f6f6f6] px-1.5 py-0.5 font-mono text-[13px] font-semibold text-[#1a1a1a] before:content-none after:content-none"
+      >
+        {codeString}
+      </code>
+    );
   }
 
   const codeHTML = highlight(codeString);
@@ -306,6 +317,10 @@ const components = {
   UnbufferedChannelDemo,
   CodePlayground,
   RealtimeAudioFlow,
+  ApiRequest,
+  FlowSteps,
+  ProcessSteps,
+  DocsExplorer,
 };
 
 export function CustomMDX({ source }: { source: string }) {
