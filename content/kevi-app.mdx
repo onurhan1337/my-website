@@ -1,0 +1,374 @@
+---
+title: "Kevi: Multi-tenant key-value API for the edge"
+publishedAt: "2025-12-27"
+summary: "Build secure, isolated key-value storage for multiple services on Cloudflare Workers."
+---
+
+Applications need to store configuration data. Feature flags, settings, and values that change without updating code. When you have multiple services, each one needs its own storage. They should not see each other's data.
+
+Kevi is a key-value API for Cloudflare Workers. It lets you run one API for multiple services. Each service has its own token and its own data. They share the same infrastructure but cannot access each other's data.
+
+## Motivation
+
+Imagine you have a mobile app, a web app, and an admin dashboard. Each one needs to store configuration data. Each one needs different access rules. They should not see each other's data.
+
+You could build separate APIs for each service. Or you could build one API with complex permissions. Both ways create problems. You need to maintain more code. You need to manage more servers. Everything becomes more complex.
+
+<ProsCard
+  pros={[
+    "One API that handles multiple services",
+    "Each service gets its own secure token",
+    "Complete data isolation between services",
+    "Shared infrastructure with zero data leakage",
+    "Edge-native performance with Cloudflare Workers",
+  ]}
+/>
+
+Kevi solves this. One API. Multiple services. Complete isolation. Fast performance.
+
+## How it works
+
+Kevi uses an identity-first architecture. This means tokens map directly to services. There is no complex parsing. There are no slow lookups. Just fast, direct mapping.
+
+<ProcessSteps
+  steps={[
+    {
+      label: "Request",
+      title: "Send request with your service token",
+      description:
+        "Your service sends a request with an X-Kevi-Token header containing your service token.",
+      code: `curl https://kevi.onurhandtr.workers.dev/v1/kv/settings \\
+  -H "X-Kevi-Token: your-token-here"`,
+      meta: [
+        { label: "Header", value: "X-Kevi-Token" },
+        { label: "Method", value: "GET /v1/kv/settings" },
+        { label: "Latency", value: "Edge fast" },
+      ],
+    },
+    {
+      label: "Resolve",
+      title: "Token maps directly to your service",
+      description:
+        "Kevi looks up the token in environment variables and resolves it to a service ID.",
+      code: `// Environment variable: TOKEN_your-token-here
+// Resolves to: "mobile-app"`,
+      meta: [
+        { label: "Lookup", value: "Environment vars" },
+        { label: "Service ID", value: "mobile-app" },
+        { label: "Cost", value: "Zero DB reads" },
+      ],
+    },
+    {
+      label: "Config",
+      title: "Load service-level permissions",
+      description:
+        "Kevi retrieves the service configuration including storage, permissions, and prefix.",
+      code: `{
+  storage: "KEVI_STORAGE",
+  role: "admin",
+  prefix: "mobile-app"
+}`,
+      meta: [
+        { label: "Storage", value: "KEVI_STORAGE" },
+        { label: "Role", value: "admin" },
+        { label: "Prefix", value: "mobile-app" },
+      ],
+    },
+    {
+      label: "Prefix",
+      title: "Automatic key isolation",
+      description:
+        "Keys are automatically prefixed with the service name to ensure complete isolation.",
+      code: `// Request key: "settings"
+// Stored as: "mobile-app:settings"`,
+      meta: [
+        { label: "Original key", value: "settings" },
+        { label: "Stored key", value: "mobile-app:settings" },
+        { label: "Collision risk", value: "0%" },
+      ],
+    },
+    {
+      label: "Deliver",
+      title: "Return data for this service only",
+      description:
+        "Data is stored and retrieved with complete isolation. Services never see each other's data.",
+      code: `// mobile-app -> "mobile-app:settings"
+// web-app -> "web-app:settings"
+// isolated forever`,
+      meta: [
+        { label: "Isolation", value: "Per service" },
+        { label: "Multi-tenant", value: "Yes" },
+        { label: "Leak risk", value: "None" },
+      ],
+    },
+  ]}
+/>
+
+The magic is in the prefix. If your service is `mobile-app` and you store a key called `settings`, Kevi stores it as `mobile-app:settings`. Another service called `web-app` stores "settings" as "web-app:settings". They never conflict. They never see each other's data.
+
+## Setup your own Kevi
+
+Kevi is not a fully serverless service you can use directly. To use Kevi in your project, you need to fork the repository, configure it with your own settings, and deploy it to your own Cloudflare account. This gives you complete control over your data, tokens, and configuration.
+
+<Callout>
+  Important: Kevi requires you to fork the repository and deploy it yourself.
+  You must configure your own Cloudflare KV namespace and deploy with your own
+  Cloudflare Workers account. This is not a hosted service you can use
+  immediately.
+</Callout>
+
+Here is how to set it up:
+
+**Step 1: Fork and clone**
+
+First, fork the Kevi repository on GitHub. Then clone your fork:
+
+```bash
+git clone https://github.com/your-username/kevi
+cd kevi
+bun install
+```
+
+**Step 2: Create KV namespace**
+
+You need your own Cloudflare KV namespace. Create your storage bucket:
+
+```bash
+bunx wrangler kv namespace create KEVI_STORAGE
+```
+
+Wrangler is Cloudflare's command-line tool. It helps you manage your Workers and storage. It connects your code to Cloudflare's platform. When you run this command, Wrangler creates a storage space and connects it to your project. It will ask if you want to add the ID to your configuration. Say yes.
+
+<Callout>
+  For more details, see the [Wrangler
+  documentation](https://developers.cloudflare.com/workers/wrangler/).
+</Callout>
+
+**Step 3: Create your service registry**
+
+First, create your service in `src/config.ts`. This is your service registry. It tells Kevi what each service can do:
+
+```typescript
+export const registry: ServiceRegistry = {
+  "my-service": {
+    storage: "KEVI_STORAGE",
+    role: "admin",
+    prefix: "my-service",
+    description: "My application service",
+    allowedOrigins: ["https://myapp.com"],
+    publicKeys: ["public/*"],
+  },
+};
+```
+
+<ProsCard
+  pros={[
+    "storage: The KV namespace name (from Step 2)",
+    "role: 'admin' for read/write access, 'read-only' for read-only access",
+    "prefix: The prefix added to all keys (ensures isolation)",
+    "allowedOrigins: Which domains can access this service",
+    "publicKeys: Keys that can be accessed without origin checks",
+  ]}
+/>
+
+**Step 4: Update wrangler.jsonc**
+
+After creating your service in `src/config.ts`, you need to add the token mapping to `wrangler.jsonc`. This connects tokens to your services:
+
+```jsonc
+{
+  "vars": {
+    "TOKEN_your-token-here": "my-service"
+  }
+}
+```
+
+The easiest way is to use Kevi's generator tool. It creates a secure token and shows you what to add to both files:
+
+```bash
+# Using Bun
+bun gen:service -s my-service
+
+# Using npm
+npm run gen:service -s my-service
+```
+
+The generator validates your service name and creates a secure 32-byte token. Use 3 to 30 characters, lowercase letters, numbers, and hyphens. After the command finishes, copy the `TOKEN_...` entry into `wrangler.jsonc` and add the service definition into `src/config.ts`.
+
+If you prefer to do it manually, generate a token:
+
+```bash
+openssl rand -base64 32
+```
+
+Then add it to `wrangler.jsonc`:
+
+```jsonc
+{
+  "vars": {
+    "TOKEN_f06ab447627dc0a8a4e970b902b23730aed2dce50cb50f5687e35b5ebb896d9c": "my-service"
+  }
+}
+```
+
+**Step 5: Deploy to your Cloudflare account**
+
+Deploy your forked Kevi instance to your own Cloudflare Workers account:
+
+```bash
+bun run deploy
+```
+
+After deployment, you will have your own Kevi instance running on your Cloudflare account. You can then use it in your services.
+
+## Use Kevi in your services
+
+Once deployed, using Kevi is simple. Send requests with your token:
+
+**Store a value:**
+
+<ApiRequest
+  method="POST"
+  url="https://kevi.onurhandtr.workers.dev/v1/kv/settings"
+  headers={{
+    "X-Kevi-Token": "your-token-here",
+    "Content-Type": "application/json",
+  }}
+  body='{"value": {"feature_enabled": true, "version": "1.0.0"}}'
+  response={{
+    status: 200,
+    body: {
+      status: "ok",
+      key: "settings",
+      value: {
+        feature_enabled: true,
+        version: "1.0.0",
+      },
+    },
+  }}
+  description="Store configuration data for your service. The value can be any JSON object."
+/>
+
+**Get a value:**
+
+<ApiRequest
+  method="GET"
+  url="https://kevi.onurhandtr.workers.dev/v1/kv/settings"
+  headers={{
+    "X-Kevi-Token": "your-token-here",
+  }}
+  response={{
+    status: 200,
+    body: {
+      status: "ok",
+      key: "settings",
+      value: {
+        feature_enabled: true,
+        version: "1.0.0",
+      },
+    },
+  }}
+  description="Retrieve a stored value by its key. Returns the value if found, or an error if the key doesn't exist."
+/>
+
+**List all keys:**
+
+<ApiRequest
+  method="GET"
+  url="https://kevi.onurhandtr.workers.dev/v1/kv"
+  headers={{
+    "X-Kevi-Token": "your-token-here",
+  }}
+  response={{
+    status: 200,
+    body: {
+      status: "ok",
+      keys: [
+        {
+          name: "settings",
+          metadata: {
+            updated_by: "kevi-storage",
+            updated_at: "2025-12-27T17:03:15.479Z",
+          },
+        },
+        {
+          name: "feature-flags",
+          metadata: {
+            updated_by: "kevi-storage",
+            updated_at: "2025-12-27T16:45:22.123Z",
+          },
+        },
+      ],
+      list_complete: true,
+    },
+  }}
+  description="List all keys stored for your service. Each key includes metadata about when it was last updated."
+/>
+
+That is it. Simple. Fast. Secure. But remember, you need to fork the repository and deploy it yourself with your own Cloudflare account.
+
+## Explore the hosted docs and API explorer
+
+<DocsExplorer
+  url="https://kevi.onurhandtr.workers.dev/"
+  quickStart={[
+    "install",
+    "KV namespaces",
+    "bun gen:service -s your-service",
+    "bun run dev",
+  ]}
+  docs={[
+    {
+      name: "Architecture",
+      path: "docs/ARCHITECTURE.md",
+      url: "https://github.com/onurhan1337/kevi/blob/master/docs/ARCHITECTURE.md",
+    },
+    {
+      name: "Configuration",
+      path: "docs/CONFIGURATION.md",
+      url: "https://github.com/onurhan1337/kevi/blob/master/docs/CONFIGURATION.md",
+    },
+    {
+      name: "Public Keys",
+      path: "docs/PUBLIC_KEYS.md",
+      url: "https://github.com/onurhan1337/kevi/blob/master/docs/PUBLIC_KEYS.md",
+    },
+  ]}
+  apiExplorer={{
+    local: "http://localhost:8787/",
+    production: "https://kevi.onurhandtr.workers.dev/",
+  }}
+/>
+
+## Why this matters
+
+<ProsCard
+  pros={[
+    "Edge-native performance: Data stored at the edge with Cloudflare Workers",
+    "Global distribution: Low latency worldwide, no cold starts",
+    "Multi-tenant design: Serve many services from one deployment",
+    "Cost efficient: Lower costs, less maintenance, more focus on features",
+    "Identity-first architecture: Fast lookups, no database queries, milliseconds not seconds",
+  ]}
+/>
+
+Kevi runs on Cloudflare Workers. This means your data is stored at the edge. Low latency. Global distribution. No cold starts. Your configuration changes reach users instantly, anywhere in the world.
+
+The multi-tenant design means you can serve many services from one deployment. Lower costs. Less maintenance. More time to build features, less time managing infrastructure.
+
+The identity-first architecture means fast lookups. No database queries. No complex joins. Just direct environment variable lookups. Milliseconds, not seconds.
+
+## Is Kevi right for you?
+
+Kevi might be a bit overcomplicated for some use cases. Maybe you do not need multi-tenant isolation. Maybe you do not need edge-native performance. But if you have multiple services that need secure, isolated configuration storage, Kevi can help.
+
+It is a good idea. It is open source. You can customize it. You can extend it. You can make it yours.
+
+<Callout>
+  Kevi is open source and available on
+  [GitHub](https://github.com/onurhan1337/kevi). Remember, you need to fork the
+  repository, configure it with your own Cloudflare KV namespace, and deploy it
+  yourself. Contributions, issues, and feature requests are welcome.
+</Callout>
+
+<BuyMeACoffee username="onurhan" />
