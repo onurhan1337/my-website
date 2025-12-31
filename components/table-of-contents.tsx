@@ -22,22 +22,24 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
       layout
       layoutRoot
     >
-      <motion.div layout className="flex items-center gap-4 mb-4">
-        <div className="flex-1 h-px bg-foreground/10" />
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity"
-        >
-          <span className="text-sm font-medium">On this page</span>
-          <motion.div
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 30 }}
+      {headings.length > 0 && (
+        <motion.div layout className="flex items-center gap-4 mb-4">
+          <div className="flex-1 h-px bg-foreground/10" />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity"
           >
-            <ChevronDown className="w-4 h-4" />
-          </motion.div>
-        </button>
-        <div className="flex-1 h-px bg-foreground/10" />
-      </motion.div>
+            <span className="text-sm font-medium">On this page</span>
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 30 }}
+            >
+              <ChevronDown className="w-4 h-4" />
+            </motion.div>
+          </button>
+          <div className="flex-1 h-px bg-foreground/10" />
+        </motion.div>
+      )}
 
       <motion.div
         layout
