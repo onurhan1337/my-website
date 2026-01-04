@@ -107,8 +107,7 @@ export default async function BlogDetailPage({ params }: Props) {
             "@type": "BlogPosting",
             headline: blog.metadata.title,
             datePublished: blog.metadata.publishedAt,
-            dateModified:
-              blog.metadata.publishedAt || blog.metadata.publishedAt,
+            dateModified: blog.metadata.publishedAt,
             description: blog.metadata.summary,
             image: blog.metadata.image
               ? `https://onurhan.dev${blog.metadata.image}`
