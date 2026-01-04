@@ -1,9 +1,10 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import type { AvailabilityBadgeProps } from "@/types"
+import { memo } from "react";
+import { cn } from "@/lib/utils";
+import type { AvailabilityBadgeProps } from "@/types";
 
-export function AvailabilityBadge({
+export const AvailabilityBadge = memo(function AvailabilityBadge({
   className,
   onClick,
 }: AvailabilityBadgeProps) {
@@ -13,7 +14,7 @@ export function AvailabilityBadge({
       className={cn(
         "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium tracking-tight",
         "border border-foreground/10 hover:border-foreground/20",
-        "hover:bg-foreground/[0.02]",
+        "hover:bg-foreground/2",
         "transition-all",
         className
       )}
@@ -26,6 +27,5 @@ export function AvailabilityBadge({
       </span>
       <span className="opacity-75">Available for work</span>
     </button>
-  )
-}
-
+  );
+});
