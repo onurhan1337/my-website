@@ -36,6 +36,7 @@ export const BlogCard = React.memo(
   (prev, next) =>
     prev.blog.slug === next.blog.slug &&
     prev.blog.metadata.publishedAt === next.blog.metadata.publishedAt &&
+    prev.blog.readingTime === next.blog.readingTime &&
     prev.blog.metadata.title === next.blog.metadata.title &&
     prev.blog.metadata.summary === next.blog.metadata.summary
 );

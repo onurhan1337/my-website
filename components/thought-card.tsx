@@ -34,6 +34,7 @@ export const ThoughtCard = React.memo(
   },
   (prev, next) =>
     prev.thought.slug === next.thought.slug &&
+    prev.thought.renderedContent === next.thought.renderedContent &&
     prev.thought.metadata.createdAt === next.thought.metadata.createdAt &&
     prev.thought.metadata.type === next.thought.metadata.type
 );
