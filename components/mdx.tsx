@@ -92,7 +92,15 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  return <Image {...props} alt={props.alt || ""} className="rounded-lg" />;
+  return (
+    <Image
+      {...props}
+      alt={props.alt || ""}
+      className="rounded-lg"
+      loading={props.loading || "lazy"}
+      quality={props.quality || 85}
+    />
+  );
 }
 
 function Callout({ children }: { children: React.ReactNode }) {
