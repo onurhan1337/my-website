@@ -1,52 +1,14 @@
 import path from "path";
-import { unstable_cache } from "next/cache";
 import type { BlogPost, BlogListItem, PaginatedResult } from "@/types/blog";
 import { getMDXFiles, readMDXFile, getReadingTime } from "@/lib/mdx";
 import { validateBlogMetadata } from "@/lib/schemas";
 
-function getMDXData(dir: string): BlogPost[] {
+function getBlogPostsData(
+  dir: string,
+  includeContent: boolean = true
+): BlogPost[] | BlogListItem[] {
   const mdxFiles = getMDXFiles(dir);
-  const posts: BlogPost[] = [];
-  const errors: string[] = [];
-
-  for (const file of mdxFiles) {
-    try {
-      const { metadata, content } = readMDXFile<Record<string, string>>(
-        path.join(dir, file)
-      );
-      const slug = path.basename(file, path.extname(file));
-
-      const validatedMetadata = validateBlogMetadata(metadata);
-      const readingTime = getReadingTime(content);
-      posts.push({
-        metadata: validatedMetadata,
-        slug,
-        content,
-        readingTime,
-      });
-    } catch (error) {
-      errors.push(
-        `Invalid metadata in ${file}: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
-    }
-  }
-
-  if (errors.length > 0) {
-    console.error("Blog post validation errors:", errors);
-  }
-
-  return posts.sort(
-    (left, right) =>
-      new Date(right.metadata.publishedAt).getTime() -
-      new Date(left.metadata.publishedAt).getTime()
-  );
-}
-
-function getMDXListData(dir: string): BlogListItem[] {
-  const mdxFiles = getMDXFiles(dir);
-  const posts: BlogListItem[] = [];
+  const posts: (BlogPost | BlogListItem)[] = [];
   const errors: string[] = [];
 
   for (const file of mdxFiles) {
@@ -59,11 +21,20 @@ function getMDXListData(dir: string): BlogListItem[] {
       const validatedMetadata = validateBlogMetadata(metadata);
       const readingTime = getReadingTime(content);
 
-      posts.push({
-        metadata: validatedMetadata,
-        slug,
-        readingTime,
-      });
+      if (includeContent) {
+        (posts as BlogPost[]).push({
+          metadata: validatedMetadata,
+          slug,
+          content,
+          readingTime,
+        });
+      } else {
+        (posts as BlogListItem[]).push({
+          metadata: validatedMetadata,
+          slug,
+          readingTime,
+        });
+      }
     } catch (error) {
       errors.push(
         `Invalid metadata in ${file}: ${
@@ -77,37 +48,21 @@ function getMDXListData(dir: string): BlogListItem[] {
     console.error("Blog post validation errors:", errors);
   }
 
-  return posts.sort(
+  return (posts as BlogPost[] | BlogListItem[]).sort(
     (left, right) =>
       new Date(right.metadata.publishedAt).getTime() -
       new Date(left.metadata.publishedAt).getTime()
   );
 }
 
-const getCachedMDXData = unstable_cache(
-  async (dir: string): Promise<BlogPost[]> => getMDXData(dir),
-  ["blog-posts"],
-  {
-    revalidate: 3600,
-    tags: ["blog-posts"],
-  }
-);
-
-const getCachedMDXListData = unstable_cache(
-  async (dir: string): Promise<BlogListItem[]> => getMDXListData(dir),
-  ["blog-posts-list"],
-  {
-    revalidate: 3600,
-    tags: ["blog-posts"],
-  }
-);
+const contentDir = path.join(process.cwd(), "content");
 
 async function getAllBlogPostsSorted(): Promise<BlogPost[]> {
-  return getCachedMDXData(path.join(process.cwd(), "content"));
+  return getBlogPostsData(contentDir, true) as BlogPost[];
 }
 
 async function getAllBlogPostsListSorted(): Promise<BlogListItem[]> {
-  return getCachedMDXListData(path.join(process.cwd(), "content"));
+  return getBlogPostsData(contentDir, false) as BlogListItem[];
 }
 
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
@@ -132,6 +87,26 @@ export async function getBlogPosts(
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const posts = await getAllBlogPostsSorted();
-  return posts.find((post) => post.slug === slug) ?? null;
+  const filePath = path.join(contentDir, `${slug}.mdx`);
+  const mdxFiles = getMDXFiles(contentDir);
+
+  if (!mdxFiles.includes(`${slug}.mdx`)) {
+    return null;
+  }
+
+  try {
+    const { metadata, content } = readMDXFile<Record<string, string>>(filePath);
+    const validatedMetadata = validateBlogMetadata(metadata);
+    const readingTime = getReadingTime(content);
+
+    return {
+      metadata: validatedMetadata,
+      slug,
+      content,
+      readingTime,
+    };
+  } catch (error) {
+    console.error(`Error reading blog post ${slug}:`, error);
+    return null;
+  }
 }

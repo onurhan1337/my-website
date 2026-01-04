@@ -1,32 +1,33 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { memo, useCallback, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { useRef, useState } from "react";
 import type { TableOfContentsProps } from "@/types";
 
-const TableOfContents = ({ headings }: TableOfContentsProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+const TableOfContents = memo(
+  function TableOfContents({ headings }: TableOfContentsProps) {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: "smooth" });
-  };
+    const handleClick = useCallback((e: React.MouseEvent, id: string) => {
+      e.preventDefault();
+      const element = document.getElementById(id);
+      element?.scrollIntoView({ behavior: "smooth" });
+    }, []);
 
-  return (
-    <motion.div
-      ref={containerRef}
-      className="w-full max-w-3xl mx-auto mt-8 mb-12"
-      layout
-      layoutRoot
-    >
-      {headings.length > 0 && (
-        <motion.div layout className="flex items-center gap-4 mb-4">
+    const toggleOpen = useCallback(() => {
+      setIsOpen((prev) => !prev);
+    }, []);
+
+    if (headings.length === 0) return null;
+
+    return (
+      <div ref={containerRef} className="w-full max-w-3xl mx-auto mt-8 mb-12">
+        <div className="flex items-center gap-4 mb-4">
           <div className="flex-1 h-px bg-foreground/10" />
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={toggleOpen}
             className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity"
           >
             <span className="text-sm font-medium">On this page</span>
@@ -38,47 +39,56 @@ const TableOfContents = ({ headings }: TableOfContentsProps) => {
             </motion.div>
           </button>
           <div className="flex-1 h-px bg-foreground/10" />
-        </motion.div>
-      )}
+        </div>
 
-      <motion.div
-        layout
-        className="relative overflow-hidden"
-        animate={{
-          height: isOpen ? "auto" : 0,
-          opacity: isOpen ? 1 : 0,
-          marginBottom: isOpen ? "1rem" : 0,
-        }}
-        transition={{
-          height: { duration: 0.3, ease: "easeInOut" },
-          opacity: { duration: 0.2 },
-          marginBottom: { duration: 0.3 },
-        }}
-      >
-        <nav className="flex flex-col space-y-2 px-4">
-          {headings.map((heading, i) => (
-            <motion.a
-              key={heading.id}
-              initial={false}
-              animate={{
-                opacity: isOpen ? 1 : 0,
-                x: isOpen ? 0 : -4,
-              }}
-              transition={{
-                duration: 0.2,
-                delay: isOpen ? i * 0.05 : 0,
-              }}
-              href={`#${heading.id}`}
-              className="text-sm opacity-50 hover:opacity-100 transition-opacity py-1 hover:underline underline-offset-4"
-              onClick={(e) => handleClick(e, heading.id)}
-            >
-              {heading.title}
-            </motion.a>
-          ))}
-        </nav>
-      </motion.div>
-    </motion.div>
-  );
-};
+        <motion.div
+          className="relative overflow-hidden"
+          animate={{
+            height: isOpen ? "auto" : 0,
+            opacity: isOpen ? 1 : 0,
+            marginBottom: isOpen ? "1rem" : 0,
+          }}
+          transition={{
+            height: { duration: 0.3, ease: "easeInOut" },
+            opacity: { duration: 0.2 },
+            marginBottom: { duration: 0.3 },
+          }}
+        >
+          <nav className="flex flex-col space-y-2 px-4">
+            {headings.map((heading, i) => (
+              <motion.a
+                key={heading.id}
+                initial={false}
+                animate={{
+                  opacity: isOpen ? 1 : 0,
+                  x: isOpen ? 0 : -4,
+                }}
+                transition={{
+                  duration: 0.2,
+                  delay: isOpen ? i * 0.05 : 0,
+                }}
+                href={`#${heading.id}`}
+                className="text-sm opacity-50 hover:opacity-100 transition-opacity py-1 hover:underline underline-offset-4"
+                onClick={(e) => handleClick(e, heading.id)}
+              >
+                {heading.title}
+              </motion.a>
+            ))}
+          </nav>
+        </motion.div>
+      </div>
+    );
+  },
+  (prev, next) => {
+    if (prev.headings.length !== next.headings.length) return false;
+    return prev.headings.every(
+      (heading, index) =>
+        heading.id === next.headings[index]?.id &&
+        heading.title === next.headings[index]?.title
+    );
+  }
+);
+
+TableOfContents.displayName = "TableOfContents";
 
 export default TableOfContents;

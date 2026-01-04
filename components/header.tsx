@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,11 +14,28 @@ const NAV_ITEMS = {
   blog: "/blog",
   thoughts: "/thoughts",
   work: "/work",
-};
+} as const;
 
-export const Header = () => {
+export const Header = memo(function Header() {
   const pathname = usePathname();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const navLinks = useMemo(
+    () =>
+      Object.entries(NAV_ITEMS).map(([name, href]) => (
+        <Link
+          key={name}
+          href={href}
+          className={cn(
+            pathname === href ? "opacity-100" : "opacity-50",
+            "transition-opacity hover:opacity-100 py-1 px-2 first:pl-0 text-[15px]"
+          )}
+        >
+          {name}
+        </Link>
+      )),
+    [pathname]
+  );
 
   return (
     <header>
@@ -44,23 +61,10 @@ export const Header = () => {
           )}
 
           <div className="flex flex-row items-center justify-start w-full mt-12 sm:mt-6 tracking-tight">
-            <div className="inline-flex items-center gap-1">
-              {Object.entries(NAV_ITEMS).map(([name, href]) => (
-                <Link
-                  key={name}
-                  href={href}
-                  className={cn(
-                    pathname === href ? "opacity-100" : "opacity-50",
-                    "transition-opacity hover:opacity-100 py-1 px-2 first:pl-0 text-[15px]"
-                  )}
-                >
-                  {name}
-                </Link>
-              ))}
-            </div>
+            <div className="inline-flex items-center gap-1">{navLinks}</div>
           </div>
         </nav>
       </Container>
     </header>
   );
-};
+});

@@ -1,48 +1,30 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { memo } from "react";
 import { BlogCard } from "./blog-card";
 import type { BlogListProps } from "@/types";
 
-export function BlogList({ blogs, currentPage }: BlogListProps) {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 5 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 150,
-        damping: 10,
-        duration: 0.5,
-      },
-    },
-  };
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={currentPage}
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
+export const BlogList = memo(
+  function BlogList({ blogs, currentPage }: BlogListProps) {
+    return (
+      <div>
         {blogs.map((blog) => (
-          <motion.div key={blog.slug} variants={item}>
-            <BlogCard blog={blog} />
-          </motion.div>
+          <BlogCard key={blog.slug} blog={blog} />
         ))}
-      </motion.div>
-    </AnimatePresence>
-  );
-}
+      </div>
+    );
+  },
+  (prev, next) => {
+    if (prev.currentPage !== next.currentPage) return false;
+    if (prev.blogs.length !== next.blogs.length) return false;
+
+    return prev.blogs.every(
+      (blog, index) =>
+        blog.slug === next.blogs[index]?.slug &&
+        blog.metadata.publishedAt === next.blogs[index]?.metadata.publishedAt &&
+        blog.metadata.title === next.blogs[index]?.metadata.title &&
+        blog.metadata.summary === next.blogs[index]?.metadata.summary &&
+        blog.readingTime === next.blogs[index]?.readingTime
+    );
+  }
+);

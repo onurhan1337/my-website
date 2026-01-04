@@ -10,6 +10,8 @@ import { Header } from "@/components/header";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  preload: false,
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {

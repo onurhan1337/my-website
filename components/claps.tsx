@@ -1,7 +1,23 @@
 "use client";
 
+import { memo } from "react";
 import Claps from "@upstash/claps";
 
-export default function ClapsButton({ key }: { key: string }) {
-  return <Claps fixed="left" shareButton={false} key={key} />;
-}
+const ClapsButton = memo(function ClapsButton({
+  blogSlug,
+}: {
+  blogSlug: string;
+}) {
+  return (
+    <Claps
+      key={blogSlug}
+      fixed="left"
+      shareButton={false}
+      apiPath="/api/claps"
+    />
+  );
+});
+
+ClapsButton.displayName = "ClapsButton";
+
+export default ClapsButton;

@@ -92,7 +92,15 @@ function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 function RoundedImage(props: React.ComponentProps<typeof Image>) {
-  return <Image {...props} alt={props.alt || ""} className="rounded-lg" />;
+  return (
+    <Image
+      {...props}
+      alt={props.alt || ""}
+      className="rounded-lg"
+      loading={props.loading || "lazy"}
+      quality={props.quality || 85}
+    />
+  );
 }
 
 function Callout({ children }: { children: React.ReactNode }) {
@@ -228,13 +236,13 @@ function Code({
   const isLongCode = lineCount > LONG_CODE_THRESHOLD;
 
   const codeBlock = (
-    <pre className="!border-none">
+    <pre className="border-none!">
       <code dangerouslySetInnerHTML={{ __html: codeHTML }} />
     </pre>
   );
 
   const wrappedCode = (
-    <div className="bg-zinc-50 rounded-lg">
+    <div className="bg-transparent rounded-lg">
       <CopyCode code={codeString} className="p-4">
         {codeBlock}
       </CopyCode>
