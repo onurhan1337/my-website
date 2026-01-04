@@ -1,5 +1,4 @@
 import path from "path";
-import { unstable_cache } from "next/cache";
 import type { ThoughtPost } from "@/types/thought";
 import { getMDXFiles, readMDXFile } from "@/lib/mdx";
 import { validateThoughtMetadata } from "@/lib/schemas";
@@ -44,17 +43,8 @@ function getMDXData(dir: string): ThoughtPost[] {
 
 const thoughtsDir = path.join(process.cwd(), "thoughts");
 
-const getCachedThoughtsData = unstable_cache(
-  async (): Promise<ThoughtPost[]> => getMDXData(thoughtsDir),
-  ["thoughts-data", thoughtsDir],
-  {
-    revalidate: 3600,
-    tags: ["thoughts"],
-  }
-);
-
 async function getAllThoughtsSorted(): Promise<ThoughtPost[]> {
-  return getCachedThoughtsData();
+  return getMDXData(thoughtsDir);
 }
 
 export async function getThoughts(): Promise<ThoughtPost[]> {
