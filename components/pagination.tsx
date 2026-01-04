@@ -23,16 +23,17 @@ const PaginationComponent = memo(
             className="flex justify-center gap-4 mt-12"
           >
             {prevPage ? (
-              <Link href={prevHref} prefetch={true}>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
-                  )}
-                >
+              <Button
+                asChild
+                variant="outline"
+                className={cn(
+                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
+                )}
+              >
+                <Link href={prevHref} prefetch={true}>
                   Previous
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : (
               <Button
                 disabled
@@ -50,16 +51,17 @@ const PaginationComponent = memo(
             </span>
 
             {nextPage ? (
-              <Link href={nextHref} prefetch={true}>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
-                  )}
-                >
+              <Button
+                asChild
+                variant="outline"
+                className={cn(
+                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
+                )}
+              >
+                <Link href={nextHref} prefetch={true}>
                   Next
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : (
               <Button
                 disabled
