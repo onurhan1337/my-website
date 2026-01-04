@@ -4,11 +4,18 @@ import { memo } from "react";
 import Claps from "@upstash/claps";
 
 const ClapsButton = memo(function ClapsButton({
-  postKey,
+  blogSlug,
 }: {
-  postKey: string;
+  blogSlug: string;
 }) {
-  return <Claps fixed="left" shareButton={false} key={postKey} />;
+  return (
+    <Claps
+      key={blogSlug}
+      fixed="left"
+      shareButton={false}
+      apiPath="/api/claps"
+    />
+  );
 });
 
 ClapsButton.displayName = "ClapsButton";

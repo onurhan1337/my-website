@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { getBlogPost, getAllBlogPosts } from "@/app/db/blog";
-import Claps from "@/components/claps";
+import ClapsButton from "@/components/claps";
 import { CustomMDX } from "@/components/mdx";
+import Container from "@/components/shared/container";
 import TableOfContents from "@/components/table-of-contents";
 import { extractHeadings, formatDate } from "@/lib/utils";
 
@@ -96,8 +96,10 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const headings = extractHeadings(blog.content);
 
+  console.log("blog", blog);
+
   return (
-    <section className="mx-auto px-2 sm:px-6 lg:px-8 w-full sm:max-w-5xl bg-background">
+    <Container size="large">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -136,26 +138,24 @@ export default async function BlogDetailPage({ params }: Props) {
           }),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tight max-w-[650px]">
+      <h1 className="title font-medium text-2xl tracking-tight">
         {blog.metadata.title}
       </h1>
-      <div className="flex justify-start items-center mt-3 mb-8 text-sm max-w-[650px]">
-        <Suspense fallback={<p className="h-5" />}>
-          <p className="text-[15px] opacity-60 tracking-tight">
-            {formatDate(blog.metadata.publishedAt)}
-          </p>
-          <span className="mx-2 opacity-40">—</span>
-          <p className="text-[15px] opacity-60 tracking-tight">
-            {blog.readingTime} min read
-          </p>
-        </Suspense>
+      <div className="flex justify-start items-center mt-3 mb-8 text-sm">
+        <p className="text-[15px] opacity-60 tracking-tight">
+          {formatDate(blog.metadata.publishedAt)}
+        </p>
+        <span className="mx-2 opacity-40">—</span>
+        <p className="text-[15px] opacity-60 tracking-tight">
+          {blog.readingTime} min read
+        </p>
       </div>
       <TableOfContents headings={headings} />
       <article className="prose prose-quoteless prose-neutral text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
 
-      <Claps postKey={blog.slug} />
-    </section>
+      <ClapsButton key={blog.slug} blogSlug={blog.slug} />
+    </Container>
   );
 }
