@@ -34,6 +34,7 @@ export async function generateMetadata({
   const {
     title,
     publishedAt: publishedTime,
+    modifiedAt: modifiedTime,
     summary: description,
     keywords,
   } = blog.metadata;
@@ -55,6 +56,7 @@ export async function generateMetadata({
       description,
       type: "article",
       publishedTime,
+      ...(modifiedTime && { modifiedTime }),
       url: blogUrl,
       siteName: "Onurhan Demir",
       locale: "en_US",
