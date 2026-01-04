@@ -156,7 +156,7 @@ export default async function BlogDetailPage({ params }: Props) {
         <CustomMDX source={blog.content} />
       </article>
 
-      <Claps key={blog.slug} />
+      <Claps postKey={blog.slug} />
     </section>
   );
 }
