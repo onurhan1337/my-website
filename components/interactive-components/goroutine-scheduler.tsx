@@ -55,14 +55,12 @@ const Processor = React.memo(
       <div className="mb-4 border border-neutral-200 rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-neutral-700">
-              P{pid}
-            </span>
+            <span className="text-sm font-medium text-neutral-700">P{pid}</span>
             <span className="px-2 py-1 text-xs bg-neutral-100 text-neutral-600 rounded-md">
               M{pid}
             </span>
           </div>
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence initial={false}>
             {runningGoroutines.map((g) => (
               <motion.div
                 key={g.id}
@@ -81,8 +79,8 @@ const Processor = React.memo(
           </AnimatePresence>
         </div>
 
-        <div className="flex gap-2 p-2 bg-neutral-50 rounded-lg overflow-x-auto min-h-[3rem] items-center">
-          <AnimatePresence mode="wait" initial={false}>
+        <div className="flex gap-2 p-2 bg-neutral-50 rounded-lg overflow-x-auto min-h-12 items-center">
+          <AnimatePresence initial={false}>
             {localQueueGoroutines.map((g) => (
               <motion.div
                 key={g.id}
@@ -96,7 +94,7 @@ const Processor = React.memo(
                   damping: 12,
                   mass: 1.5,
                 }}
-                className="flex-shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                className="shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 G{g.id}
               </motion.div>
@@ -311,8 +309,8 @@ export const GoroutineScheduler = () => {
         <h4 className="text-sm font-medium text-neutral-700 mb-2">
           Global Run Queue
         </h4>
-        <div className="flex gap-2 p-3 bg-neutral-50 rounded-lg overflow-x-auto min-h-[4rem] items-center">
-          <AnimatePresence mode="wait" initial={false}>
+        <div className="flex gap-2 p-3 bg-neutral-50 rounded-lg overflow-x-auto min-h-16 items-center">
+          <AnimatePresence initial={false}>
             {globalGoroutines.map((g) => (
               <motion.div
                 key={g.id}
@@ -326,7 +324,7 @@ export const GoroutineScheduler = () => {
                   damping: 12,
                   mass: 1.5,
                 }}
-                className="flex-shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                className="shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 G{g.id}
               </motion.div>

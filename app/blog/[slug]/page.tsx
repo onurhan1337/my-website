@@ -96,8 +96,6 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const headings = extractHeadings(blog.content);
 
-  console.log("blog", blog);
-
   return (
     <Container size="large">
       <script

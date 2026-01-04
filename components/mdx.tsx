@@ -236,13 +236,13 @@ function Code({
   const isLongCode = lineCount > LONG_CODE_THRESHOLD;
 
   const codeBlock = (
-    <pre className="!border-none">
+    <pre className="border-none!">
       <code dangerouslySetInnerHTML={{ __html: codeHTML }} />
     </pre>
   );
 
   const wrappedCode = (
-    <div className="bg-zinc-50 rounded-lg">
+    <div className="bg-transparent rounded-lg">
       <CopyCode code={codeString} className="p-4">
         {codeBlock}
       </CopyCode>
