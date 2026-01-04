@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { getAllBlogPosts } from "@/app/db/blog";
+import { getBlogPost, getAllBlogPosts } from "@/app/db/blog";
 import Claps from "@/components/claps";
 import { CustomMDX } from "@/components/mdx";
 import TableOfContents from "@/components/table-of-contents";
@@ -14,12 +14,18 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+export async function generateStaticParams() {
+  const posts = await getAllBlogPosts();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 export async function generateMetadata({
   params,
 }: Props): Promise<Metadata | undefined> {
   const { slug } = await params;
-  const allPosts = await getAllBlogPosts();
-  const blog = allPosts.find((blog) => blog.slug === slug);
+  const blog = await getBlogPost(slug);
 
   if (!blog) {
     return;
@@ -82,16 +88,16 @@ export async function generateMetadata({
 
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params;
-  const allPosts = await getAllBlogPosts();
-  const blog = allPosts.find((blog) => blog.slug === slug);
-  const headings = blog ? extractHeadings(blog.content) : [];
+  const blog = await getBlogPost(slug);
 
   if (!blog) {
     notFound();
   }
 
+  const headings = extractHeadings(blog.content);
+
   return (
-    <section className="mx-auto px-2 sm:px-6 lg:px-8 w-full sm:max-w-screen-lg bg-background">
+    <section className="mx-auto px-2 sm:px-6 lg:px-8 w-full sm:max-w-5xl bg-background">
       <script
         type="application/ld+json"
         suppressHydrationWarning
