@@ -8,6 +8,10 @@ export const blogMetadataSchema = z.object({
   publishedAt: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
+  modifiedAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD")
+    .optional(),
   summary: z.string().min(1, "Summary is required"),
   keywords: z
     .union([
@@ -46,7 +50,7 @@ export const thoughtMetadataSchema = z.object({
       },
       {
         message: "Hour must be 00-23 and minute must be 00-59.",
-      },
+      }
     ),
 });
 
@@ -56,7 +60,7 @@ export const thoughtMetadataSchema = z.object({
  * @returns Validated metadata or throws error
  */
 export function validateBlogMetadata(
-  metadata: unknown,
+  metadata: unknown
 ): z.infer<typeof blogMetadataSchema> {
   return blogMetadataSchema.parse(metadata);
 }
@@ -67,7 +71,7 @@ export function validateBlogMetadata(
  * @returns Validated metadata or throws error
  */
 export function validateThoughtMetadata(
-  metadata: unknown,
+  metadata: unknown
 ): z.infer<typeof thoughtMetadataSchema> {
   return thoughtMetadataSchema.parse(metadata);
 }

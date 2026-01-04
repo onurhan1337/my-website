@@ -95,6 +95,40 @@ export default async function BlogDetailPage({ params }: Props) {
   }
 
   const headings = extractHeadings(blog.content);
+  const modifiedAt = blog.metadata.modifiedAt;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog.metadata.title,
+    datePublished: blog.metadata.publishedAt,
+    ...(modifiedAt && { dateModified: modifiedAt }),
+    description: blog.metadata.summary,
+    image: blog.metadata.image
+      ? `https://onurhan.dev${blog.metadata.image}`
+      : `https://onurhan.dev/og?title=${blog.metadata.title}`,
+    url: `https://onurhan.dev/blog/${blog.slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://onurhan.dev/blog/${blog.slug}`,
+    },
+    author: {
+      "@type": "Person",
+      name: "Onurhan Demir",
+      url: "https://onurhan.dev",
+      sameAs: [
+        "https://github.com/onurhan1337",
+        "https://youtube.com/@onurhandev",
+        "https://x.com/onurhan1337",
+      ],
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Onurhan Demir",
+      url: "https://onurhan.dev",
+    },
+    inLanguage: "en-US",
+  };
 
   return (
     <Container size="large">
@@ -102,38 +136,7 @@ export default async function BlogDetailPage({ params }: Props) {
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: blog.metadata.title,
-            datePublished: blog.metadata.publishedAt,
-            dateModified: blog.metadata.publishedAt,
-            description: blog.metadata.summary,
-            image: blog.metadata.image
-              ? `https://onurhan.dev${blog.metadata.image}`
-              : `https://onurhan.dev/og?title=${blog.metadata.title}`,
-            url: `https://onurhan.dev/blog/${blog.slug}`,
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": `https://onurhan.dev/blog/${blog.slug}`,
-            },
-            author: {
-              "@type": "Person",
-              name: "Onurhan Demir",
-              url: "https://onurhan.dev",
-              sameAs: [
-                "https://github.com/onurhan1337",
-                "https://youtube.com/@onurhandev",
-                "https://x.com/onurhan1337",
-              ],
-            },
-            publisher: {
-              "@type": "Person",
-              name: "Onurhan Demir",
-              url: "https://onurhan.dev",
-            },
-            inLanguage: "en-US",
-          }),
+          __html: JSON.stringify(jsonLd),
         }}
       />
       <h1 className="title font-medium text-2xl tracking-tight">
