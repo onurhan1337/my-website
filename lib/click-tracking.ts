@@ -12,7 +12,9 @@ if (!redis) {
 export type ClickType =
   | "AVAILABILITY_DIALOG:EMAIL"
   | "AVAILABILITY_DIALOG:UPWORK"
-  | "MAIN_PAGE:UPWORK";
+  | "MAIN_PAGE:UPWORK"
+  | "WORK_PAGE:EMAIL"
+  | "WORK_PAGE:UPWORK";
 
 const SESSION_TTL = 24 * 60 * 60;
 

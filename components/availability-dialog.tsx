@@ -61,8 +61,8 @@ export function AvailabilityDialog({
 
           <div className="space-y-4">
             <p className="text-[15px] leading-[22px] opacity-80 font-medium tracking-[-0.6px] text-[#00bd8e]">
-              Besides full-time roles, I also take on freelance projects and
-              outsourced software development.
+              I also offer outsourced software development services for
+              businesses looking to build or scale their products.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">

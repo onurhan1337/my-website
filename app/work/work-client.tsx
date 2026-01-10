@@ -2,6 +2,18 @@
 
 import { motion } from "framer-motion";
 import { WavySeparator } from "@/components/shared/wavy-separator";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Mail } from "lucide-react";
+import IconUpwork from "@/components/shared/icons/upwork";
+import { trackClick } from "@/lib/actions/track-click";
+import type { ClickType } from "@/lib/click-tracking";
+
+function handleTrackClick(clickType: ClickType) {
+  trackClick(clickType).catch((error) => {
+    console.error("Failed to track click:", error);
+  });
+}
 
 const workExperiences = [
   {
@@ -108,6 +120,61 @@ export function WorkClient() {
           </motion.article>
         ))}
       </section>
+
+      <WavySeparator />
+
+      <motion.section
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: workExperiences.length * 0.1 }}
+        className="py-8"
+      >
+        <header className="mb-6">
+          <h2 className="font-medium text-xl mb-2 tracking-tight">
+            Freelance & Outsourced Development
+          </h2>
+        </header>
+
+        <p className="text-[15px] leading-relaxed opacity-80 mb-6">
+          I offer outsourced software development services for businesses looking
+          to build or scale their products. Whether you need a full-stack
+          application, a B2B SaaS solution, or help building your next product,
+          I can help you ship fast and iterate quickly.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            asChild
+            variant="default"
+            className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
+          >
+            <Link
+              href="https://www.upwork.com/freelancers/~018ec24713c9a36406?mp_source=share"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+              onClick={() => handleTrackClick("WORK_PAGE:UPWORK")}
+            >
+              <IconUpwork size={18} />
+              <span>Upwork</span>
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="default"
+            className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
+          >
+            <Link
+              href="mailto:onurhandtr@gmail.com"
+              className="flex items-center gap-2"
+              onClick={() => handleTrackClick("WORK_PAGE:EMAIL")}
+            >
+              <Mail size={18} />
+              <span>Email</span>
+            </Link>
+          </Button>
+        </div>
+      </motion.section>
     </main>
   );
 }
