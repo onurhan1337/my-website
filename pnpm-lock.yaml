@@ -23,6 +23,9 @@ importers:
       '@upstash/claps':
         specifier: 1.0.0-beta.5
         version: 1.0.0-beta.5
+      '@upstash/redis':
+        specifier: ^1.36.1
+        version: 1.36.1
       '@vercel/analytics':
         specifier: ^1.6.1
         version: 1.6.1(next@16.0.10(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
@@ -1095,8 +1098,8 @@ packages:
   '@upstash/claps@1.0.0-beta.5':
     resolution: {integrity: sha512-7M1yP4Ay7zllJwU0sPU9+7wK4KsBOW8Fphvbwx7z2RiLK6dCSnOtHwbkGgOkh4lcoac7tw8p/RQCaRJgQDgcyQ==}
 
-  '@upstash/redis@1.35.7':
-    resolution: {integrity: sha512-bdCdKhke+kYUjcLLuGWSeQw7OLuWIx3eyKksyToLBAlGIMX9qiII0ptp8E0y7VFE1yuBxBd/3kSzJ8774Q4g+A==}
+  '@upstash/redis@1.36.1':
+    resolution: {integrity: sha512-N6SjDcgXdOcTAF+7uNoY69o7hCspe9BcA7YjQdxVu5d25avljTwyLaHBW3krWjrP0FfocgMk94qyVtQbeDp39A==}
 
   '@vercel/analytics@1.6.1':
     resolution: {integrity: sha512-oH9He/bEM+6oKlv3chWuOOcp8Y6fo6/PSro8hEkgCW3pu9/OiCXiUpRUogDh3Fs3LH2sosDrx8CxeOLBEE+afg==}
@@ -3760,7 +3763,7 @@ snapshots:
 
   '@upstash/claps@1.0.0-beta.5':
     dependencies:
-      '@upstash/redis': 1.35.7
+      '@upstash/redis': 1.36.1
       clsx: 2.1.1
       lodash.debounce: 4.0.8
       next: 14.2.33(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3773,7 +3776,7 @@ snapshots:
       - babel-plugin-macros
       - sass
 
-  '@upstash/redis@1.35.7':
+  '@upstash/redis@1.36.1':
     dependencies:
       uncrypto: 0.1.3
 

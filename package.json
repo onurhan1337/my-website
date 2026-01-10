@@ -19,6 +19,7 @@
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@upstash/claps": "1.0.0-beta.5",
+    "@upstash/redis": "^1.36.1",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "class-variance-authority": "^0.7.1",
