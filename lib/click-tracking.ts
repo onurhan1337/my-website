@@ -5,10 +5,6 @@ import { headers } from "next/headers";
 
 const redis = Redis.fromEnv();
 
-if (!redis) {
-  throw new Error("Redis is not initialized");
-}
-
 export type ClickType =
   | "AVAILABILITY_DIALOG:EMAIL"
   | "AVAILABILITY_DIALOG:UPWORK"
