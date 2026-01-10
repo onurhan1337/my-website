@@ -1,6 +1,8 @@
-# onurhan.dev
+<div align="center">
+  <img src="public/logo.svg" alt="Logo" width="56" height="48">
+</div>
 
-<a href="https://www.buymeacoffee.com/onurhan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=onurhan&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" /></a>
+# onurhan.dev
 
 - **Icons**: [Lucide React](https://lucide.dev/icons/)
 - **Like**: [Upstash Claps](https://github.com/upstash/claps)
@@ -18,7 +20,9 @@
 - `components/` - All components.
 - `public/*` - Static assets including images for blogs and other all images.
 - `content/` - Contains all posts and snippets.
+- `thoughts/` - Contains all thoughts.
 - `lib/`- Contains metadata and util functions.
+- `stores/`- Store files for zustand.
 - `types/`- Contains all types and interfaces.
 - `styles/*` - Contains all global styles.
 
@@ -35,8 +39,8 @@ This application requires Node.js v16.13+.
 ```bash
 git clone https://github.com/onurhan1337/my-website.git
 cd my-website
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example). You don't need to fill them out for the site to work. However, it is required to be able to use the [Upstash/Claps](https://github.com/upstash/claps) package.
