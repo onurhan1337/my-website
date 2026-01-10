@@ -14,8 +14,9 @@ export const AvailabilityBadge = memo(function AvailabilityBadge({
       className={cn(
         "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium tracking-tight",
         "border border-foreground/10 hover:border-foreground/20",
-        "hover:bg-foreground/2",
-        "transition-all",
+        "hover:bg-foreground/5 active:bg-foreground/8",
+        "transition-all cursor-pointer",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20",
         className
       )}
       aria-label="Available for work - Click for details"
