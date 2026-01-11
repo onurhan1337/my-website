@@ -12,8 +12,11 @@ export const metadata: Metadata = {
     "Onurhan Demir About",
     "Onurhan Demir Software Developer",
     "Onurhan Demir Türkiye",
+    "Software Developer",
+    "Full Stack Developer",
     "Software Developer Turkey",
-    "Full Stack Developer Turkey",
+    "Yazılım Geliştirici Türkiye",
+    "Full Stack Developer Türkiye",
   ],
   openGraph: {
     title: "About | Onurhan Demir",
@@ -44,6 +47,9 @@ const structuredData = {
     "TypeScript",
     "JavaScript",
     "B2B SaaS",
+    "Yazılım Geliştirme",
+    "Web Geliştirme",
+    "Full Stack Geliştirme",
   ],
   sameAs: [
     "https://github.com/onurhan1337",
@@ -54,16 +60,21 @@ const structuredData = {
     "@type": "PostalAddress",
     addressCountry: "TR",
     addressLocality: "Turkey",
+    alternateName: "Türkiye",
   },
   nationality: {
     "@type": "Country",
     name: "Turkey",
+    alternateName: "Türkiye",
   },
   jobLocation: {
     "@type": "Place",
+    name: "Turkey",
+    alternateName: "Türkiye",
     address: {
       "@type": "PostalAddress",
       addressCountry: "TR",
+      addressLocality: "Turkey",
     },
   },
 };

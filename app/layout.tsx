@@ -24,26 +24,25 @@ export const metadata: Metadata = {
   },
   description:
     "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Available for new opportunities.",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   keywords: [
     "Onurhan Demir",
     "Onurhan Demir Software Developer",
-    "Onurhan Demir Full Stack",
-    "Onurhan Demir React",
+    "Onurhan Demir Full Stack Developer",
+    "Onurhan Demir React Developer",
     "Onurhan Demir Türkiye",
-    "Onurhan Demir Turkey",
-    "Onurhan Demir Developer",
     "Onurhan Demir Yazılım Geliştirici",
-    "Onurhan",
     "Software Developer",
     "Full Stack Developer",
     "Web Developer",
-    "Frontend Engineer",
     "React Developer",
     "Next.js Developer",
     "TypeScript Developer",
-    "B2B SaaS",
-    "onurhan.dev",
-    "Onurhan Demir available",
     "Yazılım Geliştirici Türkiye",
     "Full Stack Developer Türkiye",
     "React Developer Türkiye",
@@ -62,7 +61,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://onurhan.dev/logo.svg",
+        url: "https://onurhan.dev/opengraph-image?title=Onurhan%20Demir%20-%20Software%20Developer",
         width: 1200,
         height: 630,
         alt: "Onurhan Demir - Software Developer",
@@ -107,6 +106,9 @@ export const metadata: Metadata = {
       "tr-TR": "https://onurhan.dev",
       "x-default": "https://onurhan.dev",
     },
+    types: {
+      "application/rss+xml": "https://onurhan.dev/feed.xml",
+    },
   },
 };
 
@@ -124,6 +126,8 @@ export default function RootLayout({
     url: "https://onurhan.dev",
     description:
       "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies.",
+    descriptionTr:
+      "Full stack web uygulamaları, B2B SaaS çözümleri ve mikro ürünler geliştiren Yazılım Geliştirici. React, Next.js, TypeScript ve modern web teknolojilerinde uzman.",
     knowsAbout: [
       "Software Development",
       "Web Development",
@@ -133,6 +137,9 @@ export default function RootLayout({
       "TypeScript",
       "JavaScript",
       "B2B SaaS",
+      "Yazılım Geliştirme",
+      "Web Geliştirme",
+      "Full Stack Geliştirme",
     ],
     sameAs: [
       "https://github.com/onurhan1337",
@@ -142,10 +149,17 @@ export default function RootLayout({
     address: {
       "@type": "PostalAddress",
       addressCountry: "TR",
+      addressLocality: "Turkey",
     },
     nationality: {
       "@type": "Country",
       name: "Turkey",
+      alternateName: "Türkiye",
+    },
+    workLocation: {
+      "@type": "Country",
+      name: "Turkey",
+      alternateName: "Türkiye",
     },
   };
 

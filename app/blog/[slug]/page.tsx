@@ -57,6 +57,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime,
       ...(modifiedTime && { modifiedTime }),
+      authors: ["Onurhan Demir"],
       url: blogUrl,
       siteName: "Onurhan Demir",
       locale: "en_US",
@@ -98,8 +99,10 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const headings = extractHeadings(blog.content);
   const modifiedAt = blog.metadata.modifiedAt;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev";
+  const blogUrl = `${baseUrl}/blog/${blog.slug}`;
 
-  const jsonLd = {
+  const blogPostJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: blog.metadata.title,
@@ -107,17 +110,19 @@ export default async function BlogDetailPage({ params }: Props) {
     ...(modifiedAt && { dateModified: modifiedAt }),
     description: blog.metadata.summary,
     image: blog.metadata.image
-      ? `https://onurhan.dev${blog.metadata.image}`
-      : `https://onurhan.dev/og?title=${blog.metadata.title}`,
-    url: `https://onurhan.dev/blog/${blog.slug}`,
+      ? `${baseUrl}${blog.metadata.image}`
+      : `${baseUrl}/opengraph-image?title=${encodeURIComponent(
+          blog.metadata.title
+        )}`,
+    url: blogUrl,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://onurhan.dev/blog/${blog.slug}`,
+      "@id": blogUrl,
     },
     author: {
       "@type": "Person",
       name: "Onurhan Demir",
-      url: "https://onurhan.dev",
+      url: baseUrl,
       sameAs: [
         "https://github.com/onurhan1337",
         "https://youtube.com/@onurhandev",
@@ -127,9 +132,39 @@ export default async function BlogDetailPage({ params }: Props) {
     publisher: {
       "@type": "Person",
       name: "Onurhan Demir",
-      url: "https://onurhan.dev",
+      url: baseUrl,
     },
     inLanguage: "en-US",
+    ...(blog.metadata.keywords && {
+      keywords: Array.isArray(blog.metadata.keywords)
+        ? blog.metadata.keywords.join(", ")
+        : blog.metadata.keywords,
+    }),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${baseUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: blog.metadata.title,
+        item: blogUrl,
+      },
+    ],
   };
 
   return (
@@ -138,7 +173,14 @@ export default async function BlogDetailPage({ params }: Props) {
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd),
+          __html: JSON.stringify(blogPostJsonLd),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
         }}
       />
       <h1 className="title font-medium text-2xl tracking-tight">
