@@ -126,8 +126,6 @@ export default function RootLayout({
     url: "https://onurhan.dev",
     description:
       "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies.",
-    descriptionTr:
-      "Full stack web uygulamaları, B2B SaaS çözümleri ve mikro ürünler geliştiren Yazılım Geliştirici. React, Next.js, TypeScript ve modern web teknolojilerinde uzman.",
     knowsAbout: [
       "Software Development",
       "Web Development",
