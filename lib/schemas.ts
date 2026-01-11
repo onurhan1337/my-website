@@ -26,6 +26,7 @@ export const blogMetadataSchema = z.object({
     .optional()
     .default([]),
   image: z.string().optional(),
+  lang: z.enum(["en", "tr"]).optional(),
 });
 
 /**
