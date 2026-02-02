@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export const KIZZLE_URL = "https://kizzle.studio?utm_source=onurhan.dev&utm_medium=website&utm_campaign=portfolio";
+export const KIZZLE_URL = "https://kizzle.studio?utm_source=onurhan.dev&utm_medium=website&utm_campaign=portfolio&src=personal";
 
 interface KizzleCTAButtonProps {
   text?: string;
@@ -33,7 +33,7 @@ export function KizzleCTAButton({
 
   if (href) {
     return (
-      <Link href={href} target="_blank" rel="noopener noreferrer" className={buttonClasses}>
+      <Link href={href} target="_blank" rel="noopener" className={buttonClasses}>
         {buttonContent}
       </Link>
     );
