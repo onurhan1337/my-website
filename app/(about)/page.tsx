@@ -1,17 +1,19 @@
 import Container from "@/components/shared/container";
 import Social from "@/components/social";
+import { KizzleCTA } from "@/components/kizzle-cta";
 import Script from "next/script";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Based in Turkey.",
+    "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Based in Turkey.",
   keywords: [
     "Onurhan Demir",
     "Onurhan Demir About",
     "Onurhan Demir Software Developer",
     "Onurhan Demir Türkiye",
+    "Kizzle Studio",
     "Software Developer",
     "Full Stack Developer",
     "Software Developer Turkey",
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About | Onurhan Demir",
     description:
-      "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products.",
+      "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms.",
     url: "https://onurhan.dev",
   },
   alternates: {
@@ -34,14 +36,17 @@ const structuredData = {
   "@type": "Person",
   name: "Onurhan Demir",
   alternateName: "Onurhan",
-  jobTitle: "Software Developer",
+  jobTitle: "Software Developer & Founder",
   url: "https://onurhan.dev",
   description:
-    "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Available for new opportunities.",
+    "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
   knowsAbout: [
     "Software Development",
     "Web Development",
     "Full Stack Development",
+    "E-commerce Development",
+    "Shopify",
+    "Ikas",
     "React",
     "Next.js",
     "TypeScript",
@@ -55,7 +60,15 @@ const structuredData = {
     "https://github.com/onurhan1337",
     "https://youtube.com/@onurhandev",
     "https://x.com/onurhan1337",
+    "https://kizzle.studio",
   ],
+  worksFor: {
+    "@type": "Organization",
+    name: "Kizzle Studio",
+    url: "https://kizzle.studio",
+    description:
+      "E-commerce development studio specializing in Shopify, Ikas, and custom solutions.",
+  },
   address: {
     "@type": "PostalAddress",
     addressCountry: "TR",
@@ -81,9 +94,9 @@ const structuredData = {
 
 export default function About() {
   const paragraphs = [
-    `I'm a Software Developer who ships full-stack applications. I build fast, scalable products that solve real problems—from B2B SaaS platforms to micro tools people actually use.`,
+    `I'm a Software Developer and Founder of Kizzle Studio, an e-commerce development studio specializing in Shopify and Ikas platforms. We build custom solutions from corporate invoicing workflows to AI-powered analytics for ambitious commerce brands.`,
     `I move fast and iterate. Ship, gather feedback, improve, repeat. I write clean, maintainable code while keeping velocity high. Balance matters—quality and speed go hand in hand.`,
-    `When I'm not coding for work, I'm building side projects and experimenting with new tech. Always learning, always building, always shipping.`,
+    `When I'm not building Kizzle Studio, I'm experimenting with new tech and building side projects. Always learning, always building, always shipping.`,
   ];
 
   return (
@@ -113,6 +126,7 @@ export default function About() {
           {index === 0 && <hr className="border-foreground/10 my-8" />}
         </div>
       ))}
+      <KizzleCTA />
       <Social />
       <Script
         id="structured-data"

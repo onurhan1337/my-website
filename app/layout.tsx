@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Onurhan Demir",
   },
   description:
-    "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies. Available for new opportunities.",
+    "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Onurhan Demir - Software Developer | Full Stack Engineer",
     description:
-      "Onurhan Demir is a Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Available for new opportunities.",
+      "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms.",
     url: "https://onurhan.dev",
     siteName: "Onurhan Demir - Software Developer",
     locale: "en_US",
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     site: "@onurhan1337",
     creator: "@onurhan1337",
     description:
-      "Software Developer specializing in full-stack development and modern web technologies. Available for new opportunities.",
+      "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, e-commerce platforms, and modern web technologies.",
   },
   verification: {
     google: "K1pkJ72cY3DylswXke2MHJGxmjJ91WXwgozcCICvFrU",
@@ -122,14 +122,17 @@ export default function RootLayout({
     "@type": "Person",
     name: "Onurhan Demir",
     alternateName: "Onurhan",
-    jobTitle: "Software Developer",
+    jobTitle: "Software Developer & Founder",
     url: "https://onurhan.dev",
     description:
-      "Software Developer specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and micro products. Expert in React, Next.js, TypeScript, and modern web technologies.",
+      "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
     knowsAbout: [
       "Software Development",
       "Web Development",
       "Full Stack Development",
+      "E-commerce Development",
+      "Shopify",
+      "Ikas",
       "React",
       "Next.js",
       "TypeScript",
@@ -143,7 +146,15 @@ export default function RootLayout({
       "https://github.com/onurhan1337",
       "https://youtube.com/@onurhandev",
       "https://x.com/onurhan1337",
+      "https://kizzle.studio",
     ],
+    worksFor: {
+      "@type": "Organization",
+      name: "Kizzle Studio",
+      url: "https://kizzle.studio",
+      description:
+        "E-commerce development studio specializing in Shopify, Ikas, and custom solutions.",
+    },
     address: {
       "@type": "PostalAddress",
       addressCountry: "TR",

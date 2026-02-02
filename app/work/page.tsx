@@ -5,18 +5,19 @@ import { WorkClient } from "./work-client";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Onurhan Demir's professional experience and work history. Software Developer at Insider, Frontend Engineer at Utilify. Building B2B SaaS solutions and web applications.",
+    "Onurhan Demir's professional experience and work history. Founder of Kizzle Studio, former Software Developer at Insider, Frontend Engineer at Utilify. Building e-commerce solutions and web applications.",
   keywords: [
     "Onurhan Demir Work",
     "Onurhan Demir Experience",
     "Onurhan Demir Career",
+    "Kizzle Studio",
     "Software Developer Turkey",
     "Full Stack Developer Experience",
   ],
   openGraph: {
     title: "Work | Onurhan Demir",
     description:
-      "Onurhan Demir's professional experience and work history. Software Developer specializing in full-stack development.",
+      "Onurhan Demir's professional experience and work history. Founder of Kizzle Studio, specializing in e-commerce and full-stack development.",
     url: "https://onurhan.dev/work",
   },
   alternates: {

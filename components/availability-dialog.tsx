@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import IconUpwork from "@/components/shared/icons/upwork";
+import { KizzleCTAButton, KIZZLE_URL } from "@/components/kizzle-cta-button";
 import type { AvailabilityDialogProps } from "@/types";
 import { trackClick } from "@/lib/actions/track-click";
 import type { ClickType } from "@/lib/click-tracking";
@@ -29,63 +29,63 @@ export function AvailabilityDialog({
       <DialogContent className="max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className="text-xl font-medium tracking-tight mb-2">
-            Available for Work
+            Building Kizzle Studio
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="space-y-4">
             <p className="text-[15px] leading-relaxed opacity-80">
-              I&apos;m available immediately for full-time opportunities. Open
-              to remote, hybrid, or on-site work.
+              I&apos;m currently focused on building{" "}
+              <Link
+                href={KIZZLE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline decoration-foreground/30 underline-offset-2 hover:opacity-100 transition-opacity"
+              >
+                Kizzle Studio
+              </Link>
+              , an e-commerce development studio specializing in Shopify and
+              Ikas platforms.
             </p>
 
             <div>
               <p className="text-[15px] font-medium leading-relaxed opacity-90 mb-2">
-                Looking for roles as:
+                What we do:
               </p>
               <div className="text-[15px] leading-relaxed opacity-75 space-y-1 pl-1">
-                <p>• Senior Front-end Engineer</p>
-                <p>• Product Engineer</p>
-                <p>• React/Next.js Specialist</p>
+                <p>• Custom Shopify & Ikas development</p>
+                <p>• Corporate invoicing workflows</p>
+                <p>• AI-powered analytics solutions</p>
               </div>
             </div>
 
             <p className="text-[15px] leading-relaxed opacity-80">
-              Based in Türkiye, open to remote work worldwide. Flexible with
-              timezone requirements.
+              We build the technical infrastructure that powers exceptional
+              commerce experiences for ambitious brands.
             </p>
           </div>
 
           <hr className="border-foreground/10" />
 
           <div className="space-y-4">
-            <p className="text-[15px] leading-[22px] opacity-80 font-medium tracking-[-0.6px] text-[#00bd8e]">
-              I also offer outsourced software development services for
-              businesses looking to build or scale their products.
+            <p className="text-[15px] leading-[22px] opacity-90 font-medium tracking-[-0.6px]">
+              Looking to build or scale your e-commerce business? Let&apos;s
+              talk.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-3">
+              <div onClick={() => handleTrackClick("AVAILABILITY_DIALOG:KIZZLE")}>
+                <KizzleCTAButton
+                  text="Kizzle Studio"
+                  href="https://kizzle.studio"
+                  className="w-full justify-center"
+                />
+              </div>
               <Button
                 asChild
                 variant="default"
-                className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
-              >
-                <Link
-                  href="https://www.upwork.com/freelancers/~018ec24713c9a36406?mp_source=share"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                  onClick={() => handleTrackClick("AVAILABILITY_DIALOG:UPWORK")}
-                >
-                  <IconUpwork size={18} />
-                  <span>Upwork</span>
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="default"
-                className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
+                className="w-full justify-center gap-2 h-[52px] px-5 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border border-neutral-200 hover:opacity-90 hover:bg-[#ebebeb]"
               >
                 <Link
                   href="mailto:onurhandtr@gmail.com"

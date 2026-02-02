@@ -5,7 +5,8 @@ import { WavySeparator } from "@/components/shared/wavy-separator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import IconUpwork from "@/components/shared/icons/upwork";
+import IconKizzle from "@/components/shared/icons/kizzle";
+import { KizzleCTAButton, KIZZLE_URL } from "@/components/kizzle-cta-button";
 import { trackClick } from "@/lib/actions/track-click";
 import type { ClickType } from "@/lib/click-tracking";
 
@@ -16,6 +17,20 @@ function handleTrackClick(clickType: ClickType) {
 }
 
 const workExperiences = [
+  {
+    company: "Kizzle Studio",
+    role: "Founder",
+    period: "2025 — Present",
+    isKizzle: true,
+description:
+      "Building Kizzle Studio, an e-commerce development studio specializing in Shopify and Ikas platforms. We solve complex commerce challenges and build the technical infrastructure that powers exceptional commerce experiences.",
+    achievements: [
+      "Building custom Shopify and Ikas theme development solutions.",
+      "Developing corporate invoicing workflows and AI-powered analytics tools.",
+      "Creating custom integrations and app development for e-commerce platforms.",
+      "Providing technical partnership for ambitious commerce brands.",
+    ],
+  },
   {
     company: "Insider",
     role: "Software Developer",
@@ -95,7 +110,10 @@ export function WorkClient() {
             className="py-8 border-b border-foreground/10 last:border-0"
           >
             <header className="mb-6">
-              <h2 className="font-medium text-xl mb-2 tracking-tight ">
+              <h2 className="font-medium text-xl mb-2 tracking-tight flex items-center gap-2">
+                {"isKizzle" in experience && experience.isKizzle && (
+                  <IconKizzle size={20} />
+                )}
                 {experience.company}
               </h2>
               <div className="flex items-center gap-2 text-[13px] opacity-50 tracking-tight">
@@ -131,38 +149,28 @@ export function WorkClient() {
       >
         <header className="mb-6">
           <h2 className="font-medium text-xl mb-2 tracking-tight">
-            Freelance & Outsourced Development
+            Work With Kizzle Studio
           </h2>
         </header>
 
         <p className="text-[15px] leading-relaxed opacity-80 mb-6">
-          I offer outsourced software development services for businesses looking
-          to build or scale their products. Whether you need a full-stack
-          application, a B2B SaaS solution, or help building your next product,
-          I can help you ship fast and iterate quickly.
+          Looking to build or scale your e-commerce business? At Kizzle Studio,
+          we specialize in Shopify and Ikas development, building custom
+          solutions from corporate invoicing workflows to AI-powered analytics.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
+          <div onClick={() => handleTrackClick("WORK_PAGE:KIZZLE")} className="w-full sm:w-auto">
+            <KizzleCTAButton
+              text="Kizzle Studio"
+              href="https://kizzle.studio"
+              className="w-full sm:w-auto justify-center sm:justify-start"
+            />
+          </div>
           <Button
             asChild
             variant="default"
-            className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
-          >
-            <Link
-              href="https://www.upwork.com/freelancers/~018ec24713c9a36406?mp_source=share"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2"
-              onClick={() => handleTrackClick("WORK_PAGE:UPWORK")}
-            >
-              <IconUpwork size={18} />
-              <span>Upwork</span>
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="default"
-            className="w-full justify-center sm:justify-start gap-2 h-10 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border-0 hover:opacity-90 outline-1 outline-offset-2 outline-secondary hover:bg-secondary hover:outline-offset-0"
+            className="w-full sm:w-auto justify-center sm:justify-start gap-2 h-[52px] px-5 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border border-neutral-200 hover:opacity-90 hover:bg-[#ebebeb]"
           >
             <Link
               href="mailto:onurhandtr@gmail.com"

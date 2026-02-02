@@ -7,10 +7,10 @@ const redis = Redis.fromEnv();
 
 export type ClickType =
   | "AVAILABILITY_DIALOG:EMAIL"
-  | "AVAILABILITY_DIALOG:UPWORK"
-  | "MAIN_PAGE:UPWORK"
+  | "AVAILABILITY_DIALOG:KIZZLE"
+  | "MAIN_PAGE:KIZZLE"
   | "WORK_PAGE:EMAIL"
-  | "WORK_PAGE:UPWORK";
+  | "WORK_PAGE:KIZZLE";
 
 const SESSION_TTL = 24 * 60 * 60;
 
