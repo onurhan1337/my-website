@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getBlogPost, getAllBlogPosts } from "@/app/db/blog";
-import ClapsButton from "@/components/claps";
 import { CustomMDX } from "@/components/mdx";
 import Container from "@/components/shared/container";
 import TableOfContents from "@/components/table-of-contents";
@@ -199,8 +198,6 @@ export default async function BlogDetailPage({ params }: Props) {
       <article className="prose prose-quoteless prose-neutral text-justify w-auto">
         <CustomMDX source={blog.content} />
       </article>
-
-      <ClapsButton key={blog.slug} blogSlug={blog.slug} />
     </Container>
   );
 }

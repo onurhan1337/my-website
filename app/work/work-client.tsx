@@ -6,15 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import IconKizzle from "@/components/shared/icons/kizzle";
-import { KizzleCTAButton, KIZZLE_URL } from "@/components/kizzle-cta-button";
-import { trackClick } from "@/lib/actions/track-click";
-import type { ClickType } from "@/lib/click-tracking";
-
-function handleTrackClick(clickType: ClickType) {
-  trackClick(clickType).catch((error) => {
-    console.error("Failed to track click:", error);
-  });
-}
+import { KizzleCTAButton } from "@/components/kizzle-cta-button";
 
 const workExperiences = [
   {
@@ -160,13 +152,11 @@ export function WorkClient() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <div onClick={() => handleTrackClick("WORK_PAGE:KIZZLE")} className="w-full sm:w-auto">
-            <KizzleCTAButton
-              text="Kizzle Studio"
-              href="https://kizzle.studio"
-              className="w-full sm:w-auto justify-center sm:justify-start"
-            />
-          </div>
+          <KizzleCTAButton
+            text="Kizzle Studio"
+            href="https://kizzle.studio"
+            className="w-full sm:w-auto justify-center sm:justify-start"
+          />
           <Button
             asChild
             variant="default"
@@ -175,7 +165,6 @@ export function WorkClient() {
             <Link
               href="mailto:onurhandtr@gmail.com"
               className="flex items-center gap-2"
-              onClick={() => handleTrackClick("WORK_PAGE:EMAIL")}
             >
               <Mail size={18} />
               <span>Email</span>

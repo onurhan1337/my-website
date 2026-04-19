@@ -11,14 +11,6 @@ import Link from "next/link";
 import { Mail } from "lucide-react";
 import { KizzleCTAButton, KIZZLE_URL } from "@/components/kizzle-cta-button";
 import type { AvailabilityDialogProps } from "@/types";
-import { trackClick } from "@/lib/actions/track-click";
-import type { ClickType } from "@/lib/click-tracking";
-
-function handleTrackClick(clickType: ClickType) {
-  trackClick(clickType).catch((error) => {
-    console.error("Failed to track click:", error);
-  });
-}
 
 export function AvailabilityDialog({
   open,
@@ -75,13 +67,11 @@ export function AvailabilityDialog({
             </p>
 
             <div className="flex flex-col gap-3">
-              <div onClick={() => handleTrackClick("AVAILABILITY_DIALOG:KIZZLE")}>
-                <KizzleCTAButton
-                  text="Kizzle Studio"
-                  href="https://kizzle.studio"
-                  className="w-full justify-center"
-                />
-              </div>
+              <KizzleCTAButton
+                text="Kizzle Studio"
+                href="https://kizzle.studio"
+                className="w-full justify-center"
+              />
               <Button
                 asChild
                 variant="default"
@@ -90,7 +80,6 @@ export function AvailabilityDialog({
                 <Link
                   href="mailto:onurhandtr@gmail.com"
                   className="flex items-center gap-2"
-                  onClick={() => handleTrackClick("AVAILABILITY_DIALOG:EMAIL")}
                 >
                   <Mail size={18} />
                   <span>Email</span>

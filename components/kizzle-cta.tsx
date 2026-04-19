@@ -1,7 +1,4 @@
-"use client";
-
 import { KizzleCTAButton } from "@/components/kizzle-cta-button";
-import { trackClick } from "@/lib/actions/track-click";
 
 export function KizzleCTA() {
   return (
@@ -15,12 +12,7 @@ export function KizzleCTA() {
             Custom e-commerce development at kizzle studio
           </p>
         </div>
-        <div
-          onClick={() => {
-            trackClick("MAIN_PAGE:KIZZLE").catch(console.error);
-          }}
-          className="shrink-0"
-        >
+        <div className="shrink-0">
           <KizzleCTAButton text="Get in Touch" />
         </div>
       </div>

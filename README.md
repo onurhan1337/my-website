@@ -5,16 +5,14 @@
 # onurhan.dev
 
 - **Icons**: [Lucide React](https://lucide.dev/icons/)
-- **Like**: [Upstash Claps](https://github.com/upstash/claps)
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Deployment**: [Vercel](https://vercel.com)
+- **Deployment**: Docker on [Coolify](https://coolify.io/) (Hetzner)
 - **Syntax Highlight**: [Sugar High](https://github.com/huozhi/sugar-high)
 - **Blog**: [Next MDX Remote](https://github.com/hashicorp/next-mdx-remote)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
 
 ## Overview
 
-- `pages/api/*` - [API Routes](https://nextjs.org/docs/api-routes/introduction), claps.
 - `app/blog/*` - Static pre-rendered blog pages using Contentlayer.
 - `app/*` - All other pages.
 - `components/` - All components.
@@ -43,7 +41,7 @@ pnpm install
 pnpm dev
 ```
 
-Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example). You don't need to fill them out for the site to work. However, it is required to be able to use the [Upstash/Claps](https://github.com/upstash/claps) package.
+Create a `.env` file similar to [`.env.example`](https://github.com/onurhan1337/my-website/blob/master/.env.example). You don't need to fill them out for the site to work.
 
 ## Cloning / Forking
 
@@ -77,9 +75,9 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deployed via Docker on [Coolify](https://coolify.io/) running on Hetzner. The provided [`Dockerfile`](./Dockerfile) builds a minimal standalone image using Next.js output tracing.
 
 # Inspiration
 
