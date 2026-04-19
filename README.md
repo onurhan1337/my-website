@@ -69,11 +69,4 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 Deployed on [Cloudflare Pages](https://pages.cloudflare.com/) as a pure static export (`output: "export"`). All HTML is generated at build time, so MDX content is read from the filesystem during the build and served as plain static files from the CDN.
 
-# Inspiration
-
-- [@rauchg](https://twitter.com/emilkowalski_)
-- [@ademilter](https://twitter.com/ademilter)
-- [@leerob](https://twitter.com/leeerob)
-- [@shadcn](https://twitter.com/shadcn)
-
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
