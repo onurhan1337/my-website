@@ -69,6 +69,10 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   return getAllBlogPostsSorted();
 }
 
+export async function getAllBlogPostsList(): Promise<BlogListItem[]> {
+  return getAllBlogPostsListSorted();
+}
+
 export async function getBlogPosts(
   page: number = 1,
   limit: number = 5

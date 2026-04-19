@@ -6,7 +6,7 @@
 
 - **Icons**: [Lucide React](https://lucide.dev/icons/)
 - **Framework**: [Next.js](https://nextjs.org/)
-- **Deployment**: Docker on [Coolify](https://coolify.io/) (Hetzner)
+- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/)
 - **Syntax Highlight**: [Sugar High](https://github.com/huozhi/sugar-high)
 - **Blog**: [Next MDX Remote](https://github.com/hashicorp/next-mdx-remote)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
@@ -77,7 +77,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deployment
 
-Deployed via Docker on [Coolify](https://coolify.io/) running on Hetzner. The provided [`Dockerfile`](./Dockerfile) builds a minimal standalone image using Next.js output tracing.
+Deployed on [Cloudflare Pages](https://pages.cloudflare.com/). All pages are statically generated at build time (`force-static`), so MDX content is read from the filesystem during the build — no Node.js runtime is needed on the edge.
 
 # Inspiration
 

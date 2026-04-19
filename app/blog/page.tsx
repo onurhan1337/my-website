@@ -1,8 +1,8 @@
-import Pagination from "@/components/pagination";
+import { BlogPaginatedList } from "@/components/blog-paginated-list";
 import Container from "@/components/shared/container";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { getBlogPosts } from "../db/blog";
+import { getAllBlogPostsList } from "../db/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -30,26 +30,20 @@ export const metadata: Metadata = {
   },
 };
 
-interface BlogPageProps {
-  searchParams: Promise<{ page?: string }>;
-}
+export const dynamic = "force-static";
 
-export const revalidate = 3600;
-
-export default async function Blog({ searchParams }: BlogPageProps) {
-  const { page = "1" } = await searchParams;
-  const currentPage = Math.max(1, Number(page));
-  const { posts, totalPages } = await getBlogPosts(currentPage);
+export default async function Blog() {
+  const posts = await getAllBlogPostsList();
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev";
 
   const blogCollectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "@id": `${baseUrl}/blog?page=${currentPage}`,
+    "@id": `${baseUrl}/blog`,
     name: "Blog | Onurhan Demir",
     description:
       "Read Onurhan Demir's thoughts on software development, design, React, Next.js, TypeScript, and modern web technologies. Articles about building web applications and B2B SaaS solutions.",
-    url: `${baseUrl}/blog?page=${currentPage}`,
+    url: `${baseUrl}/blog`,
     mainEntity: {
       "@type": "Blog",
       name: "Onurhan Demir's Blog",
@@ -80,11 +74,7 @@ export default async function Blog({ searchParams }: BlogPageProps) {
           __html: JSON.stringify(blogCollectionJsonLd),
         }}
       />
-      <Pagination
-        blogs={posts}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
+      <BlogPaginatedList posts={posts} />
     </Container>
   );
 }

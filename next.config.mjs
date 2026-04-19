@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
   transpilePackages: ["next-mdx-remote"],
   images: {
     formats: ["image/avif", "image/webp"],

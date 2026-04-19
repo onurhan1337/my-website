@@ -1,6 +1,6 @@
 import { getAllBlogPosts } from "@/app/db/blog";
 
-export const revalidate = 18000; // Revalidate every 5 hours
+export const dynamic = "force-static";
 
 function detectLanguage(text: string): "tr" | "en" {
   const turkishChars = /[çğıöşüÇĞİÖŞÜ]/;

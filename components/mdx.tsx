@@ -316,6 +316,7 @@ const components = {
   ConsCard,
   code: Code,
   Table,
+  LinkCard,
   LinkCardList,
   BuyMeACoffee,
   TaskSimulator,
