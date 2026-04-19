@@ -39,12 +39,6 @@ export async function generateMetadata({
     keywords,
   } = blog.metadata;
 
-  const ogImage =
-    new URL(
-      "/opengraph-image",
-      process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
-    ).toString() + `?title=${encodeURIComponent(title)}`;
-
   const blogUrl = `https://onurhan.dev/blog/${blog.slug}`;
 
   return {
@@ -62,14 +56,6 @@ export async function generateMetadata({
       siteName: "Onurhan Demir",
       locale: "en_US",
       alternateLocale: ["tr_TR"],
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -77,7 +63,6 @@ export async function generateMetadata({
       description,
       site: "@onurhan1337",
       creator: "@onurhan1337",
-      images: [ogImage],
     },
     alternates: {
       canonical: blogUrl,
@@ -111,9 +96,7 @@ export default async function BlogDetailPage({ params }: Props) {
     description: blog.metadata.summary,
     image: blog.metadata.image
       ? `${baseUrl}${blog.metadata.image}`
-      : `${baseUrl}/opengraph-image?title=${encodeURIComponent(
-          blog.metadata.title
-        )}`,
+      : `${baseUrl}/blog/${blog.slug}/opengraph-image`,
     url: blogUrl,
     mainEntityOfPage: {
       "@type": "WebPage",

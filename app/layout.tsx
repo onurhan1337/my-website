@@ -1,5 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -59,14 +57,6 @@ export const metadata: Metadata = {
     locale: "en_US",
     alternateLocale: ["tr_TR"],
     type: "website",
-    images: [
-      {
-        url: "https://onurhan.dev/opengraph-image?title=Onurhan%20Demir%20-%20Software%20Developer",
-        width: 1200,
-        height: 630,
-        alt: "Onurhan Demir - Software Developer",
-      },
-    ],
   },
   robots: {
     index: true,
@@ -190,8 +180,6 @@ export default function RootLayout({
             {children}
           </section>
         </main>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
