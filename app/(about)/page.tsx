@@ -1,29 +1,32 @@
 import Container from "@/components/shared/container";
 import Social from "@/components/social";
-import { KizzleCTA } from "@/components/kizzle-cta";
+import { CTA } from "@/components/cta";
 import Script from "next/script";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Based in Turkey.",
+    "Onurhan Demir is a Developer Advocate & Frontend Developer at ikas, specializing in developer ecosystems, UX-focused interfaces, and e-commerce solutions. Based in Turkey.",
   keywords: [
     "Onurhan Demir",
     "Onurhan Demir About",
-    "Onurhan Demir Software Developer",
+    "Onurhan Demir Developer Advocate",
     "Onurhan Demir Türkiye",
-    "Kizzle Studio",
-    "Software Developer",
+    "Developer Advocate",
+    "Frontend Developer",
     "Full Stack Developer",
     "Software Developer Turkey",
     "Yazılım Geliştirici Türkiye",
     "Full Stack Developer Türkiye",
+    "ikas developer",
+    "e-commerce development",
+    "UX development",
   ],
   openGraph: {
     title: "About | Onurhan Demir",
     description:
-      "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms.",
+      "Onurhan Demir is a Developer Advocate & Frontend Developer at ikas, focused on developer ecosystems, UX, and e-commerce solutions. Based in Turkey.",
     url: "https://onurhan.dev",
   },
   alternates: {
@@ -36,14 +39,15 @@ const structuredData = {
   "@type": "Person",
   name: "Onurhan Demir",
   alternateName: "Onurhan",
-  jobTitle: "Software Developer & Founder",
+  jobTitle: "Developer Advocate & Frontend Developer",
   url: "https://onurhan.dev",
   description:
-    "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
+    "Developer Advocate & Frontend Developer at ikas, focused on developer ecosystems, UX, and e-commerce solutions. Building useful digital products with modern web technologies.",
   knowsAbout: [
     "Software Development",
     "Web Development",
-    "Full Stack Development",
+    "Product Development",
+    "UX Design",
     "E-commerce Development",
     "Shopify",
     "Ikas",
@@ -51,10 +55,9 @@ const structuredData = {
     "Next.js",
     "TypeScript",
     "JavaScript",
-    "B2B SaaS",
     "Yazılım Geliştirme",
     "Web Geliştirme",
-    "Full Stack Geliştirme",
+    "Ürün Geliştirme",
   ],
   sameAs: [
     "https://github.com/onurhan1337",
@@ -64,10 +67,10 @@ const structuredData = {
   ],
   worksFor: {
     "@type": "Organization",
-    name: "Kizzle Studio",
-    url: "https://kizzle.studio",
+    name: "ikas",
+    url: "https://ikas.com",
     description:
-      "E-commerce development studio specializing in Shopify, Ikas, and custom solutions.",
+      "E-commerce platform company building tools for merchants and developers.",
   },
   address: {
     "@type": "PostalAddress",
@@ -94,9 +97,9 @@ const structuredData = {
 
 export default function About() {
   const paragraphs = [
-    `I'm a Software Developer and Founder of Kizzle Studio, an e-commerce development studio specializing in Shopify and Ikas platforms. We build custom solutions from corporate invoicing workflows to AI-powered analytics for ambitious commerce brands.`,
+    `I'm a Developer Advocate & Frontend Developer at ikas, where I help grow the developer ecosystem and build products and experiences for the platform. My focus is on shipping practical, maintainable solutions that improve the merchant and developer experience.`,
     `I move fast and iterate. Ship, gather feedback, improve, repeat. I write clean, maintainable code while keeping velocity high. Balance matters—quality and speed go hand in hand.`,
-    `When I'm not building Kizzle Studio, I'm experimenting with new tech and building side projects. Always learning, always building, always shipping.`,
+    `Outside of work, I'm still experimenting with new tech and building side projects. Always learning, always building, always shipping.`,
   ];
 
   return (
@@ -123,10 +126,10 @@ export default function About() {
           >
             {paragraph}
           </p>
-          {index === 0 && <hr className="border-foreground/10 my-8" />}
+          {index === 0 && <hr className="border-foreground/10 my-0!" />}
         </div>
       ))}
-      <KizzleCTA />
+      <CTA />
       <Social />
       <Script
         id="structured-data"

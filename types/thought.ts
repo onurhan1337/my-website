@@ -22,10 +22,4 @@ export interface ThoughtsListProps {
   currentPage: number;
 }
 
-export interface ThoughtsPaginationProps {
-  allThoughts: (ThoughtPost & {
-    renderedContent: React.ReactNode;
-  })[];
-  thoughtsPerPage?: number;
-  filter?: string;
-}
+

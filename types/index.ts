@@ -13,7 +13,6 @@ export type {
   ThoughtPost,
   ThoughtCardProps,
   ThoughtsListProps,
-  ThoughtsPaginationProps,
 } from "./thought";
 
 export interface ISVGProps extends React.SVGProps<SVGSVGElement> {

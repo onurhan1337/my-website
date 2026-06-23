@@ -243,7 +243,7 @@ function Code({
 
   const wrappedCode = (
     <div className="bg-transparent rounded-lg">
-      <CopyCode code={codeString} className="p-4">
+      <CopyCode code={codeString}>
         {codeBlock}
       </CopyCode>
     </div>

@@ -2,38 +2,60 @@
 
 import { motion } from "framer-motion";
 import { WavySeparator } from "@/components/shared/wavy-separator";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Mail } from "lucide-react";
-import IconKizzle from "@/components/shared/icons/kizzle";
-import { KizzleCTAButton } from "@/components/kizzle-cta-button";
 
 const workExperiences = [
   {
-    company: "Kizzle Studio",
-    role: "Founder",
-    period: "2025 — Present",
-    isKizzle: true,
-description:
-      "Building Kizzle Studio, an e-commerce development studio specializing in Shopify and Ikas platforms. We solve complex commerce challenges and build the technical infrastructure that powers exceptional commerce experiences.",
+    company: "ikas",
+    role: "Developer Advocate & Frontend Developer",
+    period: "Jun 2026 — Present",
+    description:
+      "At ikas, I work across Developer Relations and frontend, helping grow the developer ecosystem around the app store, theme store, and Studio. I bridge developers, agencies, and the product teams while building toward a better developer and merchant experience.",
     achievements: [
-      "Building custom Shopify and Ikas theme development solutions.",
-      "Developing corporate invoicing workflows and AI-powered analytics tools.",
-      "Creating custom integrations and app development for e-commerce platforms.",
-      "Providing technical partnership for ambitious commerce brands.",
+      "Supporting the growth of the ikas developer ecosystem across the app store, theme store, and Studio.",
+      "Improving the Studio experience with frontend and component work that makes stores easier to customize.",
+      "Producing technical content, examples, and guides to help developers build apps, themes, and components on ikas.",
+      "Exploring AI-assisted Studio ideas to help non-technical merchants solve their own needs.",
+      "Bringing developer and merchant feedback back to the product teams to shape the platform.",
     ],
   },
   {
-    company: "Insider",
+    company: "Kizzle Studio",
+    role: "Software Developer",
+    period: "2025 — 2026",
+    description:
+      "Software Developer at Kizzle Studio, an e-commerce development studio specializing in Shopify and Ikas platforms. We build custom solutions from corporate invoicing workflows to AI-powered analytics for ambitious commerce brands.",
+    achievements: [
+      "Building custom Shopify and Ikas theme development solutions.",
+      "Developing corporate invoicing workflows and AI-powered analytics for e-commerce platforms.",
+      "Creating custom integrations and app development for e-commerce platforms.",
+      "Providing technical partnership for ambitious commerce brands.",
+    ],  
+  },
+  {
+    company: "Insider One",
     role: "Software Developer",
     period: "2024 — 2025",
     description:
-      "At Insider, I was part of the Partner Solution Development team, where I contributed to the development of B2B SaaS solutions tailored to our clients' needs. My role involved collaborating with cross-functional teams to deliver scalable and efficient software solutions that helped businesses grow and optimize their workflows.",
+      "At Insider One, I was part of the Partner Solution Development team, where I contributed to the development of B2B SaaS solutions tailored to our clients' needs. My role involved collaborating with cross-functional teams to deliver scalable and efficient software solutions that helped businesses grow and optimize their workflows.",
     achievements: [
       "Developed and customized solutions for enterprise clients to enhance their business operations.",
       "Collaborated closely with product managers and designers to deliver user-centric features for B2B applications.",
       "Implemented efficient and maintainable codebases using modern software development practices.",
       "Actively improved existing systems by identifying bottlenecks and implementing optimizations.",
+    ],
+  },
+  {
+    company: "ION Labs",
+    role: "Frontend Engineer",
+    period: "Jan 2024 — Sep 2024",
+    description:
+      "Worked as a contract Frontend Engineer at ION Labs, building end-to-end applications with Next.js, Docker, and PostgreSQL that served thousands of users. Collaborated on internal tools and data platforms to streamline operations.",
+    achievements: [
+      "Built scalable full-stack applications using Next.js, Docker, and PostgreSQL serving thousands of users.",
+      "Developed data visualization dashboards that improved decision-making for management teams.",
+      "Integrated Paraşüt accounting APIs, reducing manual workload for client financial operations.",
+      "Improved application performance and user experience through targeted frontend optimizations.",
+      "Developed the mobile version of the internal operations tool using React Native + Expo, enabling field teams to access customer data, create records, and track tasks on the go.",
     ],
   },
   {
@@ -81,7 +103,7 @@ export function WorkClient() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="mb-12"
+        className="mb-2"
       >
         <p className="text-[15px] leading-relaxed opacity-80">
           On a mission to create impactful applications that engage users and
@@ -103,9 +125,6 @@ export function WorkClient() {
           >
             <header className="mb-6">
               <h2 className="font-medium text-xl mb-2 tracking-tight flex items-center gap-2">
-                {"isKizzle" in experience && experience.isKizzle && (
-                  <IconKizzle size={20} />
-                )}
                 {experience.company}
               </h2>
               <div className="flex items-center gap-2 text-[13px] opacity-50 tracking-tight">
@@ -130,48 +149,6 @@ export function WorkClient() {
           </motion.article>
         ))}
       </section>
-
-      <WavySeparator />
-
-      <motion.section
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: workExperiences.length * 0.1 }}
-        className="py-8"
-      >
-        <header className="mb-6">
-          <h2 className="font-medium text-xl mb-2 tracking-tight">
-            Work With Kizzle Studio
-          </h2>
-        </header>
-
-        <p className="text-[15px] leading-relaxed opacity-80 mb-6">
-          Looking to build or scale your e-commerce business? At Kizzle Studio,
-          we specialize in Shopify and Ikas development, building custom
-          solutions from corporate invoicing workflows to AI-powered analytics.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <KizzleCTAButton
-            text="Kizzle Studio"
-            href="https://kizzle.studio"
-            className="w-full sm:w-auto justify-center sm:justify-start"
-          />
-          <Button
-            asChild
-            variant="default"
-            className="w-full sm:w-auto justify-center sm:justify-start gap-2 h-[52px] px-5 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border border-neutral-200 hover:opacity-90 hover:bg-[#ebebeb]"
-          >
-            <Link
-              href="mailto:onurhandtr@gmail.com"
-              className="flex items-center gap-2"
-            >
-              <Mail size={18} />
-              <span>Email</span>
-            </Link>
-          </Button>
-        </div>
-      </motion.section>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 export function WavySeparator() {
   return (
-    <div className="relative w-full my-12">
+    <div className="relative w-full my-2">
       <svg
         className="w-full h-4"
         viewBox="0 0 800 16"

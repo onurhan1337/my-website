@@ -1,27 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
 import { Header } from "@/components/header";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  adjustFontFallback: false,
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev"
   ),
   title: {
-    default: "Onurhan Demir - Software Developer | Full Stack Engineer",
+    default: "Onurhan Demir - Developer Advocate & Frontend Developer at ikas",
     template: "%s | Onurhan Demir",
   },
   description:
-    "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
+    "Onurhan Demir is a Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences. Expert in React, Next.js, TypeScript, and modern web technologies.",
   referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,
@@ -30,30 +22,33 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Onurhan Demir",
-    "Onurhan Demir Software Developer",
-    "Onurhan Demir Full Stack Developer",
+    "Onurhan Demir Developer Advocate",
+    "Onurhan Demir Frontend Developer",
+    "Onurhan Demir ikas",
     "Onurhan Demir React Developer",
     "Onurhan Demir Türkiye",
     "Onurhan Demir Yazılım Geliştirici",
-    "Software Developer",
-    "Full Stack Developer",
+    "Developer Advocate",
+    "DevRel",
+    "Frontend Developer",
+    "ikas developer",
     "Web Developer",
     "React Developer",
     "Next.js Developer",
     "TypeScript Developer",
-    "Yazılım Geliştirici Türkiye",
-    "Full Stack Developer Türkiye",
+    "Developer Advocate Türkiye",
+    "Frontend Developer Türkiye",
     "React Developer Türkiye",
   ],
   authors: [{ name: "Onurhan Demir", url: "https://onurhan.dev" }],
   creator: "Onurhan Demir",
   publisher: "Onurhan Demir",
   openGraph: {
-    title: "Onurhan Demir - Software Developer | Full Stack Engineer",
+    title: "Onurhan Demir - Developer Advocate & Frontend Developer at ikas",
     description:
-      "Onurhan Demir is a Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms.",
+      "Onurhan Demir is a Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences.",
     url: "https://onurhan.dev",
-    siteName: "Onurhan Demir - Software Developer",
+    siteName: "Onurhan Demir - Developer Advocate",
     locale: "en_US",
     alternateLocale: ["tr_TR"],
     type: "website",
@@ -79,12 +74,12 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: "Onurhan Demir - Software Developer",
+    title: "Onurhan Demir - Developer Advocate & Frontend Developer",
     card: "summary_large_image",
     site: "@onurhan1337",
     creator: "@onurhan1337",
     description:
-      "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, e-commerce platforms, and modern web technologies.",
+      "Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences.",
   },
   verification: {
     google: "K1pkJ72cY3DylswXke2MHJGxmjJ91WXwgozcCICvFrU",
@@ -112,25 +107,25 @@ export default function RootLayout({
     "@type": "Person",
     name: "Onurhan Demir",
     alternateName: "Onurhan",
-    jobTitle: "Software Developer & Founder",
+    jobTitle: "Developer Advocate & Frontend Developer",
     url: "https://onurhan.dev",
     description:
-      "Software Developer and Founder of Kizzle Studio, specializing in full-stack development, building comprehensive web applications, B2B SaaS solutions, and e-commerce platforms. Expert in React, Next.js, TypeScript, and modern web technologies.",
+      "Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences. Expert in React, Next.js, TypeScript, and modern web technologies.",
     knowsAbout: [
-      "Software Development",
+      "Developer Relations",
+      "Developer Advocacy",
+      "Frontend Development",
       "Web Development",
-      "Full Stack Development",
+      "Developer Experience",
       "E-commerce Development",
+      "ikas",
       "Shopify",
-      "Ikas",
       "React",
       "Next.js",
       "TypeScript",
       "JavaScript",
-      "B2B SaaS",
       "Yazılım Geliştirme",
       "Web Geliştirme",
-      "Full Stack Geliştirme",
     ],
     sameAs: [
       "https://github.com/onurhan1337",
@@ -140,10 +135,10 @@ export default function RootLayout({
     ],
     worksFor: {
       "@type": "Organization",
-      name: "Kizzle Studio",
-      url: "https://kizzle.studio",
+      name: "ikas",
+      url: "https://ikas.com",
       description:
-        "E-commerce development studio specializing in Shopify, Ikas, and custom solutions.",
+        "E-commerce platform company building tools for merchants and developers.",
     },
     address: {
       "@type": "PostalAddress",
@@ -163,8 +158,8 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={inter.className}>
-      <body className="bg-background text-foreground overflow-y-scroll">
+    <html lang="en">
+      <body className="bg-background text-foreground overflow-y-scroll font-body">
         <Script
           id="person-structured-data"
           type="application/ld+json"

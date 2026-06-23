@@ -109,7 +109,7 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
             disabled={!hasPreviousPage}
             variant="outline"
             className={cn(
-              "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/[0.02]",
+              "tracking-tight shadow-none",
               !hasPreviousPage && "opacity-30 cursor-not-allowed"
             )}
           >
@@ -125,7 +125,7 @@ export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
             disabled={!hasNextPage}
             variant="outline"
             className={cn(
-              "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/[0.02]",
+              "tracking-tight shadow-none",
               !hasNextPage && "opacity-30 cursor-not-allowed"
             )}
           >

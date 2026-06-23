@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -25,11 +26,13 @@
 
 @plugin "@tailwindcss/typography";
 
+/* Selection */
 ::selection {
   color: hsl(var(--foreground));
   background-color: hsl(var(--foreground) / 0.1);
 }
 
+/* Base */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -61,177 +64,152 @@
     --ring: 0 0% 9%;
 
     --radius: 0.5rem;
-
-    --sh-class: #2d5e9d;
-    --sh-identifier: #354150;
-    --sh-sign: #8996a3;
-    --sh-string: #007f7a;
-    --sh-keyword: #e02518;
-    --sh-comment: #a19595;
-    --sh-jsxliterals: #6266d1;
-    --sh-property: #e25a1c;
-    --sh-entity: #e25a1c;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
   }
 
   body {
+    font-family: var(--font-body);
     @apply bg-background text-foreground;
   }
 
-  .prose h1 {
-    @apply scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl mt-8 mb-6;
-  }
-
-  .prose h2 {
-    @apply mt-10 scroll-m-20 border-b border-foreground/10 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0 mb-4;
-  }
-
-  .prose h3 {
-    @apply mt-8 scroll-m-20 text-2xl font-medium tracking-tight mb-3;
-  }
-
-  .prose h4 {
-    @apply scroll-m-20 text-xl font-medium tracking-tight mt-6 mb-2;
-  }
-
-  .prose h5 {
-    @apply scroll-m-20 text-lg font-medium tracking-tight mt-4 mb-2;
-  }
-
-  .prose h6 {
-    @apply scroll-m-20 text-base font-medium tracking-tight mt-4 mb-2;
-  }
-
-  .prose p {
-    @apply leading-7 mb-6;
-  }
-
-  .prose blockquote {
-    @apply mt-6 border-l-2 pl-6 italic border-foreground/10;
-  }
-
-  .prose ul,
-  .prose ol {
-    @apply my-6 ml-6 space-y-2;
-  }
-
-  .prose li {
-    @apply leading-7;
-  }
-
-  .prose ul > li {
-    @apply list-disc;
-  }
-
-  .prose ol > li {
-    @apply list-decimal;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
   }
 }
 
-.prose .anchor {
-  @apply absolute invisible no-underline;
+/* FONT VARIABLES */
+:root {
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Helvetica Neue", sans-serif;
 
-  margin-left: -1em;
-  padding-right: 0.5em;
-  width: 80%;
-  max-width: 700px;
-  cursor: pointer;
+  /* Sugar-high syntax highlighting */
+  --sh-identifier: #1a1a1a;
+  --sh-keyword: #9333ea;
+  --sh-string: #2563eb;
+  --sh-class: #059669;
+  --sh-property: #0d9488;
+  --sh-entity: #dc2626;
+  --sh-jsxliterals: #1a1a1a;
+  --sh-sign: #525252;
+  --sh-comment: #a3a3a3;
+  --sh-space: transparent;
+  --sh-break: transparent;
 }
 
-.anchor:hover {
-  @apply visible;
+/* TYPOGRAPHY SCALE */
+h1, .prose h1 {
+  letter-spacing: -0.04em;
+  font-weight: 600;
 }
 
+h2, .prose h2 {
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+h3, .prose h3 {
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+/* PROSE */
+.prose {
+  font-family: var(--font-body);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: var(--font-heading);
+}
+
+/* Existing prose styles (unchanged structurally, cleaned) */
+.prose h1 {
+  @apply scroll-m-20 text-4xl lg:text-5xl mt-8 mb-6;
+}
+
+.prose h2 {
+  @apply mt-10 scroll-m-20 border-b border-foreground/10 pb-2 text-3xl mb-4;
+}
+
+.prose h3 {
+  @apply mt-8 scroll-m-20 text-2xl mb-3;
+}
+
+.prose h4 {
+  @apply scroll-m-20 text-xl mt-6 mb-2;
+}
+
+.prose h5 {
+  @apply scroll-m-20 text-lg mt-4 mb-2;
+}
+
+.prose h6 {
+  @apply scroll-m-20 text-base mt-4 mb-2;
+}
+
+.prose p {
+  @apply leading-7 mb-6;
+}
+
+.prose blockquote {
+  @apply mt-6 border-l-2 pl-6 italic border-foreground/10;
+}
+
+.prose ul,
+.prose ol {
+  @apply my-6 ml-6 space-y-2;
+}
+
+.prose li {
+  @apply leading-7;
+}
+
+.prose ul > li {
+  @apply list-disc;
+}
+
+.prose ol > li {
+  @apply list-decimal;
+}
+
+/* Links */
 .prose a {
-  @apply transition-all decoration-foreground/30 underline-offset-2 decoration-[0.1em];
+  @apply transition-all underline decoration-foreground/30 underline-offset-2;
 }
 
-.prose .anchor:after {
-  @apply text-foreground/20;
-  content: "#";
-}
-
-.prose *:hover > .anchor {
-  @apply visible;
-}
-
+/* Code */
 .prose pre {
   @apply relative overflow-x-auto rounded-lg bg-foreground/[0.03];
-  margin: 0;
 }
 
 .prose > pre {
   @apply bg-foreground/[0.05];
 }
 
-.thoughts-prose > pre {
-  @apply bg-transparent;
+.prose pre code {
+  font-size: 13px;
 }
 
-.prose code span {
+.sh__line {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0.01 !important;
+}
+
+.prose code span:not(.sh__line) {
   @apply font-medium;
 }
 
+/* Images */
 .prose img {
-  /* Don't apply styles to next/image */
   @apply m-0;
 }
 
-/* Removed duplicate heading styles - now handled in @layer base */
-
-.prose strong {
-  @apply font-medium;
-}
-
-.prose > :first-child {
-  /* Override removing top margin, causing layout shift */
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
-}
-
-pre::-webkit-scrollbar {
-  display: none;
-}
-
-pre {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
-
-/* Remove Safari input shadow on mobile */
-input[type="text"],
-input[type="email"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-.prose .tweet a {
-  text-decoration: inherit;
-  font-weight: 500;
-}
-
-table {
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-}
-
-.prose .callout > p {
-  margin: 0;
-}
-
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 0.5rem;
 }
@@ -245,22 +223,22 @@ table {
   background-color: var(--background);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--foreground);
+/* Input reset */
+input[type="text"],
+input[type="email"] {
+  appearance: none;
 }
 
-::-webkit-scrollbar-thumb:active {
-  background-color: var(--foreground);
-}
-
-::-webkit-scrollbar-corner {
-  background-color: var(--background);
-}
-
+/* Container animation */
 .container > * {
   animation: enter 0.3s ease both;
   animation-delay: calc(var(--delay) * var(--stagger));
   --delay: 120ms;
+}
+
+/* Misc */
+table {
+  border-collapse: collapse;
 }
 
 body.modal-open .fixed.bottom-8 {

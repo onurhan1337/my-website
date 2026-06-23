@@ -350,7 +350,6 @@ ExplanationPanel.displayName = 'ExplanationPanel';
 export const RaceConditionVisualizer = () => {
   const [sharedState, setSharedState] = useState(0);
   const [goroutines, setGoroutines] = useState<Goroutine[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
   const [history, setHistory] = useState<{ value: number; description: string }[]>([]);
   const [currentStep, setCurrentStep] = useState<Step | null>(null);
   const [activeConnections, setActiveConnections] = useState<{
@@ -567,7 +566,7 @@ export const RaceConditionVisualizer = () => {
           <ExplanationPanel />
 
           {/* Add Step Progress */}
-          {isRunning && (
+          {autoPlaying && (
             <StepProgress currentStep={stepIndex} totalSteps={totalSteps} />
           )}
 
@@ -626,7 +625,7 @@ export const RaceConditionVisualizer = () => {
                       <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
                         {sharedState}
                       </span>
-                      {isRunning && (
+                      {autoPlaying && (
                         <motion.span
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}

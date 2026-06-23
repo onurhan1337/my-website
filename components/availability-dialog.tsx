@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { KizzleCTAButton, KIZZLE_URL } from "@/components/kizzle-cta-button";
 import type { AvailabilityDialogProps } from "@/types";
 
 export function AvailabilityDialog({
@@ -21,40 +20,30 @@ export function AvailabilityDialog({
       <DialogContent className="max-w-md" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className="text-xl font-medium tracking-tight mb-2">
-            Building Kizzle Studio
+            Who am I
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="space-y-4">
             <p className="text-[15px] leading-relaxed opacity-80">
-              I&apos;m currently focused on building{" "}
-              <Link
-                href={KIZZLE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium underline decoration-foreground/30 underline-offset-2 hover:opacity-100 transition-opacity"
-              >
-                Kizzle Studio
-              </Link>
-              , an e-commerce development studio specializing in Shopify and
-              Ikas platforms.
+              Hi, I&apos;m Onurhan Demir — a <span className="font-medium">Developer Advocate &amp; Frontend Developer</span> at <span className="font-medium">ikas</span>, helping grow the developer ecosystem and build clean, useful products for the platform.
             </p>
 
             <div>
               <p className="text-[15px] font-medium leading-relaxed opacity-90 mb-2">
-                What we do:
+                What I do:
               </p>
               <div className="text-[15px] leading-relaxed opacity-75 space-y-1 pl-1">
-                <p>• Custom Shopify & Ikas development</p>
-                <p>• Corporate invoicing workflows</p>
-                <p>• AI-powered analytics solutions</p>
+                <p>• Developer relations &amp; ecosystem growth</p>
+                <p>• Frontend &amp; Studio development</p>
+                <p>• Technical content, guides &amp; examples</p>
+                <p>• UX-focused digital experiences</p>
               </div>
             </div>
 
             <p className="text-[15px] leading-relaxed opacity-80">
-              We build the technical infrastructure that powers exceptional
-              commerce experiences for ambitious brands.
+              I love talking to developers, agencies, and merchants — sharing ideas, helping people build on ikas, and turning their feedback into better products. My inbox is always open.
             </p>
           </div>
 
@@ -62,20 +51,14 @@ export function AvailabilityDialog({
 
           <div className="space-y-4">
             <p className="text-[15px] leading-[22px] opacity-90 font-medium tracking-[-0.6px]">
-              Looking to build or scale your e-commerce business? Let&apos;s
-              talk.
+              Building on ikas, have an idea, or just want to chat? Reach out — I&apos;d love to hear from you.
             </p>
 
             <div className="flex flex-col gap-3">
-              <KizzleCTAButton
-                text="Kizzle Studio"
-                href="https://kizzle.studio"
-                className="w-full justify-center"
-              />
               <Button
                 asChild
-                variant="default"
-                className="w-full justify-center gap-2 h-[52px] px-5 bg-[#f5f5f5] text-[#262626] tracking-[-0.1px] border border-neutral-200 hover:opacity-90 hover:bg-[#ebebeb]"
+                className="w-full justify-center gap-2 h-[52px] px-5"
+                variant={'fancy'}
               >
                 <Link
                   href="mailto:onurhandtr@gmail.com"
