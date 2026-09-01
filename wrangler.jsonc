@@ -7,8 +7,5 @@
     "directory": "./out",
     "binding": "ASSETS",
     "not_found_handling": "404-page"
-  },
-  "vars": {
-    "KIZZLE_KEY_ID": "kzl_REPLACE_ME"
   }
 }
