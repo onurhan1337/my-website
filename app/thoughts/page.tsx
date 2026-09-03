@@ -1,6 +1,7 @@
 import { ThoughtsClient } from "./thoughts-client";
 import { getThoughts } from "@/app/db/thoughts";
 import Container from "@/components/shared/container";
+import { PageTitle } from "@/components/page-title";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -40,7 +41,8 @@ export default async function ThoughtsPage() {
   );
 
   return (
-    <Container size="large">
+    <Container>
+      <PageTitle title="Thoughts" description="Short notes. Quotes, ideas, snippets." />
       <ThoughtsClient thoughts={thoughtsWithContent} />
     </Container>
   );

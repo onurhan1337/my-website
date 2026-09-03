@@ -14,12 +14,3 @@ export interface ThoughtCardProps {
     renderedContent: React.ReactNode;
   };
 }
-
-export interface ThoughtsListProps {
-  thoughts: (ThoughtPost & {
-    renderedContent: React.ReactNode;
-  })[];
-  currentPage: number;
-}
-
-

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getBlogPost, getAllBlogPosts } from "@/app/db/blog";
+import Link from "next/link";
+import {
+  getBlogPost,
+  getAllBlogPosts,
+  getBlogNeighbours,
+} from "@/app/db/blog";
 import { CustomMDX } from "@/components/mdx";
 import Container from "@/components/shared/container";
 import TableOfContents from "@/components/table-of-contents";
@@ -82,6 +87,8 @@ export default async function BlogDetailPage({ params }: Props) {
     notFound();
   }
 
+  const { newer, older } = await getBlogNeighbours(slug);
+
   const headings = extractHeadings(blog.content);
   const modifiedAt = blog.metadata.modifiedAt;
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://onurhan.dev";
@@ -151,7 +158,7 @@ export default async function BlogDetailPage({ params }: Props) {
   };
 
   return (
-    <Container size="large">
+    <Container>
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -166,22 +173,50 @@ export default async function BlogDetailPage({ params }: Props) {
           __html: JSON.stringify(breadcrumbJsonLd),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tight">
-        {blog.metadata.title}
-      </h1>
-      <div className="flex justify-start items-center mt-3 mb-8 text-sm">
-        <p className="text-[15px] opacity-60 tracking-tight">
-          {formatDate(blog.metadata.publishedAt)}
+      <header className="mb-16">
+        <h1 className="text-title">{blog.metadata.title}</h1>
+        <p className="mt-4 text-caption text-ink-3">
+          <time dateTime={blog.metadata.publishedAt}>
+            {formatDate(blog.metadata.publishedAt)}
+          </time>
+          <span className="mx-2">·</span>
+          <span>{blog.readingTime} min</span>
         </p>
-        <span className="mx-2 opacity-40">—</span>
-        <p className="text-[15px] opacity-60 tracking-tight">
-          {blog.readingTime} min read
-        </p>
-      </div>
+      </header>
       <TableOfContents headings={headings} />
-      <article className="prose prose-quoteless prose-neutral text-justify w-auto">
+      <article className="prose">
         <CustomMDX source={blog.content} />
       </article>
+
+      {(newer || older) && (
+        <nav
+          aria-label="More posts"
+          className="mt-24 grid gap-8 rule pt-8 sm:grid-cols-2"
+        >
+          {newer ? (
+            <div>
+              <p className="text-caption text-ink-3">Newer</p>
+              <p className="mt-1">
+                <Link href={`/blog/${newer.slug}`} className="link">
+                  {newer.metadata.title}
+                </Link>
+              </p>
+            </div>
+          ) : (
+            <span />
+          )}
+          {older && (
+            <div className="sm:text-right">
+              <p className="text-caption text-ink-3">Older</p>
+              <p className="mt-1">
+                <Link href={`/blog/${older.slug}`} className="link">
+                  {older.metadata.title}
+                </Link>
+              </p>
+            </div>
+          )}
+        </nav>
+      )}
     </Container>
   );
 }

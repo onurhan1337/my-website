@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, Globe, FileText, Terminal, Rocket } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 interface DocsExplorerProps {
   url: string;
@@ -22,45 +22,37 @@ export function DocsExplorer({
   };
 
   return (
-    <div className="my-8 border border-[#dcdcdc] bg-white">
-      <div className="border-b border-[#dcdcdc] px-5 py-3 bg-[#f6f6f6]">
-        <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 text-[#F38020] shrink-0 mt-2" />
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-[#1c1c1c]">
-            Explore the hosted docs and API explorer
-          </h3>
-        </div>
-      </div>
+    <div className="my-8 rounded-md border border-rule bg-paper p-6">
+      <h3 className="mb-4 text-caption text-ink-2">
+        Explore the hosted docs and API explorer
+      </h3>
 
-      <div className="p-5 space-y-4">
-        <p className="text-sm text-[#4a4a4a] leading-relaxed">
+      <div className="space-y-4">
+        <p className="text-small text-ink-2">
           The deployed instance ships with Scalar-powered docs at{" "}
           <Link
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-[#F38020] hover:text-[#e6731d] transition-colors inline-flex items-center gap-1"
+            className="inline-flex items-center gap-1 font-medium text-ink transition-colors hover:text-ink-2"
           >
             {url}
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="h-3 w-3" />
           </Link>
           , so you can try every endpoint without cloning the repo.
         </p>
 
         {quickStart && quickStart.length > 0 && (
-          <div className="border border-[#dcdcdc] bg-[#fafafa] p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Rocket className="w-4 h-4 text-[#F38020] shrink-0 mt-2" />
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-[#1c1c1c]">
-                Quick Start
-              </h4>
-            </div>
-            <p className="text-xs text-[#5e5e5e] mb-3 leading-relaxed">
+          <div className="rounded-md bg-well p-4">
+            <h4 className="mb-2 text-small font-medium text-ink">
+              Quick start
+            </h4>
+            <p className="mb-3 text-caption text-ink-2">
               Get started in minutes: follow these steps to set up your own Kevi
               instance.
             </p>
-            <div className="bg-white border border-[#e5e5e5] p-2">
-              <p className="text-xs font-mono text-[#1a1a1a] ">
+            <div className="rounded border border-rule bg-paper p-2">
+              <p className="font-mono text-caption text-ink">
                 {quickStart.join(" → ")}
               </p>
             </div>
@@ -68,14 +60,11 @@ export function DocsExplorer({
         )}
 
         {docs && docs.length > 0 && (
-          <div className="border border-[#dcdcdc] bg-[#fafafa] p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <FileText className="w-4 h-4 text-[#F38020] shrink-0 mt-2" />
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-[#1c1c1c]">
-                Documentation Hub
-              </h4>
-            </div>
-            <p className="text-xs text-[#5e5e5e] mb-3 leading-relaxed">
+          <div className="rounded-md bg-well p-4">
+            <h4 className="mb-2 text-small font-medium text-ink">
+              Documentation hub
+            </h4>
+            <p className="mb-3 text-caption text-ink-2">
               Deep dives covering architecture, configuration, and public key
               patterns.
             </p>
@@ -88,16 +77,16 @@ export function DocsExplorer({
                     href={docUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between bg-white border border-[#e5e5e5] p-2 hover:border-[#F38020] hover:bg-[#fff2e7] transition-colors group no-underline"
+                    className="group flex items-center justify-between rounded border border-rule bg-paper p-2 no-underline transition-colors hover:border-ink-3"
                   >
-                    <span className="text-xs font-medium text-[#1a1a1a] group-hover:text-[#F38020] transition-colors">
+                    <span className="text-caption text-ink-2 transition-colors group-hover:text-ink">
                       {doc.name}
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] text-[#5e5e5e] font-mono bg-[#f6f6f6] px-1.5 py-0.5 group-hover:bg-[#ffe8d1] transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded bg-well px-1.5 py-0.5 font-mono text-caption text-ink-3">
                         {doc.path}
                       </span>
-                      <ExternalLink className="w-3 h-3 text-[#5e5e5e] group-hover:text-[#F38020] transition-colors shrink-0" />
+                      <ExternalLink className="h-3 w-3 shrink-0 text-ink-3 transition-colors group-hover:text-ink" />
                     </div>
                   </Link>
                 );
@@ -107,41 +96,36 @@ export function DocsExplorer({
         )}
 
         {apiExplorer && (
-          <div className="border border-[#dcdcdc] bg-[#fafafa] p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Terminal className="w-4 h-4 text-[#F38020] shrink-0 mt-2" />
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-[#1c1c1c]">
-                API Explorer
-              </h4>
-            </div>
-            <p className="text-xs text-[#5e5e5e] mb-3 leading-relaxed">
+          <div className="rounded-md bg-well p-4">
+            <h4 className="mb-2 text-small font-medium text-ink">
+              API explorer
+            </h4>
+            <p className="mb-3 text-caption text-ink-2">
               Interactive API documentation with Scalar UI. Test endpoints with
               built-in authentication helpers.
             </p>
             <div className="space-y-2">
               {apiExplorer.local && (
-                <div className="flex items-center justify-between bg-white border border-[#e5e5e5] p-2">
-                  <span className="text-xs font-medium text-[#1a1a1a]">
-                    Local Development
+                <div className="flex items-center justify-between rounded border border-rule bg-paper p-2">
+                  <span className="text-caption text-ink-2">
+                    Local development
                   </span>
-                  <span className="text-[10px] text-[#5e5e5e] font-mono bg-[#f6f6f6] px-1.5 py-0.5">
+                  <span className="rounded bg-well px-1.5 py-0.5 font-mono text-caption text-ink-3">
                     {apiExplorer.local}
                   </span>
                 </div>
               )}
               {apiExplorer.production && (
-                <div className="flex items-center justify-between bg-white border border-[#e5e5e5] p-2 hover:border-[#F38020]/30 transition-colors">
-                  <span className="text-xs font-medium text-[#1a1a1a]">
-                    Production
-                  </span>
+                <div className="flex items-center justify-between rounded border border-rule bg-paper p-2 transition-colors hover:border-ink-3">
+                  <span className="text-caption text-ink-2">Production</span>
                   <Link
                     href={apiExplorer.production}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[10px] text-[#F38020] font-mono hover:text-[#e6731d] transition-colors no-underline"
+                    className="flex items-center gap-1 font-mono text-caption text-ink no-underline transition-colors hover:text-ink-2"
                   >
                     {apiExplorer.production}
-                    <ExternalLink className="w-3 h-3 shrink-0" />
+                    <ExternalLink className="h-3 w-3 shrink-0" />
                   </Link>
                 </div>
               )}
@@ -149,8 +133,8 @@ export function DocsExplorer({
           </div>
         )}
 
-        <div className="pt-2 border-t border-[#e5e5e5]">
-          <p className="text-xs text-[#5e5e5e] leading-relaxed">
+        <div className="border-t border-rule pt-4">
+          <p className="text-caption text-ink-2">
             When you need infra details, the docs also walk through Wrangler
             login, namespace creation, admin/master tokens, and typegen, so you
             can replicate the setup exactly rather than guess.

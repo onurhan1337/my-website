@@ -12,6 +12,12 @@ import { highlight } from "sugar-high";
 import { cn } from "@/lib/utils";
 import type { CodePlaygroundProps } from "@/types";
 
+const STEP_TRANSITION = {
+  x: { duration: 0.2, ease: "easeOut" as const },
+  opacity: { duration: 0.15 },
+  layout: { duration: 0.2, ease: "easeOut" as const },
+};
+
 export const CodePlayground = ({
   steps,
   language = "go",
@@ -33,8 +39,8 @@ export const CodePlayground = ({
       .map((line, i) => {
         if (i >= prevLines.length || line !== prevLines[i]) {
           return `<span class="${cn(
-            "inline-block w-full relative bg-blue-500/10",
-            'before:content-[""] before:absolute before:-left-4 before:top-0 before:bottom-0 before:w-0.5 before:bg-blue-500'
+            "inline-block w-full relative bg-well",
+            'before:content-[""] before:absolute before:-left-4 before:top-0 before:bottom-0 before:w-px before:bg-ink'
           )}">${highlight(line)}</span>`;
         }
         return highlight(line);
@@ -45,7 +51,7 @@ export const CodePlayground = ({
   const variants = useMemo(
     () => ({
       enter: (direction: number) => ({
-        x: direction > 0 ? 20 : -20,
+        x: direction > 0 ? 12 : -12,
         opacity: 0,
       }),
       center: {
@@ -53,7 +59,7 @@ export const CodePlayground = ({
         opacity: 1,
       },
       exit: (direction: number) => ({
-        x: direction > 0 ? -20 : 20,
+        x: direction > 0 ? -12 : 12,
         opacity: 0,
       }),
     }),
@@ -117,8 +123,8 @@ export const CodePlayground = ({
   // Add error boundary
   if (!steps || steps.length === 0) {
     return (
-      <div className="p-4 bg-red-50 rounded-lg">
-        <p className="text-red-600">
+      <div className="my-8 rounded-md bg-well p-6">
+        <p className="text-small text-ink-2">
           No steps provided to the CodePlayground component.
         </p>
       </div>
@@ -131,158 +137,138 @@ export const CodePlayground = ({
         layout
         role="region"
         aria-label="Code Playground"
-        className="my-8 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-xl overflow-hidden shadow-lg border border-neutral-200/50"
+        className="my-8 rounded-md bg-well p-6"
       >
         <motion.div
           layout
-          className="border-b border-neutral-200 bg-white/50 p-4"
+          className="mb-4 flex items-center justify-between gap-4"
         >
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-2" aria-hidden="true">
-              <div className="w-3 h-3 rounded-full bg-red-400" />
-              <div className="w-3 h-3 rounded-full bg-yellow-400" />
-              <div className="w-3 h-3 rounded-full bg-green-400" />
-            </div>
-            <div className="text-sm font-medium text-neutral-500" role="status">
-              {steps[currentStep].title ||
-                `Step ${currentStep + 1}/${steps.length}`}
-            </div>
+          <div className="text-caption text-ink-2" role="status">
+            {steps[currentStep].title ||
+              `Step ${currentStep + 1}/${steps.length}`}
+          </div>
+          <div className="font-mono text-caption text-ink-3">
+            {currentStep + 1} / {steps.length}
           </div>
         </motion.div>
 
-        <motion.div layout className="p-6">
-          <div
-            className="mb-4 relative h-1 bg-neutral-200 rounded-full overflow-hidden"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={((currentStep + 1) / steps.length) * 100}
-          >
-            <motion.div
-              className="absolute left-0 top-0 h-full bg-blue-500"
-              initial={{ width: 0 }}
-              animate={{
-                width: `${((currentStep + 1) / steps.length) * 100}%`,
-              }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
+        <div
+          className="relative mb-6 h-px w-full bg-rule"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={((currentStep + 1) / steps.length) * 100}
+        >
+          <motion.div
+            className="absolute left-0 top-0 h-full bg-ink"
+            initial={{ width: 0 }}
+            animate={{
+              width: `${((currentStep + 1) / steps.length) * 100}%`,
+            }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          />
+        </div>
 
-          <motion.div layout className="space-y-4">
+        <motion.div layout className="space-y-4">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              layout
+              key={`code-${currentStep}`}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={STEP_TRANSITION}
+              className="w-full overflow-hidden rounded-md border border-rule bg-paper"
+            >
+              <pre className="overflow-x-auto p-4 font-mono text-caption text-ink">
+                <code
+                  dangerouslySetInnerHTML={{
+                    __html: highlightDiff(
+                      steps[currentStep].code,
+                      previousCode
+                    ),
+                  }}
+                />
+              </pre>
+            </motion.div>
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              layout
+              key={`explanation-${currentStep}`}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={STEP_TRANSITION}
+              className="w-full"
+              role="region"
+              aria-label="Step Explanation"
+            >
+              <p className="text-small text-ink-2">
+                {steps[currentStep].explanation}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {steps[currentStep].state && (
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 layout
-                key={`code-${currentStep}`}
+                key={`state-${currentStep}`}
                 custom={direction}
                 variants={variants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 500, damping: 30 },
-                  opacity: { duration: 0.15 },
-                  layout: { duration: 0.3 },
-                }}
-                className="bg-white rounded-lg shadow-sm overflow-hidden w-full"
+                transition={STEP_TRANSITION}
+                className="w-full rounded-md border border-rule bg-paper p-4"
+                role="region"
+                aria-label="Current State"
               >
-                <pre className="p-4 overflow-x-auto">
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: highlightDiff(
-                        steps[currentStep].code,
-                        previousCode
-                      ),
-                    }}
-                  />
+                <h4 className="mb-2 text-caption text-ink-2">Current state</h4>
+                <pre className="overflow-x-auto font-mono text-caption text-ink">
+                  {JSON.stringify(steps[currentStep].state, null, 2)}
                 </pre>
               </motion.div>
             </AnimatePresence>
+          )}
+        </motion.div>
 
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                layout
-                key={`explanation-${currentStep}`}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "spring", stiffness: 500, damping: 30 },
-                  opacity: { duration: 0.15 },
-                  layout: { duration: 0.3 },
-                }}
-                className="bg-blue-50 p-4 rounded-lg w-full"
-                role="region"
-                aria-label="Step Explanation"
-              >
-                <p className="text-sm text-blue-700">
-                  {steps[currentStep].explanation}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-
-            {steps[currentStep].state && (
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  layout
-                  key={`state-${currentStep}`}
-                  custom={direction}
-                  variants={variants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 500, damping: 30 },
-                    opacity: { duration: 0.15 },
-                    layout: { duration: 0.3 },
-                  }}
-                  className="bg-neutral-100 p-4 rounded-lg w-full"
-                  role="region"
-                  aria-label="Current State"
-                >
-                  <h4 className="text-sm font-semibold text-neutral-700 mb-2">
-                    Current State:
-                  </h4>
-                  <pre className="text-xs text-neutral-600">
-                    {JSON.stringify(steps[currentStep].state, null, 2)}
-                  </pre>
-                </motion.div>
-              </AnimatePresence>
-            )}
-          </motion.div>
-
-          <motion.div
-            layout
-            className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-center mt-6"
-          >
-            <div className="flex space-x-3">
-              <button
-                onClick={goToPrevStep}
-                disabled={currentStep === 0 || isPlaying}
-                className="px-4 py-2 text-sm font-medium text-neutral-700 bg-white rounded-lg border border-neutral-300 hover:bg-neutral-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
-                aria-label="Previous Step"
-              >
-                ← Previous
-              </button>
-              <button
-                onClick={goToNextStep}
-                disabled={currentStep === steps.length - 1 || isPlaying}
-                className="px-4 py-2 text-sm font-medium text-neutral-700 bg-white rounded-lg border border-neutral-300 hover:bg-neutral-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
-                aria-label="Next Step"
-              >
-                Next →
-              </button>
-            </div>
+        <motion.div
+          layout
+          className="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row"
+        >
+          <div className="flex gap-4">
             <button
-              onClick={playAnimation}
-              disabled={isPlaying}
-              className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none"
-              aria-label={isPlaying ? "Animation Playing" : "Play Animation"}
+              onClick={goToPrevStep}
+              disabled={currentStep === 0 || isPlaying}
+              className="text-small text-ink-2 transition-colors hover:text-ink disabled:cursor-default disabled:text-ink-3 disabled:hover:text-ink-3"
+              aria-label="Previous Step"
             >
-              {isPlaying ? "Playing..." : "Play Animation"}
+              ← Previous
             </button>
-          </motion.div>
+            <button
+              onClick={goToNextStep}
+              disabled={currentStep === steps.length - 1 || isPlaying}
+              className="text-small text-ink-2 transition-colors hover:text-ink disabled:cursor-default disabled:text-ink-3 disabled:hover:text-ink-3"
+              aria-label="Next Step"
+            >
+              Next →
+            </button>
+          </div>
+          <button
+            onClick={playAnimation}
+            disabled={isPlaying}
+            className="rounded bg-ink px-3 py-1.5 text-small text-paper transition-colors disabled:cursor-default disabled:bg-well disabled:text-ink-3"
+            aria-label={isPlaying ? "Animation Playing" : "Play Animation"}
+          >
+            {isPlaying ? "Playing…" : "Play animation"}
+          </button>
         </motion.div>
       </motion.div>
     </LayoutGroup>

@@ -2,10 +2,8 @@
 
 import { memo } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import type { PaginationProps } from "@/types";
 import { BlogList } from "./blog-list";
-import { Button } from "./ui/button";
 
 const PaginationComponent = memo(
   function Pagination({ blogs, currentPage, totalPages }: PaginationProps) {
@@ -20,59 +18,25 @@ const PaginationComponent = memo(
         {totalPages > 1 && (
           <nav
             aria-label="Blog pagination"
-            className="flex justify-center gap-4 mt-12"
+            className="mt-16 grid grid-cols-3 items-baseline text-small"
           >
-            {prevPage ? (
-              <Button
-                asChild
-                variant="outline"
-                className={cn(
-                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
-                )}
-              >
-                <Link href={prevHref} prefetch={true}>
-                  Previous
+            <span className="justify-self-start">
+              {prevPage && (
+                <Link href={prevHref} className="link">
+                  Newer
                 </Link>
-              </Button>
-            ) : (
-              <Button
-                disabled
-                variant="outline"
-                className={cn(
-                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2 opacity-30 cursor-not-allowed"
-                )}
-              >
-                Previous
-              </Button>
-            )}
-
-            <span className="flex items-center tracking-tight text-sm opacity-50">
-              Page {currentPage} of {totalPages}
+              )}
             </span>
-
-            {nextPage ? (
-              <Button
-                asChild
-                variant="outline"
-                className={cn(
-                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2"
-                )}
-              >
-                <Link href={nextHref} prefetch={true}>
-                  Next
+            <span className="justify-self-center font-mono text-caption text-ink-3">
+              {currentPage} / {totalPages}
+            </span>
+            <span className="justify-self-end">
+              {nextPage && (
+                <Link href={nextHref} className="link">
+                  Older
                 </Link>
-              </Button>
-            ) : (
-              <Button
-                disabled
-                variant="outline"
-                className={cn(
-                  "tracking-tight shadow-none border-foreground/10 hover:bg-foreground/2 opacity-30 cursor-not-allowed"
-                )}
-              >
-                Next
-              </Button>
-            )}
+              )}
+            </span>
           </nav>
         )}
       </>

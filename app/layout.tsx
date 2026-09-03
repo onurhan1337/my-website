@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -97,84 +98,81 @@ export const metadata: Metadata = {
   },
 };
 
+const personStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Onurhan Demir",
+  alternateName: "Onurhan",
+  jobTitle: "Developer Advocate & Frontend Developer",
+  url: "https://onurhan.dev",
+  description:
+    "Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences. Expert in React, Next.js, TypeScript, and modern web technologies.",
+  knowsAbout: [
+    "Developer Relations",
+    "Developer Advocacy",
+    "Frontend Development",
+    "Web Development",
+    "Developer Experience",
+    "E-commerce Development",
+    "ikas",
+    "Shopify",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "Yazılım Geliştirme",
+    "Web Geliştirme",
+  ],
+  sameAs: [
+    "https://github.com/onurhan1337",
+    "https://youtube.com/@onurhandev",
+    "https://x.com/onurhan1337",
+    "https://kizzle.studio",
+  ],
+  worksFor: {
+    "@type": "Organization",
+    name: "ikas",
+    url: "https://ikas.com",
+    description:
+      "E-commerce platform company building tools for merchants and developers.",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "TR",
+    addressLocality: "Turkey",
+  },
+  nationality: {
+    "@type": "Country",
+    name: "Turkey",
+    alternateName: "Türkiye",
+  },
+  workLocation: {
+    "@type": "Country",
+    name: "Turkey",
+    alternateName: "Türkiye",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const personStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Onurhan Demir",
-    alternateName: "Onurhan",
-    jobTitle: "Developer Advocate & Frontend Developer",
-    url: "https://onurhan.dev",
-    description:
-      "Developer Advocate & Frontend Developer at ikas, growing the developer ecosystem and building e-commerce products and experiences. Expert in React, Next.js, TypeScript, and modern web technologies.",
-    knowsAbout: [
-      "Developer Relations",
-      "Developer Advocacy",
-      "Frontend Development",
-      "Web Development",
-      "Developer Experience",
-      "E-commerce Development",
-      "ikas",
-      "Shopify",
-      "React",
-      "Next.js",
-      "TypeScript",
-      "JavaScript",
-      "Yazılım Geliştirme",
-      "Web Geliştirme",
-    ],
-    sameAs: [
-      "https://github.com/onurhan1337",
-      "https://youtube.com/@onurhandev",
-      "https://x.com/onurhan1337",
-      "https://kizzle.studio",
-    ],
-    worksFor: {
-      "@type": "Organization",
-      name: "ikas",
-      url: "https://ikas.com",
-      description:
-        "E-commerce platform company building tools for merchants and developers.",
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "TR",
-      addressLocality: "Turkey",
-    },
-    nationality: {
-      "@type": "Country",
-      name: "Turkey",
-      alternateName: "Türkiye",
-    },
-    workLocation: {
-      "@type": "Country",
-      name: "Turkey",
-      alternateName: "Türkiye",
-    },
-  };
-
   return (
     <html lang="en">
-      <body className="bg-background text-foreground overflow-y-scroll font-body">
+      <body className="bg-paper text-ink">
         <Script
           id="person-structured-data"
           type="application/ld+json"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD structured data is safe
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(personStructuredData),
           }}
         />
-        <main className="antialiased lg:max-w-2xl md:max-w-full mx-4 mb-40 flex flex-col md:flex-row mt-2 sm:mt-8 lg:mx-auto bg-background">
-          <section className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-            <Header />
-
-            {children}
-          </section>
-        </main>
+        <div className="mx-auto w-full max-w-[640px] px-6 pb-20 pt-10 sm:pt-14">
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

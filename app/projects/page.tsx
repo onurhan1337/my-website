@@ -1,4 +1,5 @@
 import Container from "@/components/shared/container";
+import { PageTitle } from "@/components/page-title";
 import { ProjectsClient } from "./projects-client";
 import { getAllProjects } from "@/lib/projects";
 import type { Metadata } from "next";
@@ -30,7 +31,8 @@ export default function ProjectsPage() {
   const projects = getAllProjects();
 
   return (
-    <Container size="large">
+    <Container>
+      <PageTitle title="Projects" description="Things I have built or helped build." />
       <ProjectsClient projects={projects} />
     </Container>
   );

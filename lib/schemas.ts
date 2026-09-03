@@ -36,6 +36,9 @@ export const thoughtMetadataSchema = z.object({
   type: z.enum(["code", "idea", "quote", "book"], {
     message: "Type must be one of: code, idea, quote, book",
   }),
+  title: z.string().min(1).optional(),
+  author: z.string().min(1).optional(),
+  source: z.string().url().optional(),
   createdAt: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, {
@@ -76,12 +79,3 @@ export function validateThoughtMetadata(
 ): z.infer<typeof thoughtMetadataSchema> {
   return thoughtMetadataSchema.parse(metadata);
 }
-
-/**
- * Schema for app configuration validation
- */
-export const configSchema = z.object({
-  availability: z.object({
-    enabled: z.boolean().default(true),
-  }),
-});

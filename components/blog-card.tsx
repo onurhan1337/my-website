@@ -2,37 +2,32 @@ import React from "react";
 import Link from "next/link";
 import type { BlogCardProps } from "@/types";
 
+function formatDay(date: string): string {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export const BlogCard = React.memo(
-  ({ blog }: BlogCardProps) => {
-    return (
-      <article className="py-6 border-b border-foreground/5 last:border-0">
-        <header>
-          <h3 className="font-medium text-[17px] leading-tight tracking-tight">
-            <Link
-              href={`/blog/${blog.slug}`}
-              className="hover:opacity-70 transition-opacity"
-            >
-              {blog.metadata.title}
-            </Link>
-          </h3>
-          <p className="mt-2 text-[15px] leading-relaxed opacity-70">
-            {blog.metadata.summary}
-          </p>
-        </header>
-        <footer className="mt-3 flex items-center gap-2 text-[13px] opacity-40 tracking-tight">
-          <time>
-            {new Date(blog.metadata.publishedAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </time>
-          <span>·</span>
-          <span>{blog.readingTime} min</span>
-        </footer>
-      </article>
-    );
-  },
+  ({ blog }: BlogCardProps) => (
+    <article className="grid gap-x-5 gap-y-1 py-6 sm:grid-cols-[3.75rem_1fr]">
+      <p className="font-mono text-caption text-ink-3 sm:pt-0.5">
+        <time dateTime={blog.metadata.publishedAt}>
+          {formatDay(blog.metadata.publishedAt)}
+        </time>
+      </p>
+      <div className="min-w-0">
+        <h2 className="font-medium">
+          <Link href={`/blog/${blog.slug}`} className="link-ink">
+            {blog.metadata.title}
+          </Link>
+        </h2>
+        <p className="mt-1 text-ink-2">{blog.metadata.summary}</p>
+        <p className="mt-2 text-caption text-ink-3">{blog.readingTime} min</p>
+      </div>
+    </article>
+  ),
   (prev, next) =>
     prev.blog.slug === next.blog.slug &&
     prev.blog.metadata.publishedAt === next.blog.metadata.publishedAt &&

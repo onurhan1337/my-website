@@ -1,8 +1,10 @@
-import Container from "@/components/shared/container";
-import Social from "@/components/social";
-import { CTA } from "@/components/cta";
+import Link from "next/link";
 import Script from "next/script";
 import type { Metadata } from "next";
+import { getAllBlogPostsList } from "@/app/db/blog";
+import { getThoughts } from "@/app/db/thoughts";
+import { getAllProjects } from "@/lib/projects";
+import { quoteExcerpt } from "@/lib/quotes";
 
 export const metadata: Metadata = {
   title: "About",
@@ -34,6 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-static";
+
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -55,9 +59,6 @@ const structuredData = {
     "Next.js",
     "TypeScript",
     "JavaScript",
-    "Yazılım Geliştirme",
-    "Web Geliştirme",
-    "Ürün Geliştirme",
   ],
   sameAs: [
     "https://github.com/onurhan1337",
@@ -69,73 +70,125 @@ const structuredData = {
     "@type": "Organization",
     name: "ikas",
     url: "https://ikas.com",
-    description:
-      "E-commerce platform company building tools for merchants and developers.",
   },
   address: {
     "@type": "PostalAddress",
     addressCountry: "TR",
-    addressLocality: "Turkey",
-    alternateName: "Türkiye",
-  },
-  nationality: {
-    "@type": "Country",
-    name: "Turkey",
-    alternateName: "Türkiye",
-  },
-  jobLocation: {
-    "@type": "Place",
-    name: "Turkey",
-    alternateName: "Türkiye",
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "TR",
-      addressLocality: "Turkey",
-    },
   },
 };
 
-export default function About() {
-  const paragraphs = [
-    `I'm a Developer Advocate & Frontend Developer at ikas, where I help grow the developer ecosystem and build products and experiences for the platform. My focus is on shipping practical, maintainable solutions that improve the merchant and developer experience.`,
-    `I move fast and iterate. Ship, gather feedback, improve, repeat. I write clean, maintainable code while keeping velocity high. Balance matters—quality and speed go hand in hand.`,
-    `Outside of work, I'm still experimenting with new tech and building side projects. Always learning, always building, always shipping.`,
+function formatShort(date: string): string {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default async function Home() {
+  const [posts, thoughts, projects] = await Promise.all([
+    getAllBlogPostsList(),
+    getThoughts(),
+    Promise.resolve(getAllProjects()),
+  ]);
+
+  const latestPost = posts[0];
+  const latestQuote = thoughts.find((t) => t.metadata.type === "quote");
+  const latestProject = projects[0];
+
+  const index = [
+    {
+      label: "Blog",
+      href: "/blog",
+      count: `${posts.length} posts`,
+      latest: latestPost && {
+        title: latestPost.metadata.title,
+        href: `/blog/${latestPost.slug}`,
+        meta: formatShort(latestPost.metadata.publishedAt),
+      },
+    },
+    {
+      label: "Thoughts",
+      href: "/thoughts",
+      count: `${thoughts.length} notes`,
+      latest: latestQuote && {
+        title: quoteExcerpt(latestQuote.content, 72),
+        href: `/thoughts/${latestQuote.slug}`,
+        meta: formatShort(latestQuote.metadata.createdAt),
+      },
+    },
+    {
+      label: "Work",
+      href: "/work",
+      count: "2023 — now",
+      latest: {
+        title: "Developer Advocate & Frontend Developer, ikas",
+        href: "/work",
+        meta: "Current",
+      },
+    },
+    {
+      label: "Projects",
+      href: "/projects",
+      count: `${projects.length} projects`,
+      latest: latestProject && {
+        title: latestProject.title,
+        href: `/projects/${latestProject.slug}`,
+        meta: latestProject.description,
+      },
+    },
   ];
 
   return (
-    <Container
-      size="large"
-      className="prose prose-zinc container animate-enter"
-    >
-      <p className="text-lg font-medium tracking-tight mb-8">
-        Hi, I&apos;m Onurhan.
-      </p>
-      {paragraphs.map((paragraph, index) => (
-        <div
-          key={index}
-          style={
-            { "--stagger": index } as React.CSSProperties & {
-              [key: string]: number;
-            }
-          }
-        >
-          <p
-            className={`text-[15px] leading-relaxed opacity-80 ${
-              index === paragraphs.length - 1 ? "mb-8" : "mb-6"
-            }`}
+    <>
+      <header>
+        <h1 className="text-title">Onurhan Demir</h1>
+        <p className="mt-3 text-ink-2">
+          Developer Advocate and Frontend Developer at{" "}
+          <a
+            href="https://ikas.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-ink underline decoration-ink-3 decoration-1 underline-offset-[3px] transition-colors hover:decoration-ink"
           >
-            {paragraph}
-          </p>
-          {index === 0 && <hr className="border-foreground/10 my-0!" />}
-        </div>
-      ))}
-      <CTA />
-      <Social />
+            ikas
+          </a>
+          . I help grow the developer ecosystem and build things for merchants
+          and developers.
+        </p>
+      </header>
+
+      <section className="mt-20 divide-y divide-rule rule">
+        {index.map((item) => (
+          <div
+            key={item.href}
+            className="grid gap-x-6 gap-y-2 py-6 sm:grid-cols-[8rem_1fr]"
+          >
+            <div>
+              <Link href={item.href} className="font-medium link-ink">
+                {item.label}
+              </Link>
+              <p className="mt-0.5 text-caption text-ink-3">{item.count}</p>
+            </div>
+            {item.latest && (
+              <div className="min-w-0">
+                <Link href={item.latest.href} className="link">
+                  {item.latest.title}
+                </Link>
+                <p className="mt-0.5 truncate text-caption text-ink-3">
+                  {item.latest.meta}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
+
       <Script
         id="structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-    </Container>
+    </>
   );
 }

@@ -21,9 +21,9 @@ const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
 
   if (hasError) {
     return (
-      <div className="p-4 bg-red-50 rounded-lg text-red-600">
-        <h3 className="text-lg font-medium mb-2">Something went wrong</h3>
-        <p className="text-sm">Please try refreshing the page.</p>
+      <div className="my-8 rounded-md bg-well p-6">
+        <h3 className="text-body font-medium text-ink mb-2">Something went wrong</h3>
+        <p className="text-small text-ink-2">Please try refreshing the page.</p>
       </div>
     );
   }
@@ -46,25 +46,16 @@ interface Step {
   actualValue?: number;
 }
 
-// Extracted and memoized components for better performance
-const MemoryGlow = memo(() => (
-  <div className="absolute inset-0 -z-10">
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-500/10 blur-xl" />
-    <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-white/0 blur-sm" />
-  </div>
-));
+// Decorative glows removed for the flat style; components kept for structure
+const MemoryGlow = memo(() => null);
 MemoryGlow.displayName = 'MemoryGlow';
 
-const GoroutineGlow = memo(({ color }: { color: string }) => (
-  <div className="absolute inset-0 -z-10">
-    <div className={`absolute inset-0 ${color} blur-xl opacity-10`} />
-    <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-white/0 blur-sm" />
-  </div>
-));
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const GoroutineGlow = memo(({ color: _color }: { color: string }) => null);
 GoroutineGlow.displayName = 'GoroutineGlow';
 
-const Arrow = memo(({ start, end, color, animate }: { 
-  start: { x: number; y: number }; 
+const Arrow = memo(({ start, end, color, animate }: {
+  start: { x: number; y: number };
   end: { x: number; y: number };
   color: string;
   animate: boolean;
@@ -82,9 +73,9 @@ const Arrow = memo(({ start, end, color, animate }: {
       initial={animate ? { pathLength: 0, opacity: 0 } : { pathLength: 1, opacity: 1 }}
       animate={{ pathLength: 1, opacity: 1 }}
       exit={{ opacity: 0, pathLength: 0 }}
-      transition={{ 
-        pathLength: { duration: 0.5, ease: "easeInOut" },
-        opacity: { duration: 0.3, ease: "easeInOut" }
+      transition={{
+        pathLength: { duration: 0.5, ease: "easeOut" },
+        opacity: { duration: 0.3, ease: "easeOut" }
       }}
       markerEnd={`url(#arrow-${color})`}
     />
@@ -107,9 +98,11 @@ const fadeIn = {
 };
 
 const scaleIn = {
-  hidden: { scale: 0.9, opacity: 0 },
-  visible: { scale: 1, opacity: 1 }
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 }
 };
+
+const EASE = { duration: 0.2, ease: "easeOut" as const };
 
 // Update StepDescription component with optimized animations
 const StepDescription = memo(({ step }: { step: Step | null }) => {
@@ -122,21 +115,21 @@ const StepDescription = memo(({ step }: { step: Step | null }) => {
       initial="hidden"
       animate="visible"
       exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.2 }}
-      className="w-full max-w-xl mx-auto bg-blue-50 p-3 rounded-xl border border-blue-100/50"
+      transition={EASE}
+      className="w-full max-w-xl mx-auto rounded border border-rule bg-paper p-3"
     >
-      <p className="text-sm text-blue-700 font-medium">{step.description}</p>
+      <p className="text-small text-ink">{step.description}</p>
       {step.expectedValue !== undefined && (
-        <motion.div 
+        <motion.div
           variants={fadeIn}
           initial="hidden"
           animate="visible"
-          transition={{ duration: 0.2, delay: 0.1 }}
-          className="mt-2 flex items-center space-x-4 text-xs"
+          transition={{ ...EASE, delay: 0.1 }}
+          className="mt-2 flex items-center gap-4 font-mono text-caption"
         >
-          <span className="text-blue-600 font-medium">Expected: {step.expectedValue}</span>
+          <span className="text-ink-2">Expected: {step.expectedValue}</span>
           {step.actualValue !== undefined && step.actualValue !== step.expectedValue && (
-            <span className="text-red-600 font-medium">Actual: {step.actualValue}</span>
+            <span className="text-ink font-medium">Actual: {step.actualValue} (mismatch)</span>
           )}
         </motion.div>
       )}
@@ -147,59 +140,58 @@ StepDescription.displayName = 'StepDescription';
 
 // Update GoroutineCard with fixed width and better reset handling
 const GoroutineCard = memo(({ goroutine, index }: { goroutine: Goroutine; index: number }) => {
-  const statusColor = useMemo(() => {
+  const statusLabel = useMemo(() => {
     switch (goroutine.status) {
       case 'reading':
-        return 'bg-amber-500';
+        return '○ reading';
       case 'writing':
-        return 'bg-emerald-500';
+        return '● writing';
       default:
-        return 'bg-neutral-500';
+        return 'idle';
     }
   }, [goroutine.status]);
 
-  const ringClasses = useMemo(() => {
+  const statusClasses = useMemo(() => {
     switch (goroutine.status) {
       case 'reading':
-        return 'ring-2 ring-amber-200 ring-offset-2';
+        return 'text-ink-2';
       case 'writing':
-        return 'ring-2 ring-emerald-200 ring-offset-2';
+        return 'text-ink font-medium';
       default:
-        return '';
+        return 'text-ink-3';
     }
   }, [goroutine.status]);
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.2 }}
-      className={`
-        relative overflow-hidden p-3 rounded-xl backdrop-blur-sm w-full
-        bg-white/80 border border-neutral-200
-        ${ringClasses}
-      `}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={EASE}
+      className="relative w-full rounded border border-rule bg-paper p-3"
     >
       <motion.div
         layout
-        transition={{ duration: 0.2 }}
+        transition={EASE}
       >
-        <GoroutineGlow color={statusColor} />
+        <GoroutineGlow color={statusClasses} />
         <div className="relative">
-          <h3 className="text-sm font-semibold text-neutral-800 mb-2">Goroutine {index + 1}</h3>
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="text-small font-medium text-ink">Goroutine {index + 1}</h3>
+            <span className={`text-caption ${statusClasses}`}>{statusLabel}</span>
+          </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-neutral-500">Operation:</span>
-              <span className="text-xs font-semibold text-blue-600">
+              <span className="text-caption text-ink-2">Operation</span>
+              <span className="font-mono text-caption text-ink">
                 {goroutine.operation === 'increment' ? '+1' : '-1'}
               </span>
             </div>
             <motion.div
               initial={false}
               animate={{ height: goroutine.status !== 'idle' ? 'auto' : 0 }}
-              transition={{ duration: 0.2 }}
+              transition={EASE}
               className="overflow-hidden"
             >
               {goroutine.status !== 'idle' && (
@@ -207,11 +199,11 @@ const GoroutineCard = memo(({ goroutine, index }: { goroutine: Goroutine; index:
                   variants={fadeIn}
                   initial="hidden"
                   animate="visible"
-                  transition={{ duration: 0.2 }}
-                  className="flex items-center justify-between pt-2 border-t border-neutral-100"
+                  transition={EASE}
+                  className="flex items-center justify-between border-t border-rule pt-2"
                 >
-                  <span className="text-xs font-medium text-neutral-500">Value:</span>
-                  <span className="text-xs font-semibold text-neutral-700">
+                  <span className="text-caption text-ink-2">Value</span>
+                  <span className="font-mono text-caption text-ink">
                     {goroutine.value}
                   </span>
                 </motion.div>
@@ -226,14 +218,14 @@ const GoroutineCard = memo(({ goroutine, index }: { goroutine: Goroutine; index:
 GoroutineCard.displayName = 'GoroutineCard';
 
 // Update SimulationControls to include prev/next buttons
-const SimulationControls = memo(({ 
-  isRunning, 
+const SimulationControls = memo(({
+  isRunning,
   onSimulate,
   onPrev,
   onNext,
   canGoPrev,
-  canGoNext 
-}: { 
+  canGoNext
+}: {
   isRunning: boolean;
   onSimulate: () => void;
   onPrev: () => void;
@@ -241,19 +233,19 @@ const SimulationControls = memo(({
   canGoPrev: boolean;
   canGoNext: boolean;
 }) => (
-  <motion.div layout className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-center">
-    <div className="flex space-x-3">
+  <motion.div layout className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+    <div className="flex gap-4">
       <button
         onClick={onPrev}
         disabled={!canGoPrev || isRunning}
-        className="px-4 py-2 text-sm font-medium text-neutral-700 bg-white rounded-lg border border-neutral-300 hover:bg-neutral-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
+        className="text-small text-ink-2 hover:text-ink transition-colors disabled:text-ink-3 disabled:cursor-default disabled:hover:text-ink-3"
       >
         ← Previous
       </button>
       <button
         onClick={onNext}
         disabled={!canGoNext || isRunning}
-        className="px-4 py-2 text-sm font-medium text-neutral-700 bg-white rounded-lg border border-neutral-300 hover:bg-neutral-50 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:hover:bg-white disabled:hover:shadow-none"
+        className="text-small text-ink-2 hover:text-ink transition-colors disabled:text-ink-3 disabled:cursor-default disabled:hover:text-ink-3"
       >
         Next →
       </button>
@@ -261,12 +253,12 @@ const SimulationControls = memo(({
     <button
       onClick={onSimulate}
       disabled={isRunning}
-      className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:hover:shadow-none"
+      className="text-small rounded bg-ink px-3 py-1.5 text-paper transition-colors disabled:bg-well disabled:text-ink-3 disabled:cursor-default"
       aria-busy={isRunning}
       role="button"
       aria-label={isRunning ? 'Simulation in progress' : 'Start race condition simulation'}
     >
-      {isRunning ? 'Simulating...' : 'Auto Play'}
+      {isRunning ? 'Simulating…' : 'Auto play'}
     </button>
   </motion.div>
 ));
@@ -277,17 +269,17 @@ SimulationControls.displayName = 'SimulationControls';
 const StepProgress = memo(({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => (
   <div className="relative w-full max-w-xl mx-auto mb-4">
     <div className="flex justify-between mb-2">
-      <span className="text-xs font-medium text-neutral-500">Progress</span>
-      <span className="text-xs font-medium text-neutral-500">
+      <span className="text-caption text-ink-2">Progress</span>
+      <span className="text-caption text-ink-2">
         Step {currentStep + 1} of {totalSteps}
       </span>
     </div>
-    <div className="h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+    <div className="h-1 bg-rule rounded-full overflow-hidden">
       <motion.div
-        className="h-full bg-blue-500"
+        className="h-full bg-ink"
         initial={{ width: 0 }}
         animate={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       />
     </div>
   </div>
@@ -295,14 +287,16 @@ const StepProgress = memo(({ currentStep, totalSteps }: { currentStep: number; t
 StepProgress.displayName = 'StepProgress';
 
 // Add a new ConnectionLine component
+// Read is drawn as a thin line, write as a heavier one (shape, not color)
 const ConnectionLine = memo(({ active, type }: { active: boolean; type: 'read' | 'write' }) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: active ? 1 : 0.2 }}
-    className={`absolute left-1/2 -translate-x-1/2 h-16 w-0.5 ${
+    transition={EASE}
+    className={`absolute left-1/2 -translate-x-1/2 h-16 ${
       type === 'read'
-        ? 'bg-amber-400'
-        : 'bg-emerald-400'
+        ? 'w-px bg-rule'
+        : 'w-0.5 bg-rule'
     }`}
   >
     <motion.div
@@ -310,10 +304,10 @@ const ConnectionLine = memo(({ active, type }: { active: boolean; type: 'read' |
       animate={{ height: active ? '100%' : '0%' }}
       className={`w-full ${
         type === 'read'
-          ? 'bg-amber-400'
-          : 'bg-emerald-400'
+          ? 'bg-ink-2'
+          : 'bg-ink'
       }`}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     />
   </motion.div>
 ));
@@ -322,25 +316,26 @@ ConnectionLine.displayName = 'ConnectionLine';
 // Add a new ExplanationPanel component
 const ExplanationPanel = memo(() => (
   <motion.div
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
-    className="w-full max-w-xl mx-auto bg-neutral-50 rounded-xl border border-neutral-200/50 p-4 mb-6"
+    transition={EASE}
+    className="w-full max-w-xl mx-auto mb-6"
   >
-    <h3 className="text-sm font-semibold text-neutral-700 mb-2">
-      What is a Race Condition?
+    <h3 className="text-small font-medium text-ink mb-2">
+      What is a race condition?
     </h3>
-    <p className="text-xs text-neutral-600 leading-relaxed">
-      A race condition occurs when multiple goroutines access shared memory simultaneously. 
+    <p className="text-caption text-ink-2">
+      A race condition occurs when multiple goroutines access shared memory simultaneously.
       In this visualization:
     </p>
     <ul className="mt-2 space-y-1">
-      <li className="text-xs text-neutral-600 flex items-center">
-        <span className="w-2 h-2 rounded-full bg-amber-400 mr-2" />
-        Yellow indicates a read operation
+      <li className="text-caption text-ink-2 flex items-center">
+        <span className="mr-2 text-ink-2" aria-hidden="true">○</span>
+        Outline marks a read operation
       </li>
-      <li className="text-xs text-neutral-600 flex items-center">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2" />
-        Green indicates a write operation
+      <li className="text-caption text-ink-2 flex items-center">
+        <span className="mr-2 text-ink" aria-hidden="true">●</span>
+        Filled marks a write operation
       </li>
     </ul>
   </motion.div>
@@ -391,10 +386,10 @@ export const RaceConditionVisualizer = () => {
           expectedValue: sharedState,
         });
         setActiveConnections({ g1Read: true });
-        setGoroutines(prev => prev.map(g => 
+        setGoroutines(prev => prev.map(g =>
           g.id === 'g1' ? { ...g, status: 'reading', value: sharedState } : g
         ));
-        setHistory([{ 
+        setHistory([{
           value: sharedState,
           description: "Initial value read by Goroutine 1"
         }]);
@@ -406,10 +401,10 @@ export const RaceConditionVisualizer = () => {
           expectedValue: sharedState,
         });
         setActiveConnections({ g2Read: true });
-        setGoroutines(prev => prev.map(g => 
+        setGoroutines(prev => prev.map(g =>
           g.id === 'g2' ? { ...g, status: 'reading', value: sharedState } : g
         ));
-        setHistory([{ 
+        setHistory([{
           value: sharedState,
           description: "Initial value read by Goroutine 1"
         }]);
@@ -423,15 +418,15 @@ export const RaceConditionVisualizer = () => {
           actualValue: expectedAfterIncrement,
         });
         setActiveConnections({ g1Write: true });
-        setGoroutines(prev => prev.map(g => 
+        setGoroutines(prev => prev.map(g =>
           g.id === 'g1' ? { ...g, status: 'writing', value: g.value + 1 } : g
         ));
         setHistory([
-          { 
+          {
             value: sharedState,
             description: "Initial value read by Goroutine 1"
           },
-          { 
+          {
             value: expectedAfterIncrement,
             description: "Value after Goroutine 1 increments (0 → 1)"
           }
@@ -446,19 +441,19 @@ export const RaceConditionVisualizer = () => {
           actualValue: sharedState - 1,
         });
         setActiveConnections({ g2Write: true });
-        setGoroutines(prev => prev.map(g => 
+        setGoroutines(prev => prev.map(g =>
           g.id === 'g2' ? { ...g, status: 'writing', value: g.value - 1 } : g
         ));
         setHistory([
-          { 
+          {
             value: sharedState,
             description: "Initial value read by Goroutine 1"
           },
-          { 
+          {
             value: sharedState + 1,
             description: "Value after Goroutine 1 increments (0 → 1)"
           },
-          { 
+          {
             value: sharedState - 1,
             description: "Final value after Goroutine 2 decrements its stale copy (0 → -1)"
           }
@@ -500,7 +495,7 @@ export const RaceConditionVisualizer = () => {
   // Modified simulateRace for auto-play
   const simulateRace = useCallback(async () => {
     if (autoPlaying) return;
-    
+
     setAutoPlaying(true);
     // Reset all state before starting animation
     setStepIndex(0);
@@ -512,15 +507,15 @@ export const RaceConditionVisualizer = () => {
       { id: 'g2', value: 0, status: 'idle', operation: 'decrement' }
     ]);
     setSharedState(0);
-    
+
     // Wait a tick for state to reset
     await new Promise(r => setTimeout(r, 0));
-    
+
     for (let i = 1; i <= totalSteps; i++) {
       await new Promise(r => setTimeout(r, STEP_DELAY));
       applyStep(i);
     }
-    
+
     setAutoPlaying(false);
   }, [autoPlaying, totalSteps, applyStep]);
 
@@ -530,37 +525,26 @@ export const RaceConditionVisualizer = () => {
 
   return (
     <ErrorBoundary>
-      <motion.div 
+      <motion.div
         layout
-        transition={{ duration: 0.3 }}
-        className="my-8 bg-gradient-to-br from-neutral-50 to-neutral-100 rounded-xl overflow-hidden shadow-lg border border-neutral-200/50"
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="my-8 rounded-md bg-well p-6"
         role="region"
         aria-label="Race Condition Visualization"
       >
-        <motion.div 
-          layout 
-          className="border-b border-neutral-200 bg-white/50 p-4"
+        <motion.div
+          layout
+          className="text-caption text-ink-2 mb-4"
+          role="heading"
+          aria-level={1}
         >
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-red-400" role="presentation" />
-              <div className="w-3 h-3 rounded-full bg-yellow-400" role="presentation" />
-              <div className="w-3 h-3 rounded-full bg-green-400" role="presentation" />
-            </div>
-            <div 
-              className="text-sm font-medium text-neutral-500"
-              role="heading"
-              aria-level={1}
-            >
-              Race Condition Simulator
-            </div>
-          </div>
+          Race condition simulator
         </motion.div>
 
-        <motion.div 
-          layout 
-          className="p-4 space-y-4"
-          transition={{ duration: 0.3 }}
+        <motion.div
+          layout
+          className="space-y-4"
+          transition={{ duration: 0.3, ease: "easeOut" }}
         >
           {/* Add Explanation Panel */}
           <ExplanationPanel />
@@ -578,12 +562,12 @@ export const RaceConditionVisualizer = () => {
           </div>
 
           {/* Main Visualization Area */}
-          <motion.div 
+          <motion.div
             layout
             variants={scaleIn}
             initial="hidden"
             animate="visible"
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             className="relative w-full max-w-2xl mx-auto"
             style={{ minHeight: '300px' }}
           >
@@ -591,45 +575,47 @@ export const RaceConditionVisualizer = () => {
             <div className="flex justify-center mb-16">
               {/* Add Connection Lines */}
               <div className="absolute inset-x-0 bottom-0 h-16">
-                <ConnectionLine 
+                <ConnectionLine
                   active={!!(activeConnections.g1Read || activeConnections.g2Read)}
-                  type="read" 
+                  type="read"
                 />
-                <ConnectionLine 
+                <ConnectionLine
                   active={!!(activeConnections.g1Write || activeConnections.g2Write)}
-                  type="write" 
+                  type="write"
                 />
               </div>
-              
+
               <motion.div
                 key={`shared-${sharedState}`}
                 variants={scaleIn}
                 initial="hidden"
                 animate="visible"
-                transition={{ duration: 0.2 }}
+                transition={EASE}
                 className="relative w-full"
               >
                 <motion.div
-                  className="relative overflow-hidden p-4 rounded-2xl bg-white/90 border border-neutral-200 flex flex-col items-center"
+                  className="relative rounded border border-rule bg-paper p-4 flex flex-col items-center"
                   layout
                 >
                   <MemoryGlow />
                   <div className="relative w-full text-center">
-                    <span className="block text-sm font-medium text-neutral-400 mb-2">Shared Memory</span>
-                    <motion.div 
+                    <span className="block text-caption text-ink-2 mb-2">Shared memory</span>
+                    <motion.div
                       key={sharedState}
-                      initial={{ scale: 0.5, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={EASE}
                       className="flex flex-col items-center"
                     >
-                      <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
+                      <span className="font-mono text-body font-medium text-ink">
                         {sharedState}
                       </span>
                       {autoPlaying && (
                         <motion.span
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="mt-2 text-xs font-medium text-neutral-400 px-2 py-0.5 rounded-full bg-neutral-50"
+                          transition={EASE}
+                          className="mt-2 font-mono text-caption text-ink-3"
                         >
                           0x1234
                         </motion.span>
@@ -660,30 +646,30 @@ export const RaceConditionVisualizer = () => {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="w-full max-w-xl mx-auto bg-white/50 rounded-xl border border-neutral-200/50 p-3"
+                transition={EASE}
+                className="w-full max-w-xl mx-auto rounded border border-rule bg-paper p-3"
               >
-                <div className="text-xs font-medium text-neutral-600 mb-2 tracking-wider">
-                  Value History:
+                <div className="text-caption text-ink-2 mb-2">
+                  Value history
                 </div>
                 <div className="space-y-2">
                   {history.map(({ value, description }, index) => (
                     <motion.div
                       key={`history-${index}`}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center space-x-3"
+                      transition={{ ...EASE, delay: index * 0.1 }}
+                      className="flex items-center gap-3"
                       role="listitem"
                     >
                       <div
-                        className="w-6 h-6 rounded-lg bg-white shadow-sm border border-neutral-200/50 flex items-center justify-center text-xs font-medium text-neutral-600"
+                        className="w-6 h-6 rounded border border-rule bg-paper flex items-center justify-center font-mono text-caption text-ink"
                         aria-label={`Value: ${value}`}
                       >
                         {value}
                       </div>
                       <div
-                        className="text-xs text-neutral-600 tracking-wider"
+                        className="text-caption text-ink-2"
                         aria-label={description}
                       >
                         {description}
@@ -696,7 +682,7 @@ export const RaceConditionVisualizer = () => {
           </AnimatePresence>
 
           {/* Control Button */}
-          <SimulationControls 
+          <SimulationControls
             isRunning={autoPlaying}
             onSimulate={simulateRace}
             onPrev={goToPrevStep}
@@ -709,4 +695,3 @@ export const RaceConditionVisualizer = () => {
     </ErrorBoundary>
   );
 };
-

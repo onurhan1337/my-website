@@ -149,29 +149,29 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
   const getStatusColor = useCallback((status: Task['status']) => {
     switch (status) {
       case 'waiting':
-        return 'bg-neutral-200';
+        return 'bg-rule';
       case 'running':
-        return 'bg-blue-400';
+        return 'bg-ink-2';
       case 'completed':
-        return 'bg-emerald-400';
+        return 'bg-ink';
       default:
-        return 'bg-neutral-200';
+        return 'bg-rule';
     }
   }, []);
 
   const explanation = useMemo(() => {
     if (mode === 'sequential') {
       return (
-        <p className="text-sm text-neutral-600 mb-6">
-          In Go, when tasks run <strong>sequentially</strong>, each goroutine waits for the previous one to complete before starting. 
-          This is similar to using a <code className="px-1 py-0.5 bg-neutral-100 rounded text-sm">sync.WaitGroup</code> or chaining goroutines with channels.
+        <p className="mb-6 text-small text-ink-2">
+          In Go, when tasks run <span className="font-medium text-ink">sequentially</span>, each goroutine waits for the previous one to complete before starting. 
+          This is similar to using a <code className="rounded bg-well px-1 py-0.5 font-mono text-caption text-ink">sync.WaitGroup</code> or chaining goroutines with channels.
         </p>
       );
     }
     return (
-      <p className="text-sm text-neutral-600 mb-6">
-        In Go&apos;s <strong>concurrent</strong> execution, multiple goroutines run independently and simultaneously.
-        This is like launching goroutines with <code className="px-1 py-0.5 bg-neutral-100 rounded text-sm">go func()</code> without synchronization.
+      <p className="mb-6 text-small text-ink-2">
+        In Go&apos;s <span className="font-medium text-ink">concurrent</span> execution, multiple goroutines run independently and simultaneously.
+        This is like launching goroutines with <code className="rounded bg-well px-1 py-0.5 font-mono text-caption text-ink">go func()</code> without synchronization.
       </p>
     );
   }, [mode]);
@@ -188,35 +188,17 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     }
   }, [isRunning, resetTasks, startSimulation]);
 
-  const buttonClassName = useMemo(() => `px-6 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+  const buttonClassName = useMemo(() => `text-small transition-colors ${
     isRunning
-      ? 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-      : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+      ? 'text-ink-2 hover:text-ink'
+      : 'rounded bg-ink px-3 py-1.5 text-paper'
   }`, [isRunning]);
 
   const getTaskColor = (task: Task) => {
-    const baseColors = {
-      1: {
-        base: 'bg-blue-400 border-blue-500',
-        light: 'bg-blue-200 border-blue-300'
-      },
-      2: {
-        base: 'bg-purple-400 border-purple-500',
-        light: 'bg-purple-200 border-purple-300'
-      },
-      3: {
-        base: 'bg-orange-400 border-orange-500',
-        light: 'bg-orange-200 border-orange-300'
-      }
-    }[task.id] ?? {
-      base: 'bg-neutral-400 border-neutral-500',
-      light: 'bg-neutral-200 border-neutral-300'
-    };
-
     if (task.status === 'completed' && task.progress === 100) {
-      return 'bg-emerald-400 border-emerald-500';
+      return 'bg-ink';
     }
-    return task.status === 'running' ? baseColors.base : baseColors.light;
+    return task.status === 'running' ? 'bg-ink-2' : 'bg-rule';
   };
 
   const TimeAxis = () => {
@@ -235,28 +217,28 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     });
 
     return (
-      <div className="h-12 relative mb-6">
+      <div className="relative mb-6 h-12">
         {/* Base timeline */}
-        <div className="absolute left-0 right-0 h-0.5 bg-neutral-200 top-1/2 transform -translate-y-1/2" />
+        <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 transform bg-rule" />
         
         {/* Time markers */}
         {timeMarkers.map(({ position, time }, i) => (
           <div
             key={`marker-${i}`}
-            className="absolute h-2 w-0.5 bg-neutral-300 top-1/2 transform -translate-y-1/2"
+            className="absolute top-1/2 h-2 w-px -translate-y-1/2 transform bg-ink-3"
             style={{ left: `${position}%` }}
           >
-            <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-neutral-500">
+            <span className="absolute -top-6 left-1/2 -translate-x-1/2 transform font-mono text-caption text-ink-3">
               {time}s
             </span>
           </div>
         ))}
 
         {/* Unified progress bar */}
-        <div className="absolute inset-y-0 left-0 right-0 top-1/2 transform -translate-y-1/2">
+        <div className="absolute inset-y-0 left-0 right-0 top-1/2 -translate-y-1/2 transform">
           <div className="relative h-2">
             {/* Background track */}
-            <div className="absolute inset-0 rounded-full border overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden rounded-full bg-rule">
               {taskList.map((task) => {
                 const taskLeft = mode === 'sequential'
                   ? ((task.startTime ?? 0) - (startTime ?? 0)) / totalDuration * 100
@@ -266,7 +248,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
                 return (
                   <div
                     key={`track-${task.id}`}
-                    className={`absolute h-full border-r last:border-r-0 ${getTaskColor({ ...task, status: 'waiting' })}`}
+                    className={`absolute h-full border-r border-paper last:border-r-0 ${getTaskColor({ ...task, status: 'waiting' })}`}
                     style={{
                       left: `${taskLeft}%`,
                       width: `${taskWidth}%`
@@ -277,7 +259,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
             </div>
 
             {/* Progress overlay */}
-            <div className="absolute inset-0 rounded-full overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden rounded-full">
               {taskList.map((task) => {
                 const taskLeft = mode === 'sequential'
                   ? ((task.startTime ?? 0) - (startTime ?? 0)) / totalDuration * 100
@@ -287,7 +269,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
                 return (
                   <motion.div
                     key={`progress-${task.id}`}
-                    className={`absolute h-full border-r last:border-r-0 ${getTaskColor(task)}`}
+                    className={`absolute h-full border-r border-paper last:border-r-0 ${getTaskColor(task)}`}
                     style={{
                       left: `${taskLeft}%`,
                       width: `${taskWidth}%`
@@ -314,30 +296,26 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
     <motion.div
       initial={false}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative bg-neutral-50 hover:bg-neutral-50/80 rounded-xl p-4 transition-colors duration-300"
+      className="relative rounded border border-rule bg-paper p-4"
       style={{
         zIndex: task.status === 'running' ? 2 : 1
       }}
       layout
     >
-      <div className="flex justify-between items-center mb-3">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-2 h-2 rounded-full ${getTaskColor(task)}`} />
-          <span className="font-medium text-neutral-700">Task {task.id}</span>
+          <div className={`h-2 w-2 rounded-full ${getStatusColor(task.status)}`} />
+          <span className="text-small font-medium text-ink">Task {task.id}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-sm ${
-            task.status === 'completed'
-              ? 'text-emerald-600'
-              : task.status === 'running'
-                ? 'text-blue-600'
-                : 'text-neutral-400'
+          <span className={`font-mono text-caption ${
+            task.status === 'waiting' ? 'text-ink-3' : 'text-ink-2'
           }`}>
-            {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+            {task.status === 'completed' ? '●' : task.status === 'running' ? '◐' : '○'} {task.status}
           </span>
         </div>
       </div>
-      <div className="relative h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+      <div className="relative h-1.5 overflow-hidden rounded-full bg-rule">
         <motion.div
           className={`h-full transition-colors duration-300 ${getTaskColor(task)}`}
           initial={false}
@@ -349,34 +327,21 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
             ease: 'linear'
           }}
         />
-        {task.status === 'completed' && (
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            initial={{ x: '-100%' }}
-            animate={{ x: '100%' }}
-            transition={{ 
-              duration: 0.6,
-              ease: 'easeInOut',
-              repeat: Infinity,
-              repeatDelay: 1
-            }}
-          />
-        )}
       </div>
     </motion.div>
   );
 
   return (
-    <div className="p-8 bg-white rounded-2xl shadow-sm border border-neutral-100">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <div className="inline-flex p-1 bg-neutral-50 rounded-xl">
+    <div className="my-8 rounded-md bg-well p-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="inline-flex gap-1">
           {(['sequential', 'concurrent'] as const).map((modeOption) => (
             <button
               key={modeOption}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+              className={`rounded px-3 py-1.5 text-small transition-colors ${
                 mode === modeOption
-                  ? 'bg-white text-neutral-800 shadow-sm'
-                  : 'text-neutral-500 hover:text-neutral-700'
+                  ? 'bg-ink text-paper'
+                  : 'text-ink-2 hover:text-ink'
               }`}
               onClick={() => handleModeChange(modeOption)}
             >
@@ -396,7 +361,7 @@ export const TaskSimulator = ({ tasks = 'sequential' }: { tasks: TaskMode }) => 
 
       <TimeAxis />
 
-      <div className="space-y-5">
+      <div className="space-y-4">
         <AnimatePresence mode="wait">
           {taskList.map((task) => (
             <TaskItem key={task.id} task={task} />

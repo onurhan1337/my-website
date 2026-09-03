@@ -52,11 +52,11 @@ const Processor = React.memo(
     );
 
     return (
-      <div className="mb-4 border border-neutral-200 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="mb-4 rounded-md border border-rule bg-paper p-4">
+        <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-neutral-700">P{pid}</span>
-            <span className="px-2 py-1 text-xs bg-neutral-100 text-neutral-600 rounded-md">
+            <span className="text-small font-medium text-ink">P{pid}</span>
+            <span className="rounded bg-well px-2 py-0.5 font-mono text-caption text-ink-2">
               M{pid}
             </span>
           </div>
@@ -64,37 +64,28 @@ const Processor = React.memo(
             {runningGoroutines.map((g) => (
               <motion.div
                 key={g.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{
-                  duration: 1.5,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-                className="px-3 py-2 bg-emerald-50 text-emerald-700 rounded-md text-sm font-medium shadow-sm border border-emerald-200"
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="rounded bg-ink px-2.5 py-1 font-mono text-caption text-paper"
               >
-                Running G{g.id}
+                running G{g.id}
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
 
-        <div className="flex gap-2 p-2 bg-neutral-50 rounded-lg overflow-x-auto min-h-12 items-center">
+        <div className="flex min-h-12 items-center gap-2 overflow-x-auto rounded bg-well p-2">
           <AnimatePresence initial={false}>
             {localQueueGoroutines.map((g) => (
               <motion.div
                 key={g.id}
-                initial={{ opacity: 0, scale: 0.4 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.4 }}
-                transition={{
-                  duration: 1.5,
-                  type: "spring",
-                  stiffness: 50,
-                  damping: 12,
-                  mass: 1.5,
-                }}
-                className="shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-rule bg-paper font-mono text-caption text-ink"
               >
                 G{g.id}
               </motion.div>
@@ -284,47 +275,37 @@ export const GoroutineScheduler = () => {
 
   return (
     <div
-      className={`p-6 bg-white rounded-2xl shadow-sm border border-neutral-200 ${
+      className={`my-8 rounded-md bg-well p-6 ${
         isTransitioning ? "pointer-events-none" : ""
       }`}
     >
-      <div className="mb-6">
-        <h3 className="text-lg font-medium text-neutral-900 mb-2">
-          Go Scheduler Visualization
+      <div className="mb-4">
+        <h3 className="mb-2 text-body font-medium text-ink">
+          Go scheduler visualization
         </h3>
-        <p className="text-sm text-neutral-600">
+        <p className="text-small text-ink-2">
           This demonstrates Go&apos;s M:N scheduler model where M (OS Threads)
           and N (Goroutines) are scheduled through P (Processors). Each P has a
           local run queue and can steal work from other Ps when idle.
         </p>
       </div>
 
-      <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-        <p className="text-sm text-blue-700 font-medium">
-          {currentDescription}
-        </p>
+      <div className="mb-4 rounded-md border border-rule bg-paper p-3">
+        <p className="font-mono text-caption text-ink">{currentDescription}</p>
       </div>
 
-      <div className="mb-6">
-        <h4 className="text-sm font-medium text-neutral-700 mb-2">
-          Global Run Queue
-        </h4>
-        <div className="flex gap-2 p-3 bg-neutral-50 rounded-lg overflow-x-auto min-h-16 items-center">
+      <div className="mb-4">
+        <h4 className="mb-2 text-caption text-ink-2">Global run queue</h4>
+        <div className="flex min-h-16 items-center gap-2 overflow-x-auto rounded-md border border-rule bg-paper p-3">
           <AnimatePresence initial={false}>
             {globalGoroutines.map((g) => (
               <motion.div
                 key={g.id}
-                initial={{ opacity: 0, scale: 0.4 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.4 }}
-                transition={{
-                  duration: 1.5,
-                  type: "spring",
-                  stiffness: 50,
-                  damping: 12,
-                  mass: 1.5,
-                }}
-                className="shrink-0 w-8 h-8 bg-blue-50 text-blue-700 rounded-lg flex items-center justify-center text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-rule bg-well font-mono text-caption text-ink"
               >
                 G{g.id}
               </motion.div>
@@ -343,13 +324,13 @@ export const GoroutineScheduler = () => {
 
       <button
         onClick={toggleScheduling}
-        className={`mt-6 px-6 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+        className={`mt-2 text-small transition-colors ${
           isRunning
-            ? "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-            : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+            ? "text-ink-2 hover:text-ink"
+            : "rounded bg-ink px-3 py-1.5 text-paper"
         }`}
       >
-        {isRunning ? "Reset" : "Start"} Scheduling
+        {isRunning ? "Reset" : "Start"} scheduling
       </button>
     </div>
   );

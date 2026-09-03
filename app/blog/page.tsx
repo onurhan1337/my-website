@@ -1,5 +1,6 @@
 import { BlogPaginatedList } from "@/components/blog-paginated-list";
 import Container from "@/components/shared/container";
+import { PageTitle } from "@/components/page-title";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { getAllBlogPostsList } from "../db/blog";
@@ -65,7 +66,7 @@ export default async function Blog() {
   };
 
   return (
-    <Container size="large">
+    <Container>
       <Script
         id="blog-collection-structured-data"
         type="application/ld+json"
@@ -74,6 +75,7 @@ export default async function Blog() {
           __html: JSON.stringify(blogCollectionJsonLd),
         }}
       />
+      <PageTitle title="Blog" description="Writing on software, the web, and building things." />
       <BlogPaginatedList posts={posts} />
     </Container>
   );

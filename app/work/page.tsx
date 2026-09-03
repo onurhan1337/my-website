@@ -1,4 +1,5 @@
 import Container from "@/components/shared/container";
+import { PageTitle } from "@/components/page-title";
 import type { Metadata } from "next";
 import { WorkClient } from "./work-client";
 
@@ -29,7 +30,8 @@ export const metadata: Metadata = {
 
 export default function Work() {
   return (
-    <Container size="large">
+    <Container>
+      <PageTitle title="Work" description="Where I have worked and what I did there." />
       <WorkClient />
     </Container>
   );

@@ -1,5 +1,5 @@
 import path from "path";
-import type { BlogPost, BlogListItem, PaginatedResult } from "@/types/blog";
+import type { BlogPost, BlogListItem } from "@/types/blog";
 import { getMDXFiles, readMDXFile, getReadingTime } from "@/lib/mdx";
 import { validateBlogMetadata } from "@/lib/schemas";
 
@@ -73,22 +73,6 @@ export async function getAllBlogPostsList(): Promise<BlogListItem[]> {
   return getAllBlogPostsListSorted();
 }
 
-export async function getBlogPosts(
-  page: number = 1,
-  limit: number = 5
-): Promise<PaginatedResult> {
-  const sortedPosts = await getAllBlogPostsListSorted();
-
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
-
-  return {
-    posts: paginatedPosts,
-    total: sortedPosts.length,
-    totalPages: Math.ceil(sortedPosts.length / limit),
-  };
-}
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   const filePath = path.join(contentDir, `${slug}.mdx`);
@@ -113,4 +97,20 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     console.error(`Error reading blog post ${slug}:`, error);
     return null;
   }
+}
+
+/** The posts either side of this one, newest first, for end-of-article links. */
+export async function getBlogNeighbours(slug: string): Promise<{
+  newer: BlogListItem | null;
+  older: BlogListItem | null;
+}> {
+  const posts = await getAllBlogPostsListSorted();
+  const index = posts.findIndex((post) => post.slug === slug);
+
+  if (index === -1) return { newer: null, older: null };
+
+  return {
+    newer: posts[index - 1] ?? null,
+    older: posts[index + 1] ?? null,
+  };
 }

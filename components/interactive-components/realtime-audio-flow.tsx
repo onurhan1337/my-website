@@ -82,28 +82,26 @@ export function RealtimeAudioFlow() {
     const isActive = currentStep === index;
     const isCompleted = completedSteps.has(index);
 
-    if (isCompleted)
-      return "bg-neutral-900 border-neutral-900 text-white";
-    if (isActive)
-      return "bg-white border-neutral-900 text-neutral-900 shadow-lg scale-110";
-    return "bg-white border-neutral-200 text-neutral-300";
+    if (isCompleted) return "bg-ink border-ink text-paper";
+    if (isActive) return "bg-paper border-ink text-ink";
+    return "bg-paper border-rule text-ink-3";
   };
 
   const getLatencyStatus = () => {
     if (totalLatency < 200)
       return {
-        color: "bg-emerald-500",
+        mark: "●",
         text: "Human-like",
         desc: "Excellent! Feels human",
       };
     if (totalLatency < 500)
       return {
-        color: "bg-yellow-500",
+        mark: "◐",
         text: "Acceptable",
         desc: "Good, but noticeable",
       };
     return {
-      color: "bg-red-500",
+      mark: "○",
       text: "Robotic",
       desc: "Too slow - feels robotic",
     };
@@ -112,37 +110,41 @@ export function RealtimeAudioFlow() {
   const status = getLatencyStatus();
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <div className="flex items-center justify-between mb-12">
+    <div className="my-8 rounded-md border border-rule bg-paper p-6">
+      <div className="mb-8 flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-neutral-900 mb-2">
-            Realtime Audio Processing
-          </h1>
-          <p className="text-sm text-neutral-500 font-mono">
+          <h3 className="mb-1 text-body font-medium text-ink">
+            Realtime audio processing
+          </h3>
+          <p className="font-mono text-caption text-ink-2">
             Speech → STT → LLM → TTS → Output
           </p>
         </div>
 
         <button
           onClick={toggleSimulation}
-          className="flex items-center gap-2 px-6 py-2 border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white transition-colors duration-200 font-mono text-sm"
+          className={`flex items-center gap-2 text-small transition-colors ${
+            isRunning
+              ? "text-ink-2 hover:text-ink"
+              : "rounded bg-ink px-3 py-1.5 text-paper"
+          }`}
         >
           {isRunning ? (
-            <Pause className="w-4 h-4" />
+            <Pause className="h-4 w-4" />
           ) : (
-            <Play className="w-4 h-4" />
+            <Play className="h-4 w-4" />
           )}
-          {isRunning ? "RESET" : "START"}
+          {isRunning ? "Reset" : "Start"}
         </button>
       </div>
 
       <div className="relative h-40">
-        <div className="absolute top-12 left-0 right-0 flex items-center justify-between px-8">
+        <div className="absolute left-0 right-0 top-12 flex items-center justify-between px-8">
           {STEPS.slice(0, -1).map((_, i) => (
-            <div key={i} className="flex-1 flex justify-center">
-              <div className="w-full max-w-32 h-px bg-neutral-200 overflow-hidden">
+            <div key={i} className="flex flex-1 justify-center">
+              <div className="h-px w-full max-w-32 overflow-hidden bg-rule">
                 <div
-                  className={`h-full bg-neutral-900 transition-all duration-500 ${
+                  className={`h-full bg-ink transition-all duration-500 ${
                     completedSteps.has(i) ? "w-full" : "w-0"
                   }`}
                 />
@@ -151,39 +153,33 @@ export function RealtimeAudioFlow() {
           ))}
         </div>
 
-        <div className="flex items-start justify-between relative z-10 pt-4">
+        <div className="relative z-10 flex items-start justify-between pt-4">
           {STEPS.map((step, i) => {
             const isActive = currentStep === i;
             const isCompleted = completedSteps.has(i);
             const Icon = step.icon;
 
             return (
-              <div key={step.id} className="flex flex-col items-center flex-1">
+              <div key={step.id} className="flex flex-1 flex-col items-center">
                 <div
-                  className={`relative w-16 h-16 border-2 rounded-full flex items-center justify-center transition-all duration-300 ${getStepStyle(
+                  className={`relative flex h-16 w-16 items-center justify-center rounded-full border transition-colors duration-300 ${getStepStyle(
                     i
                   )}`}
                 >
-                  <Icon className="w-6 h-6" />
-
-                  {isActive && (
-                    <div className="absolute inset-0 border-2 border-neutral-900 rounded-full opacity-20 animate-ping" />
-                  )}
+                  <Icon className="h-5 w-5" />
                 </div>
 
                 <div className="mt-4 text-center">
                   <div
-                    className={`font-mono text-sm tracking-wider ${
-                      isActive || isCompleted
-                        ? "text-neutral-900"
-                        : "text-neutral-400"
+                    className={`font-mono text-caption ${
+                      isActive || isCompleted ? "text-ink" : "text-ink-3"
                     }`}
                   >
                     {step.name}
                   </div>
 
                   {isActive && (
-                    <div className="text-xs text-neutral-500 mt-1 font-mono animate-in fade-in slide-in-from-bottom-1 duration-300">
+                    <div className="mt-1 font-mono text-caption text-ink-2">
                       {step.duration}ms
                     </div>
                   )}
@@ -195,31 +191,25 @@ export function RealtimeAudioFlow() {
       </div>
 
       {isRunning && (
-        <div className="mt-8 p-4 bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="mt-8 rounded-md bg-well p-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-neutral-800 mb-1">
-                Total Latency: {totalLatency}ms
+              <h4 className="mb-1 text-small font-medium text-ink">
+                Total latency: {totalLatency}ms
               </h4>
-              <p className="text-xs text-neutral-600">
-                {status.desc}
-              </p>
+              <p className="text-caption text-ink-2">{status.desc}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${status.color}`} />
-              <span className="text-xs font-medium text-neutral-600">
-                {status.text}
-              </span>
+            <div className="flex items-center gap-2 font-mono text-caption text-ink-2">
+              <span>{status.mark}</span>
+              <span>{status.text}</span>
             </div>
           </div>
         </div>
       )}
 
-      <div className="mt-8 border-l-2 border-neutral-900 pl-6">
-        <p className="text-sm text-neutral-600 leading-relaxed">
-          <span className="font-mono text-neutral-900">
-            KEY INSIGHT:
-          </span>
+      <div className="mt-8 border-l border-ink pl-4">
+        <p className="text-small text-ink-2">
+          <span className="font-mono text-caption text-ink">Key insight:</span>
           <br />
           Each step must stream data forward as soon as it&apos;s available.
           <br />

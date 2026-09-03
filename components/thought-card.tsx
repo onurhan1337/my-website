@@ -1,34 +1,31 @@
 import React from "react";
 import { formatDate } from "@/lib/utils";
 import type { ThoughtCardProps } from "@/types";
+import { QuoteCard } from "@/components/quote-card";
 
 const typeLabels = {
-  code: "CODE",
-  idea: "IDEA",
-  quote: "QUOTE",
-  book: "BOOK",
+  code: "Code",
+  idea: "Idea",
+  quote: "Quote",
+  book: "Book",
 };
 
 export const ThoughtCard = React.memo(
   ({ thought }: ThoughtCardProps) => {
     const { type, createdAt } = thought.metadata;
 
-    return (
-      <article className="py-8 first:pt-0 border-b border-foreground/10 last:border-0 focus:outline-none">
-        <header className="mb-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs tracking-wider opacity-40 uppercase">
-              {typeLabels[type]}
-            </span>
-            <time className="text-xs tracking-wider opacity-40">
-              {formatDate(createdAt, { time: true })}
-            </time>
-          </div>
-        </header>
+    if (type === "quote") {
+      return <QuoteCard thought={thought} />;
+    }
 
-        <div className="thoughts-prose prose prose-sm prose-neutral max-w-none text-[15px] leading-relaxed opacity-85">
-          {thought.renderedContent}
-        </div>
+    return (
+      <article className="py-10 first:pt-0">
+        <p className="mb-4 text-caption text-ink-3">
+          <span>{typeLabels[type]}</span>
+          <span className="mx-2">·</span>
+          <time dateTime={createdAt}>{formatDate(createdAt, { time: true })}</time>
+        </p>
+        <div className="prose">{thought.renderedContent}</div>
       </article>
     );
   },

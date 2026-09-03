@@ -80,19 +80,6 @@ export function readMDXFile<T extends Record<string, string>>(
   return result;
 }
 
-export function getMDXMetadata<T extends Record<string, string>>(
-  filePath: string
-): T {
-  const rawContent = fs.readFileSync(filePath, "utf-8");
-  const frontmatterRegex = /^\uFEFF?---\s*\n([\s\S]*?)\n---/;
-  const match = frontmatterRegex.exec(rawContent);
-
-  if (!match) {
-    throw new Error("Invalid frontmatter: frontmatter block not found");
-  }
-
-  return parseFrontmatterBlock<T>(match[1]);
-}
 
 export function getReadingTime(content: string): number {
   if (!content || typeof content !== "string") {

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { highlight } from "sugar-high";
 import { cn } from "@/lib/utils";
-import { Send, Loader2, Code2, Clock } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export interface ApiRequestProps {
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -19,11 +19,11 @@ export interface ApiRequestProps {
 }
 
 const methodColors = {
-  GET: "bg-[#eaeaea] text-[#959595] border-[#e6e6e6]",
-  POST: "bg-[#eaeaea] text-[#959595] border-[#e6e6e6]",
-  PUT: "bg-[#eaeaea] text-[#959595] border-[#e6e6e6]",
-  DELETE: "bg-[#1a1a1a] text-white border-[#1a1a1a]",
-  PATCH: "bg-[#4a4a4a] text-white border-[#4a4a4a]",
+  GET: "bg-well text-ink-2",
+  POST: "bg-well text-ink-2",
+  PUT: "bg-well text-ink-2",
+  DELETE: "bg-ink text-paper",
+  PATCH: "bg-ink text-paper",
 };
 
 const formatJson = (data: string | Record<string, unknown>) => {
@@ -94,76 +94,65 @@ export function ApiRequest({
   const curlCommand = buildCurlCommand(method, url, headers, body);
 
   return (
-    <div className="my-8 border border-[#e5e5e5] bg-white">
-      <div className="bg-[#f6f6f6] border-b border-[#e5e5e5] px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span
-              className={cn(
-                "px-2.5 py-1 text-xs font-bold uppercase tracking-wide border",
-                methodColors[method]
-              )}
-            >
-              {method}
-            </span>
-            <div className="flex-1 min-w-0">
-              <input
-                type="text"
-                value={url}
-                readOnly
-                className="w-full bg-white border border-[#e5e5e5] px-3 py-1.5 text-sm font-mono text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#F38020]/20 focus:border-[#F38020]"
-              />
-            </div>
-          </div>
-          <button
-            onClick={handleSendRequest}
-            disabled={isSending}
+    <div className="my-8 rounded-md border border-rule bg-paper p-6">
+      <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <span
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 text-sm font-semibold transition-all",
-              isSending
-                ? "bg-[#e5e5e5] text-[#999] cursor-not-allowed"
-                : "bg-[#F38020] text-white hover:bg-[#e6731d] active:scale-95"
+              "rounded px-2 py-1 font-mono text-caption",
+              methodColors[method]
             )}
           >
-            {isSending ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Sending</span>
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                <span>Send</span>
-              </>
-            )}
-          </button>
+            {method}
+          </span>
+          <div className="min-w-0 flex-1">
+            <input
+              type="text"
+              value={url}
+              readOnly
+              className="w-full rounded border border-rule bg-paper px-2.5 py-1.5 font-mono text-caption text-ink focus:border-ink focus:outline-none"
+            />
+          </div>
         </div>
+        <button
+          onClick={handleSendRequest}
+          disabled={isSending}
+          className={cn(
+            "flex items-center gap-2 rounded px-3 py-1.5 text-small transition-colors",
+            isSending
+              ? "cursor-default bg-well text-ink-3"
+              : "bg-ink text-paper"
+          )}
+        >
+          {isSending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Sending</span>
+            </>
+          ) : (
+            <span>Send</span>
+          )}
+        </button>
       </div>
 
       {description && (
-        <div className="px-4 py-3 bg-[#fafafa] border-b border-[#e5e5e5]">
-          <p className="text-sm text-[#4a4a4a] leading-relaxed">
-            {description}
-          </p>
-        </div>
+        <p className="mt-4 text-small text-ink-2">{description}</p>
       )}
 
-      <div className="divide-y divide-[#e5e5e5]">
+      <div className="mt-4 divide-y divide-rule border-t border-rule">
         {Object.keys(headers).length > 0 && (
-          <div className="px-4 py-3">
-            <div className="text-xs font-semibold text-[#999] uppercase tracking-wider mb-2">
-              Headers
-            </div>
-            <div className="space-y-1.5">
+          <div className="py-4">
+            <div className="mb-2 text-caption text-ink-2">Headers</div>
+            <div className="space-y-2">
               {Object.entries(headers).map(([key, value]) => (
                 <div
                   key={key}
-                  className="flex items-center gap-3 text-sm bg-[#fafafa] p-2 border border-[#e5e5e5]"
+                  className="flex items-center gap-3 rounded bg-well p-2 text-small"
                 >
-                  <span className="font-semibold text-[#1a1a1a] min-w-[140px]">
+                  <span className="min-w-[140px] font-medium text-ink">
                     {key}
                   </span>
-                  <span className="text-[#4a4a4a] font-mono text-xs flex-1">
+                  <span className="flex-1 font-mono text-caption text-ink-2">
                     {value}
                   </span>
                 </div>
@@ -173,14 +162,12 @@ export function ApiRequest({
         )}
 
         {body && (
-          <div className="px-4 py-3">
-            <div className="text-xs font-semibold text-[#999] uppercase tracking-wider mb-2">
-              Request Body
-            </div>
-            <div className="bg-[#fafafa] border border-[#e5e5e5] overflow-hidden">
-              <pre className="p-4 overflow-x-auto">
+          <div className="py-4">
+            <div className="mb-2 text-caption text-ink-2">Request body</div>
+            <div className="overflow-hidden rounded-md bg-well">
+              <pre className="overflow-x-auto p-4">
                 <code
-                  className="text-sm text-[#1a1a1a]"
+                  className="font-mono text-caption text-ink"
                   dangerouslySetInnerHTML={{ __html: highlight(formattedBody) }}
                 />
               </pre>
@@ -189,17 +176,14 @@ export function ApiRequest({
         )}
 
         <details className="group">
-          <summary className="cursor-pointer px-4 py-3 hover:bg-[#fafafa] transition-colors">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#999] uppercase tracking-wider">
-              <Code2 className="w-3.5 h-3.5" />
-              <span>cURL Command</span>
-            </div>
+          <summary className="cursor-pointer py-4 text-caption text-ink-2 transition-colors hover:text-ink">
+            cURL command
           </summary>
-          <div className="px-4 pb-3">
-            <div className="bg-[#fafafa] border border-[#e5e5e5] overflow-hidden">
-              <pre className="p-4 overflow-x-auto">
+          <div className="pb-4">
+            <div className="overflow-hidden rounded-md bg-well">
+              <pre className="overflow-x-auto p-4">
                 <code
-                  className="text-sm text-[#1a1a1a]"
+                  className="font-mono text-caption text-ink"
                   dangerouslySetInnerHTML={{ __html: highlight(curlCommand) }}
                 />
               </pre>
@@ -214,51 +198,46 @@ export function ApiRequest({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="border-t-2 border-[#F38020] bg-[#fafafa]"
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="overflow-hidden border-t border-rule"
           >
-            <div className="px-4 py-3 border-b border-[#e5e5e5]">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold text-[#1a1a1a]">
-                    Response
+            <div className="flex items-center justify-between py-4">
+              <div className="flex items-center gap-3">
+                <span className="text-small font-medium text-ink">
+                  Response
+                </span>
+                {requestTime && (
+                  <span className="font-mono text-caption text-ink-3">
+                    {requestTime}ms
                   </span>
-                  {requestTime && (
-                    <div className="flex items-center gap-1 text-xs text-[#999]">
-                      <Clock className="w-3 h-3" />
-                      <span>{requestTime}ms</span>
-                    </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "rounded px-2 py-1 font-mono text-caption",
+                    isSuccess ? "bg-ink text-paper" : "bg-well text-ink"
                   )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      "px-2.5 py-1 text-xs font-bold border",
-                      isSuccess
-                        ? "bg-[#F38020] text-white border-[#F38020]"
-                        : "bg-[#1a1a1a] text-white border-[#1a1a1a]"
-                    )}
-                  >
-                    {response.status}
-                  </span>
-                </div>
+                >
+                  {isSuccess ? "●" : "○"} {response.status}
+                </span>
               </div>
             </div>
 
             {isSending ? (
-              <div className="px-4 py-12 flex items-center justify-center">
+              <div className="flex items-center justify-center py-12">
                 <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#F38020]" />
-                  <span className="text-sm text-[#4a4a4a]">
+                  <Loader2 className="h-4 w-4 animate-spin text-ink-2" />
+                  <span className="text-small text-ink-2">
                     Sending request...
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="px-4 py-3 bg-[#fafafa] border border-[#e5e5e5]">
-                <pre className="p-4 overflow-x-auto">
+              <div className="overflow-hidden rounded-md bg-well">
+                <pre className="overflow-x-auto p-4">
                   <code
-                    className="text-sm text-[#1a1a1a]"
+                    className="font-mono text-caption text-ink"
                     dangerouslySetInnerHTML={{
                       __html: highlight(formattedResponse),
                     }}

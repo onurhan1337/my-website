@@ -23,15 +23,13 @@ export function ProcessSteps({ title, steps }: ProcessStepsProps) {
   if (!steps?.length) return null;
 
   return (
-    <div className="my-8 border border-[#dcdcdc] bg-white">
-      <div className="border-b border-[#dcdcdc] px-5 py-3">
-        <p className="text-[13px] font-semibold uppercase tracking-wide text-[#1c1c1c]">
-          {title ?? "How the request flows"}
-        </p>
-      </div>
+    <div className="my-8 rounded-md border border-rule bg-paper p-6">
+      <p className="mb-4 text-caption text-ink-2">
+        {title ?? "How the request flows"}
+      </p>
 
-      <div className="flex flex-col md:flex-row">
-        <div className="w-full border-b border-[#dcdcdc] md:w-1/3 md:border-b-0 md:border-r">
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="w-full border-b border-rule pb-4 md:w-1/3 md:border-b-0 md:border-r md:pb-0 md:pr-6">
           {steps.map((step, index) => {
             const isActive = index === activeStep;
             return (
@@ -39,62 +37,56 @@ export function ProcessSteps({ title, steps }: ProcessStepsProps) {
                 key={step.label}
                 onClick={() => setActiveStep(index)}
                 className={cn(
-                  "flex w-full items-center justify-between border-b border-[#e8e8e8] px-4 py-3 text-left text-[13px] font-semibold uppercase tracking-wide transition-colors last:border-b-0",
+                  "flex w-full items-center justify-between rounded px-3 py-2 text-left text-small transition-colors",
                   isActive
-                    ? "bg-[#fff2e7] text-[#F38020]"
-                    : "bg-white text-[#5c5c5c] hover:bg-[#f5f5f5]"
+                    ? "bg-ink text-paper"
+                    : "text-ink-2 hover:text-ink"
                 )}
               >
                 <span>
                   {(index + 1).toString().padStart(2, "0")} · {step.label}
                 </span>
-                <span
-                  className={cn(
-                    "h-4 w-1 bg-transparent transition-colors",
-                    isActive && "bg-[#F38020]"
-                  )}
-                />
               </button>
             );
           })}
         </div>
 
-        <div className="w-full px-5 py-5 md:w-2/3">
+        <div className="w-full md:w-2/3">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeStep}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.2 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F38020]">
+              <p className="text-caption text-ink-2">
                 {(activeStep + 1).toString().padStart(2, "0")} ·{" "}
                 {steps[activeStep].label}
               </p>
-              <h4 className="mt-2 text-xl font-semibold text-[#121212]">
+              <h4 className="mt-2 text-body font-medium text-ink">
                 {steps[activeStep].title}
               </h4>
-              <p className="mt-2 text-sm leading-relaxed text-[#4a4a4a]">
+              <p className="mt-2 text-small text-ink-2">
                 {steps[activeStep].description}
               </p>
 
               {steps[activeStep].meta && (
-                <div className="mt-4 grid grid-cols-1 gap-px border border-[#dcdcdc] bg-[#dcdcdc] sm:grid-cols-3">
+                <div className="mt-4 grid grid-cols-1 gap-px rounded border border-rule bg-rule sm:grid-cols-3">
                   {steps[activeStep].meta?.map((metaItem) => (
                     <div
                       key={`${metaItem.label}-${metaItem.value}`}
-                      className="bg-white p-2"
+                      className="bg-paper p-2"
                     >
                       <p
-                        className="text-[10px] font-semibold uppercase tracking-wider text-[#8a8a8a]"
+                        className="text-caption text-ink-3"
                         style={{
                           margin: "0",
                         }}
                       >
                         {metaItem.label}
                       </p>
-                      <p className="text-[11px] font-medium text-[#262626]">
+                      <p className="font-mono text-caption text-ink">
                         {metaItem.value}
                       </p>
                     </div>
@@ -103,12 +95,12 @@ export function ProcessSteps({ title, steps }: ProcessStepsProps) {
               )}
 
               {steps[activeStep].code && (
-                <div className="mt-4 border rounded-none border-[#dcdcdc] bg-[#f6f6f6]">
+                <div className="mt-4 rounded-md bg-well">
                   <pre
-                    className="overflow-x-auto bg-transparent font-mono text-[10px] leading-relaxed"
+                    className="overflow-x-auto bg-transparent p-4 font-mono text-caption"
                     style={{ borderRadius: "0" }}
                   >
-                    <code className="text-[#5e5e5e] bg-transparent">
+                    <code className="bg-transparent text-ink">
                       {steps[activeStep].code}
                     </code>
                   </pre>

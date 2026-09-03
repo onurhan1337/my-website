@@ -16,11 +16,6 @@ export interface BlogListItem {
   readingTime: number;
 }
 
-export interface PaginatedResult {
-  posts: BlogListItem[];
-  total: number;
-  totalPages: number;
-}
 
 export interface BlogCardProps {
   blog: BlogListItem;

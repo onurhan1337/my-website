@@ -15,6 +15,8 @@ type BlockedState = {
 
 const MESSAGE_DURATION = 2000;
 
+const EASE = { duration: 0.2, ease: 'easeOut' as const };
+
 export const ChannelSimulator = React.memo(({ bufferSize = 1 }: { bufferSize: number }) => {
   const [buffer, setBuffer] = useState<Value[]>([]);
   const [nextId, setNextId] = useState(1);
@@ -77,24 +79,22 @@ export const ChannelSimulator = React.memo(({ bufferSize = 1 }: { bufferSize: nu
       <motion.div
         key={index}
         className={`
-          w-16 h-16 rounded-lg flex items-center justify-center
-          ${value 
-            ? 'bg-blue-50 border-2 border-blue-200'
-            : 'bg-neutral-100 border border-neutral-200'}
+          flex h-16 w-16 items-center justify-center rounded
+          ${value
+            ? 'bg-ink text-paper'
+            : 'border border-dashed border-rule bg-paper text-ink-3'}
         `}
         initial={false}
-        animate={{
-          scale: value ? 1 : 0.95,
-          opacity: value ? 1 : 0.5,
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        animate={{ opacity: 1 }}
+        transition={EASE}
       >
         {value && (
           <motion.span
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            className="text-lg font-medium text-blue-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={EASE}
+            className="font-mono text-small font-medium"
           >
             {value.content}
           </motion.span>
@@ -103,38 +103,39 @@ export const ChannelSimulator = React.memo(({ bufferSize = 1 }: { bufferSize: nu
     );
   }, [buffer]);
 
+  const isSendDisabled = blocked.sender || buffer.length >= bufferSize;
+  const isReceiveDisabled = blocked.receiver || buffer.length === 0;
+
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-neutral-200">
+    <div className="my-8 rounded-md bg-well p-6">
       <div className="flex flex-col items-center">
-        <div className="relative w-full max-w-md mt-8 mb-6">
-          <div className="absolute -top-8 right-0 text-sm text-neutral-500">
-            Buffer Size: {bufferSize}
-          </div>
-
-          <div className="relative h-24 bg-neutral-50 rounded-xl border-2 border-neutral-200 overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center gap-4 p-4">
-              {Array.from({ length: bufferSize }).map((_, index) => renderBufferSlot(index))}
-            </div>
-
+        <div className="w-full max-w-md">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <span className="text-caption text-ink-2">Buffer size: {bufferSize}</span>
             <AnimatePresence>
               {(blocked.sender || blocked.receiver) && (
-                <motion.div
+                <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-amber-50/50 flex items-center justify-center"
+                  transition={EASE}
+                  className="text-caption text-ink"
                 >
-                  <span className="px-3 py-1.5 bg-amber-100 rounded-full text-sm font-medium text-amber-600 border border-amber-200">
-                    {blocked.sender ? 'Sender Blocked' : 'Receiver Blocked'}
-                  </span>
-                </motion.div>
+                  ● {blocked.sender ? 'sender blocked' : 'receiver blocked'}
+                </motion.span>
               )}
             </AnimatePresence>
           </div>
+
+          <div className="relative h-24 overflow-hidden rounded-md border border-rule bg-paper">
+            <div className="absolute inset-0 flex items-center justify-center gap-4 p-4">
+              {Array.from({ length: bufferSize }).map((_, index) => renderBufferSlot(index))}
+            </div>
+          </div>
         </div>
 
-        <div className="h-12 w-full relative flex items-center justify-center mb-6">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative my-4 flex h-8 w-full items-center justify-center">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <AnimatePresence mode="wait">
               {message && (
                 <motion.div
@@ -142,7 +143,7 @@ export const ChannelSimulator = React.memo(({ bufferSize = 1 }: { bufferSize: nu
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
-                  className="text-sm text-neutral-600 bg-neutral-50 px-3 py-1.5 rounded-lg border border-neutral-200"
+                  className="text-caption text-ink-2"
                 >
                   {message}
                 </motion.div>
@@ -154,29 +155,29 @@ export const ChannelSimulator = React.memo(({ bufferSize = 1 }: { bufferSize: nu
         <div className="flex gap-4">
           <button
             onClick={sendData}
-            disabled={blocked.sender || buffer.length >= bufferSize}
+            disabled={isSendDisabled}
             aria-label="Send Value"
             className={`
-              px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-              ${blocked.sender || buffer.length >= bufferSize
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100'}
+              rounded px-3 py-1.5 text-small transition-colors
+              ${isSendDisabled
+                ? 'cursor-default bg-paper text-ink-3'
+                : 'bg-ink text-paper'}
             `}
           >
-            Send Value
+            Send value
           </button>
           <button
             onClick={receiveData}
-            disabled={blocked.receiver || buffer.length === 0}
+            disabled={isReceiveDisabled}
             aria-label="Receive Value"
             className={`
-              px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-              ${blocked.receiver || buffer.length === 0
-                ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed'
-                : 'bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}
+              rounded border px-3 py-1.5 text-small transition-colors
+              ${isReceiveDisabled
+                ? 'cursor-default border-rule bg-paper text-ink-3'
+                : 'border-rule bg-paper text-ink-2 hover:text-ink'}
             `}
           >
-            Receive Value
+            Receive value
           </button>
         </div>
       </div>

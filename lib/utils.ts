@@ -37,15 +37,10 @@ export function formatDate(date: string, options?: FormatDateOptions): string {
   });
 
   if (options?.time) {
-    const time = targetDate.toLocaleString("en-us", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-    return `${time} • ${formattedDate}`;
+    return formattedDate;
   }
 
-  return `${fullDate} (${formattedDate})`;
+  return fullDate;
 }
 
 export function extractHeadings(content: string): Heading[] {

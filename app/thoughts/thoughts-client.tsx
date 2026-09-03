@@ -1,24 +1,20 @@
 "use client";
 
 import { useMemo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { ThoughtPost } from "@/types/thought";
 import { ThoughtCard } from "@/components/thought-card";
-import { Button } from "@/components/ui/button";
 import { useThoughtsStore } from "@/stores/thoughts-store";
 
 const THOUGHTS_PER_PAGE = 8;
 
 const typeFilters = [
   { key: "all", label: "All" },
+  { key: "quote", label: "Quotes" },
+  { key: "idea", label: "Ideas" },
   { key: "code", label: "Code" },
-  { key: "idea", label: "Idea" },
-  { key: "quote", label: "Quote" },
-  { key: "book", label: "Book" },
+  { key: "book", label: "Books" },
 ] as const;
-
-const filterLabelMap = new Map(typeFilters.map((f) => [f.key, f.label]));
 
 interface ThoughtsClientProps {
   thoughts: (ThoughtPost & { renderedContent: React.ReactNode })[];
@@ -27,147 +23,77 @@ interface ThoughtsClientProps {
 export function ThoughtsClient({ thoughts }: ThoughtsClientProps) {
   const { filter, page, setFilter, setPage } = useThoughtsStore();
 
-  const { paginatedThoughts, totalPages, hasNextPage, hasPreviousPage } =
-    useMemo(() => {
-      const filteredThoughts =
-        filter === "all"
-          ? thoughts
-          : thoughts.filter((thought) => thought.metadata.type === filter);
-
-      const totalPages = Math.max(
-        1,
-        Math.ceil(filteredThoughts.length / THOUGHTS_PER_PAGE)
-      );
-
-      const paginatedThoughts = filteredThoughts.slice(
+  const { paginatedThoughts, totalPages } = useMemo(() => {
+    const filtered =
+      filter === "all"
+        ? thoughts
+        : thoughts.filter((thought) => thought.metadata.type === filter);
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filtered.length / THOUGHTS_PER_PAGE)
+    );
+    return {
+      paginatedThoughts: filtered.slice(
         (page - 1) * THOUGHTS_PER_PAGE,
         page * THOUGHTS_PER_PAGE
-      );
-
-      return {
-        paginatedThoughts,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1,
-      };
-    }, [thoughts, page, filter]);
-
-  const isEmpty = paginatedThoughts.length === 0;
-  const filterLabel = filterLabelMap.get(filter) || "All";
+      ),
+      totalPages,
+    };
+  }, [thoughts, page, filter]);
 
   return (
-    <div className="pb-32">
-      {isEmpty ? (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex flex-col items-center justify-center py-24 text-center"
-        >
-          <div className="mb-6 text-6xl opacity-10">—</div>
-          <p className="text-sm tracking-tight opacity-50 mb-2">
-            No {filter === "all" ? "thoughts" : filterLabel.toLowerCase()} yet
-          </p>
-          <p className="text-xs tracking-wider opacity-30">
-            Simplicity is the ultimate sophistication
-          </p>
-        </motion.div>
-      ) : (
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={page}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ staggerChildren: 0.05 }}
+    <div>
+      <nav aria-label="Filter" className="mb-12 flex gap-5 text-small">
+        {typeFilters.map((option) => (
+          <button
+            key={option.key}
+            type="button"
+            onClick={() => setFilter(option.key)}
+            aria-pressed={filter === option.key}
+            className={cn(
+              "transition-colors duration-150",
+              filter === option.key ? "text-ink" : "text-ink-2 hover:text-ink"
+            )}
           >
-            {paginatedThoughts.map((thought) => (
-              <motion.div
-                key={thought.slug}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 10,
-                  duration: 0.5,
-                }}
-              >
-                <ThoughtCard thought={thought} />
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+            {option.label}
+          </button>
+        ))}
+      </nav>
+
+      {paginatedThoughts.length === 0 ? (
+        <p className="text-ink-2">Nothing here yet.</p>
+      ) : (
+        <div className="divide-y divide-rule">
+          {paginatedThoughts.map((thought) => (
+            <ThoughtCard key={thought.slug} thought={thought} />
+          ))}
+        </div>
       )}
 
       {totalPages > 1 && (
         <nav
           aria-label="Thoughts pagination"
-          className="flex justify-center gap-4 mt-12"
+          className="mt-16 grid grid-cols-3 items-baseline text-small"
         >
-          <Button
-            onClick={() => setPage(page - 1)}
-            disabled={!hasPreviousPage}
-            variant="outline"
-            className={cn(
-              "tracking-tight shadow-none",
-              !hasPreviousPage && "opacity-30 cursor-not-allowed"
+          <span className="justify-self-start">
+            {page > 1 && (
+              <button type="button" onClick={() => setPage(page - 1)} className="link">
+                Newer
+              </button>
             )}
-          >
-            Previous
-          </Button>
-
-          <span className="flex items-center tracking-tight text-sm opacity-50">
-            Page {page} of {totalPages}
           </span>
-
-          <Button
-            onClick={() => setPage(page + 1)}
-            disabled={!hasNextPage}
-            variant="outline"
-            className={cn(
-              "tracking-tight shadow-none",
-              !hasNextPage && "opacity-30 cursor-not-allowed"
+          <span className="justify-self-center font-mono text-caption text-ink-3">
+            {page} / {totalPages}
+          </span>
+          <span className="justify-self-end">
+            {page < totalPages && (
+              <button type="button" onClick={() => setPage(page + 1)} className="link">
+                Older
+              </button>
             )}
-          >
-            Next
-          </Button>
+          </span>
         </nav>
       )}
-
-      <motion.div
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      >
-        <div className="bg-background/95 backdrop-blur-xl border border-foreground/10 rounded-full shadow-lg px-3 py-2">
-          <div className="flex items-center gap-1">
-            {typeFilters.map((filterOption) => (
-              <motion.button
-                key={filterOption.key}
-                onClick={() => setFilter(filterOption.key)}
-                className={cn(
-                  "relative px-4 py-2 text-xs tracking-wider transition-all duration-300 rounded-full",
-                  filter === filterOption.key
-                    ? "text-background"
-                    : "opacity-50 hover:opacity-100"
-                )}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {filter === filterOption.key && (
-                  <motion.div
-                    layoutId="activeFilter"
-                    className="absolute inset-0 bg-foreground rounded-full"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{filterOption.label}</span>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }

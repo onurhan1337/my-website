@@ -2,7 +2,6 @@ export type {
   BlogMetadata,
   BlogPost,
   BlogListItem,
-  PaginatedResult,
   BlogCardProps,
   BlogListProps,
   PaginationProps,
@@ -12,17 +11,7 @@ export type {
   ThoughtMetadata,
   ThoughtPost,
   ThoughtCardProps,
-  ThoughtsListProps,
 } from "./thought";
-
-export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
-  size?: number;
-}
-
-export type SocialButtonProps = {
-  href: string;
-  children: React.ReactNode;
-};
 
 export interface CachedResult<T> {
   metadata: T;
@@ -41,16 +30,6 @@ export interface FormatDateOptions {
 
 export interface TableOfContentsProps {
   headings: Heading[];
-}
-
-export interface AvailabilityBadgeProps {
-  className?: string;
-  onClick?: () => void;
-}
-
-export interface AvailabilityDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
 export type ContainerProps = {
