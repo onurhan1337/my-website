@@ -14,7 +14,7 @@ interface Env {
   KIZZLE_SITE_HOST?: string;
 }
 
-const UA_HINTS = ["bot", "crawler", "spider", "gpt", "ai"];
+const UA_HINTS = ["bot", "crawler", "spider", "gpt", "ai", "claude", "anthropic"];
 const SEC_FETCH_SITES = ["cross-site", "same-site", "same-origin", "none"];
 const TAGGED_QUERY = /(^|[?&])(utm_source|ref|source|src)=/;
 const DEFAULT_ENDPOINT = "https://kizzle.studio/api/ingest/events";
